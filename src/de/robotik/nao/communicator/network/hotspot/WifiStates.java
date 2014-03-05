@@ -6,4 +6,5 @@ public enum WifiStates {
 	WIFI_AP_STATE_ENABLING,
 	WIFI_AP_STATE_ENABLED,
 	WIFI_AP_STATE_FAILED
+
 }
