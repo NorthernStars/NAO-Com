@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <item name="Body" format="string" type="joint">Whole body</item>
+    <item name="Head" format="string" type="joint">Head</item>
+    <item name="LArm" format="string" type="joint">Arm left</item>
+    <item name="RArm" format="string" type="joint">Arm right</item>
+    <item name="LLeg" format="string" type="joint">Leg left</item>
+    <item name="RLeg" format="string" type="joint">leg right</item>
+    <item name="LHand" format="string" type="joint">Hand left</item>
+    <item name="RHand" format="string" type="joint">Hand right</item>
+    <item name="LShoulder" format="string" type="joint">Shoulder left</item>
+    <item name="RShoulder" format="string" type="joint">Shoulder right</item>
+    <item name="LElbow" format="string" type="joint">Elbow left</item>
+    <item name="RElbow" format="string" type="joint">Elbow tight</item>
+    <item name="LWrist" format="string" type="joint">Wrist left</item>
+    <item name="RWrist" format="string" type="joint">Wrist right</item>
+    <item name="LHip" format="string" type="joint">Hip left</item>
+    <item name="RHip" format="string" type="joint">Hip right</item>
+    <item name="LKnee" format="string" type="joint">Knee left</item>
+    <item name="RKnee" format="string" type="joint">Knee right</item>
+    <item name="LAnkle" format="string" type="joint">Ankle left</item>
+    <item name="RAnkle" format="string" type="joint">Ankle right</item>
+
+</resources>

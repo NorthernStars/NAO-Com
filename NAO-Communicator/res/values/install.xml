@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <item name="header" format="string" type="install">NAO Communication Server Installation</item>
+    <item name="info_message" format="string" type="install">This installs the NAO Communication Server on your NAO. It\'s required to use the NAO Communicator App.\n\nThe needed data is downloaded online and uploaded to your NAO. Make sure your mobile device or your NAO is connected to the Internet. It\'s recommended to install only when using a fast and unlimited internet connection.</item>
+    <item name="install_button" format="string" type="install">INSTALL</item>
+    <item name="aks_install_title" format="string" type="install">Server missing?</item>
+    <item name="ask_install_message" format="string" type="install">It seems there is no NAO Communication Server installed on that NAO, because it wasn\'t possible to establish any connection.\n\nDo you want to install the NAO Communication server (internet connection required)?</item>
+    <item name="ask_yes" format="string" type="install">Yes</item>
+    <item name="ask_no" format="string" type="install">No</item>
+
+</resources>
