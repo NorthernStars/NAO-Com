@@ -17,4 +17,9 @@ public interface NAOInterface {
 	 */
 	public String getName();
 	
+	/**
+	 * @return Adress of remote host
+	 */
+	public String getHostAdress();
+	
 }

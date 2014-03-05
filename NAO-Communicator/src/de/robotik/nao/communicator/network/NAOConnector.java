@@ -9,11 +9,14 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.net.nsd.NsdServiceInfo;
+
 public class NAOConnector extends Thread {
 
 	public static final String defaultHost = "nao.local";
 	public static final int defaultPort = 9696;
 	public static final int defaultReadTimeout = 300;
+	public static final String serverNetworkServiceToken = "naocomserver";
 	
 	private String host = defaultHost;
 	private int port = defaultPort;
@@ -26,6 +29,22 @@ public class NAOConnector extends Thread {
 	private boolean stop = false;
 	private Socket socket = null;
 	
+	/**
+	 * Constructor
+	 * @param service Resolved {@link NsdServiceInfo}
+	 */
+	public NAOConnector(NsdServiceInfo service) {
+		if( service.getServiceType().contains(serverNetworkServiceToken) ){
+			host = service.getHost().getHostAddress();
+			port = service.getPort();
+		}
+	}
+	
+	/**
+	 * Constructor
+	 * @param host
+	 * @param port
+	 */
 	public NAOConnector(String host, int port) {
 		this.host = host;
 		this.port = port;
@@ -139,6 +158,20 @@ public class NAOConnector extends Thread {
 	
 	public ConnectionState getConnectionState(){
 		return state;
+	}
+
+	/**
+	 * @return the host
+	 */
+	public String getHost() {
+		return host;
+	}
+
+	/**
+	 * @return the port
+	 */
+	public int getPort() {
+		return port;
 	}
 	
 	

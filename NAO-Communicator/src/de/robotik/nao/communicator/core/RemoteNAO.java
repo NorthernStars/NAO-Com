@@ -1,9 +1,13 @@
 package de.robotik.nao.communicator.core;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import android.net.nsd.NsdServiceInfo;
 import de.robotik.nao.communicator.core.interfaces.NAOInterface;
 import de.robotik.nao.communicator.network.NAOConnector;
 import de.robotik.nao.communicator.network.NetworkDataRecievedListener;
-import de.robotik.nao.communicator.network.hotspot.ClientScanResult;
+import de.robotik.nao.communicator.network.NetworkServiceHandler;
 
 /**
  * Class for handle connection to remote nao
@@ -11,16 +15,26 @@ import de.robotik.nao.communicator.network.hotspot.ClientScanResult;
  * @author Hannes Eilers
  *
  */
-public class RemoteNAO implements NAOInterface, NetworkDataRecievedListener {
+public class RemoteNAO implements NAOInterface, NetworkDataRecievedListener, NetworkServiceHandler {
 
 	private NAOConnector connector = null;
+	private Map<String, Boolean> services = new HashMap<String, Boolean>();	
+	private String name = null;
 	
-	private String name = "";
-	
-	public RemoteNAO(ClientScanResult client){
-		this( client.getIpAddr(), NAOConnector.defaultPort );
+	/**
+	 * Constructor using {@link NsdServiceInfo} to set remote device information
+	 * @param serviceInfo
+	 */
+	public RemoteNAO(NsdServiceInfo serviceInfo){
+		connector = new NAOConnector( serviceInfo );
+		addNetworkService(serviceInfo);
 	}
 	
+	/**
+	 * Constructor to set remote device
+	 * @param host
+	 * @param port
+	 */
 	public RemoteNAO(String host, int port) {
 		connector = new NAOConnector(host, port);
 	}
@@ -43,6 +57,25 @@ public class RemoteNAO implements NAOInterface, NetworkDataRecievedListener {
 	@Override
 	public String getName() {
 		return name;
+	}
+
+	@Override
+	public void addNetworkService(NsdServiceInfo service) {
+		services.put(service.getServiceType(), true);
+		
+		if( service.getServiceType().contains(NAOConnector.serverNetworkServiceToken) ){
+			name = service.getServiceName();
+		}
+	}
+
+	@Override
+	public void removeNetworkService(NsdServiceInfo service) {
+		services.remove(service.getServiceType());
+	}
+
+	@Override
+	public String getHostAdress() {
+		return connector.getHost();
 	}
 	
 }

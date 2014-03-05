@@ -6,7 +6,6 @@ import de.northernstars.naocom.R;
 import de.robotik.nao.communicator.core.InstallActivity;
 import de.robotik.nao.communicator.core.widgets.RemoteDevice;
 import de.robotik.nao.communicator.network.NAOConnector;
-import de.robotik.nao.communicator.network.hotspot.ClientScanResult;
 import de.robotik.nao.communicator.network.hotspot.WifiApManager;
 import android.app.Activity;
 import android.os.AsyncTask;
@@ -100,68 +99,6 @@ public class PageConnect extends Page {
 			backgroundRunnable = null;			
 		}
 	}
-	
-	private class BackgroundRunnable implements Runnable{
-		private boolean repeat = true;
-		
-		public BackgroundRunnable() {}
-		
-		/**
-		 * Constructor
-		 * @param repeat If {@code true} task repeats
-		 */
-		public BackgroundRunnable(boolean repeat){
-			this.repeat = repeat;
-		}
-		
-		@Override
-		public void run() {
-			
-			(new AsyncTask<Boolean, Void, Boolean>() {
-				
-				private List<ClientScanResult> clients;
-				
-
-				@Override
-				protected Boolean doInBackground(Boolean... params) {
-					// get available devices
-					clients =  WifiApManager.getClientList(true);
-					 
-					if( params.length > 0 ){
-						return params[0];
-					}
-					return false;
-				}
-				
-				@Override
-				protected void onPostExecute(Boolean result) {					
-					// Clean device list
-					Activity activity = getActivity();
-					if( activity != null ){
-						
-						LinearLayout layout = (LinearLayout) activity.findViewById(R.id.lstNetworkDevices);
-						if( layout != null ){
-							layout.removeAllViews();
-						
-							// Add devices
-							for( ClientScanResult client : clients ){
-								layout.addView( new RemoteDevice(getActivity(), client) );
-							}
-						}
-						
-					}
-					
-					// check if to start runnable again
-					if( result && backgroundRunnable != null ){
-						backgroundHandler.postDelayed( backgroundRunnable, backgroundTaskDelay );
-					}
-				}
-				
-			}).execute(repeat);
-			
-		}
-	}
-	
 	
 	/**
 	 * Connect to nao
