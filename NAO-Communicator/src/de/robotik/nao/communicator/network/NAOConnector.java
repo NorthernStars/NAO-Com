@@ -18,6 +18,7 @@ public class NAOConnector extends Thread {
 	public static final int defaultReadTimeout = 300;
 	public static final String serverNetworkServiceToken = "naocomserver";
 	
+	
 	private String host = defaultHost;
 	private int port = defaultPort;
 	private BufferedReader in = null;

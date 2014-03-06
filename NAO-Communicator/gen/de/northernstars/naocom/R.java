@@ -161,8 +161,8 @@ public final class R {
     public static final class string {
         public static final int action_settings=0x7f080002;
         public static final int app_name=0x7f080000;
-        public static final int joints_control_header=0x7f08001c;
-        public static final int joints_img_description=0x7f08001d;
+        public static final int joints_control_header=0x7f08001d;
+        public static final int joints_img_description=0x7f08001e;
         public static final int net_connect=0x7f080005;
         public static final int net_devices=0x7f080006;
         public static final int net_host=0x7f080003;
@@ -177,18 +177,18 @@ public final class R {
         public static final int net_scan_devices=0x7f080007;
         public static final int net_ssid=0x7f080008;
         public static final int net_ssid_default=0x7f08000b;
-        public static final int net_unknown_device=0x7f08001e;
+        public static final int net_unknown_device=0x7f080013;
         public static final int net_wpa_key=0x7f080009;
         public static final int net_wpa_key_default=0x7f08000c;
-        public static final int speech_automatic=0x7f080017;
-        public static final int speech_input=0x7f080013;
-        public static final int speech_modulation=0x7f080015;
-        public static final int speech_rate=0x7f080014;
-        public static final int speech_say=0x7f080018;
-        public static final int speech_volume=0x7f080016;
-        public static final int status_battery_state_img_Description=0x7f08001a;
-        public static final int status_change_name=0x7f08001b;
-        public static final int status_nao_name=0x7f080019;
+        public static final int speech_automatic=0x7f080018;
+        public static final int speech_input=0x7f080014;
+        public static final int speech_modulation=0x7f080016;
+        public static final int speech_rate=0x7f080015;
+        public static final int speech_say=0x7f080019;
+        public static final int speech_volume=0x7f080017;
+        public static final int status_battery_state_img_Description=0x7f08001b;
+        public static final int status_change_name=0x7f08001c;
+        public static final int status_nao_name=0x7f08001a;
         public static final int title_activity_install=0x7f080001;
     }
     public static final class style {

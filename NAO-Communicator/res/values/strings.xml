@@ -20,6 +20,7 @@
     <string name="net_hotspot__disabled_failed">Failed to disable hotspot</string>
     <string name="net_hotspot_enable_success">Enabling hotspot</string>
     <string name="net_hotspot_disable_success">Disabling hotspot</string>
+    <string name="net_unknown_device">Unknown Device</string>
     <string name="speech_input">Text to say:</string>
     <string name="speech_rate">Speech rate:</string>
     <string name="speech_modulation">Speech modulation:</string>
@@ -31,6 +32,6 @@
     <string name="status_change_name">Change NAOs name</string>
     <string name="joints_control_header">Stiffness control</string>
     <string name="joints_img_description">stiffness</string>
-    <string name="net_unknown_device">unknown</string>
+   
 
 </resources>

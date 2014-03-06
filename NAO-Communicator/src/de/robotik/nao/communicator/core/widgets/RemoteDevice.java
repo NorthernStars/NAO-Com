@@ -12,13 +12,17 @@ import android.widget.TextView;
 
 public class RemoteDevice extends LinearLayout implements NetworkServiceHandler {
 
+	public static final String workstationNetworkServiceToken = "_workstation._tcp.local";
+	
 	private RemoteNAO nao;
 	private TextView txtName;
 	private ImageView imgLogo;
+	private String workstationName = null;
 	
 	public RemoteDevice(Context context, NsdServiceInfo serviceInfo) {
 		super(context);
-		nao = new RemoteNAO(serviceInfo);
+		nao = new RemoteNAO(serviceInfo);		
+		workstationName = serviceInfo.getServiceName();
 		
 		// set layout
 		setOrientation(HORIZONTAL);
@@ -44,7 +48,12 @@ public class RemoteDevice extends LinearLayout implements NetworkServiceHandler 
 		String name = nao.getName();
 		int imgRes = R.drawable.robot_on;
 		if( name == null ){
-			name = getResources().getString(R.string.net_unknown_device);
+			if( workstationName == null ){
+				name = getResources().getString(R.string.net_unknown_device);
+			}
+			else{
+				name = workstationName;
+			}
 			imgRes = R.drawable.unknown_device;
 		}
 		
@@ -57,6 +66,13 @@ public class RemoteDevice extends LinearLayout implements NetworkServiceHandler 
 	 */
 	public RemoteNAO getNao() {
 		return nao;
+	}
+	
+	/**
+	 * @return {@link String} Name of workstation
+	 */
+	public String getWorkstationName(){
+		return workstationName;
 	}
 	
 	

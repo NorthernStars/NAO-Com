@@ -17,6 +17,13 @@ import de.robotik.nao.communicator.network.NetworkServiceHandler;
  */
 public class RemoteNAO implements NAOInterface, NetworkDataRecievedListener, NetworkServiceHandler {
 
+	private static final String naoDefaultName = "unknown NAO"; 
+	public static final String naoNetworkServiceToken = "_nao._tcp";
+	public static final String naoqiNetworkServiceToken = "_naoqi._tcp";
+	public static final String sshNetworkServiceToken = "_ssh._tcp";
+	public static final String sftpNetworkServiceToken = "_sftp-ssh._tcp";
+	
+	
 	private NAOConnector connector = null;
 	private Map<String, Boolean> services = new HashMap<String, Boolean>();	
 	private String name = null;
@@ -55,16 +62,15 @@ public class RemoteNAO implements NAOInterface, NetworkDataRecievedListener, Net
 	}
 
 	@Override
-	public String getName() {
-		return name;
-	}
-
-	@Override
 	public void addNetworkService(NsdServiceInfo service) {
-		services.put(service.getServiceType(), true);
+		String serviceType = service.getServiceType();
+		services.put(serviceType, true);
 		
-		if( service.getServiceType().contains(NAOConnector.serverNetworkServiceToken) ){
+		if( serviceType.contains(NAOConnector.serverNetworkServiceToken) ){
 			name = service.getServiceName();
+		}
+		else if( serviceType.contains(naoNetworkServiceToken) ){
+			name = naoDefaultName;			
 		}
 	}
 
@@ -76,6 +82,45 @@ public class RemoteNAO implements NAOInterface, NetworkDataRecievedListener, Net
 	@Override
 	public String getHostAdress() {
 		return connector.getHost();
+	}
+	
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	@Override
+	public boolean hasNAOqi() {
+		return getServiceStatus(naoqiNetworkServiceToken);
+	}
+
+	@Override
+	public boolean hasSSH() {
+		return getServiceStatus(sshNetworkServiceToken);
+	}
+
+	@Override
+	public boolean hasSFTP() {
+		return getServiceStatus(sftpNetworkServiceToken);
+	}
+	
+	@Override
+	public boolean isNAO() {
+		return getServiceStatus(naoNetworkServiceToken);
+	}
+	
+	/**
+	 * @param serviceToken
+	 * @return Status of the service
+	 */
+	private boolean getServiceStatus(String serviceToken){
+		for( String key : services.keySet() ){
+			if( key.contains(serviceToken) ){
+				return services.get(key);
+			}
+		}
+		
+		return false;
 	}
 	
 }
