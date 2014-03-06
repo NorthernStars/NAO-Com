@@ -1,0 +1,13 @@
+*.class
+
+# Package Files #
+*.apk
+*.jar
+*.war
+*.ear
+
+# Binary folder #
+bin/
+
+# Include libs folder #
+!/libs/*.jar
