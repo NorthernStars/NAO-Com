@@ -9,9 +9,9 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.robotik.nao.communicator.network.interfaces.NetworkDataRecievedListener;
+import javax.jmdns.ServiceEvent;
 
-import android.net.nsd.NsdServiceInfo;
+import de.robotik.nao.communicator.network.interfaces.NetworkDataRecievedListener;
 
 public class NAOConnector extends Thread {
 
@@ -21,7 +21,7 @@ public class NAOConnector extends Thread {
 	public static final String serverNetworkServiceToken = "_naocomserver._tcp.local.";
 	
 	
-	private String host = defaultHost;
+	private List<String> hostAdresses = new ArrayList<String>();
 	private int port = defaultPort;
 	private BufferedReader in = null;
 	private OutputStreamWriter out = null;
@@ -34,12 +34,12 @@ public class NAOConnector extends Thread {
 	
 	/**
 	 * Constructor
-	 * @param service Resolved {@link NsdServiceInfo}
+	 * @param service Resolved {@link ServiceEvent}
 	 */
-	public NAOConnector(NsdServiceInfo service) {
-		if( service.getServiceType().contains(serverNetworkServiceToken) ){
-			host = service.getHost().getHostAddress();
-			port = service.getPort();
+	public NAOConnector(ServiceEvent service) {
+		if( service.getType().contains(serverNetworkServiceToken) && service.getInfo().getHostAddresses().length > 0 ){
+			addHostAdresses(service.getInfo().getHostAddresses());
+			port = service.getInfo().getPort();
 		}
 	}
 	
@@ -49,7 +49,7 @@ public class NAOConnector extends Thread {
 	 * @param port
 	 */
 	public NAOConnector(String host, int port) {
-		this.host = host;
+		this.hostAdresses.add(host);
 		this.port = port;
 	}
 	
@@ -60,28 +60,32 @@ public class NAOConnector extends Thread {
 	public void run() {
 		
 		try{
-			// create socket
-			socket = new Socket(host, port); 
-			socket.setSoTimeout(defaultReadTimeout);
-			in = new BufferedReader( new InputStreamReader(socket.getInputStream()) );
-			out = new OutputStreamWriter(socket.getOutputStream());
-			state = ConnectionState.CONNECTION_ESTABLISHED;
 			
-			while( !stop && socket != null ){
+			for( String host : hostAdresses ){
+				// create socket
+				socket = new Socket(host, port); 
+				socket.setSoTimeout(defaultReadTimeout);
+				in = new BufferedReader( new InputStreamReader(socket.getInputStream()) );
+				out = new OutputStreamWriter(socket.getOutputStream());
+				state = ConnectionState.CONNECTION_ESTABLISHED;
 				
-				// handle socket
-				String data = in.readLine();
-				if( data != null ){
-					notifyDataRecievedListeners( data.trim() );
+				while( !stop && socket != null ){
+					
+					// handle socket
+					String data = in.readLine();
+					if( data != null ){
+						notifyDataRecievedListeners( data.trim() );
+					}
+					
 				}
 				
+				// Close connections
+				in.close();
+				out.close();
+				socket.close();
+				socket = null;
+				break;
 			}
-			
-			// Close connections
-			in.close();
-			out.close();
-			socket.close();
-			socket = null;
 			
 		}catch(UnknownHostException e){
 			state = ConnectionState.CONNECTION_UNKNOWN_HOST;
@@ -162,12 +166,24 @@ public class NAOConnector extends Thread {
 	public ConnectionState getConnectionState(){
 		return state;
 	}
+	
+	/**
+	 * Adds host adresses to internal list
+	 * @param hostAdresses
+	 */
+	public void addHostAdresses(String[] hostAdresses){
+		for( String host : hostAdresses ){
+			if( !this.hostAdresses.contains(host) ){
+				this.hostAdresses.add(host);
+			}
+		}
+	}
 
 	/**
 	 * @return the host
 	 */
-	public String getHost() {
-		return host;
+	public List<String> getHostAdresses() {
+		return hostAdresses;
 	}
 
 	/**

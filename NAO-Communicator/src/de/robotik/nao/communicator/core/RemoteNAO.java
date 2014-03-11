@@ -1,9 +1,11 @@
 package de.robotik.nao.communicator.core;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import android.net.nsd.NsdServiceInfo;
+import javax.jmdns.ServiceEvent;
+
 import de.robotik.nao.communicator.core.interfaces.NAOInterface;
 import de.robotik.nao.communicator.network.NAOConnector;
 import de.robotik.nao.communicator.network.interfaces.NetworkDataRecievedListener;
@@ -17,7 +19,6 @@ import de.robotik.nao.communicator.network.interfaces.NetworkServiceHandler;
  */
 public class RemoteNAO implements NAOInterface, NetworkDataRecievedListener, NetworkServiceHandler {
 
-	private static final String naoDefaultName = "unknown NAO"; 
 	public static final String naoNetworkServiceToken = "_nao._tcp.local.";
 	public static final String naoqiNetworkServiceToken = "_naoqi._tcp.local.";
 	public static final String sshNetworkServiceToken = "_ssh._tcp.local.";
@@ -28,13 +29,15 @@ public class RemoteNAO implements NAOInterface, NetworkDataRecievedListener, Net
 	private Map<String, Boolean> services = new HashMap<String, Boolean>();	
 	private String name = null;
 	
+	public RemoteNAO() {
+	}
+	
 	/**
-	 * Constructor using {@link NsdServiceInfo} to set remote device information
+	 * Constructor using {@link ServiceEvent} to set remote device information
 	 * @param serviceInfo
 	 */
-	public RemoteNAO(NsdServiceInfo serviceInfo){
-		connector = new NAOConnector( serviceInfo );
-		addNetworkService(serviceInfo);
+	public RemoteNAO(ServiceEvent service){
+		addNetworkService(service);
 	}
 	
 	/**
@@ -48,8 +51,12 @@ public class RemoteNAO implements NAOInterface, NetworkDataRecievedListener, Net
 
 	
 	@Override
-	public void connect(){
-		connector.start();
+	public boolean connect(){
+		if( connector != null ){
+			connector.start();
+			return true;
+		}
+		return false;
 	}
 	@Override
 	public void disconnect(){
@@ -62,26 +69,30 @@ public class RemoteNAO implements NAOInterface, NetworkDataRecievedListener, Net
 	}
 
 	@Override
-	public void addNetworkService(NsdServiceInfo service) {
-		String serviceType = service.getServiceType();
+	public void addNetworkService(ServiceEvent service) {
+		String serviceType = service.getType();
 		services.put(serviceType, true);
 		
+		// check connector and add host adresses
+		if(connector == null){
+			connector = new NAOConnector(service);
+		}
+		connector.addHostAdresses( service.getInfo().getHostAddresses() );
+		
+		// check for communication server or only nao
 		if( serviceType.contains(NAOConnector.serverNetworkServiceToken) ){
-			name = service.getServiceName();
-		}
-		else if( serviceType.contains(naoNetworkServiceToken) ){
-			name = naoDefaultName;			
-		}
+			name = service.getName();
+		}		
 	}
 
 	@Override
-	public void removeNetworkService(NsdServiceInfo service) {
-		services.remove(service.getServiceType());
+	public void removeNetworkService(ServiceEvent service) {
+		services.remove(service.getType());
 	}
 
 	@Override
-	public String getHostAdress() {
-		return connector.getHost();
+	public List<String> getHostAdresses() {
+		return connector.getHostAdresses();
 	}
 	
 	@Override
@@ -107,6 +118,11 @@ public class RemoteNAO implements NAOInterface, NetworkDataRecievedListener, Net
 	@Override
 	public boolean isNAO() {
 		return getServiceStatus(naoNetworkServiceToken);
+	}
+	
+	@Override
+	public boolean hasCommunicationServer() {
+		return getServiceStatus( NAOConnector.serverNetworkServiceToken );
 	}
 	
 	/**

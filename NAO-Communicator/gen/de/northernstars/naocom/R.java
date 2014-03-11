@@ -18,6 +18,7 @@ public final class R {
         public static final int darkpurple=0x7f040006;
         public static final int darkred=0x7f040009;
         public static final int green=0x7f040002;
+        public static final int inactive_text=0x7f04000a;
         public static final int orange=0x7f040003;
         public static final int purple=0x7f040001;
         public static final int red=0x7f040004;
@@ -45,12 +46,12 @@ public final class R {
         public static final int unknown_device=0x7f02000d;
     }
     public static final class id {
-        public static final int action_settings=0x7f0b0044;
+        public static final int action_settings=0x7f0b0047;
         public static final int btnConnect=0x7f0b000b;
         public static final int btnScanDevices=0x7f0b000f;
         public static final int button1=0x7f0b0003;
         public static final int chkSpeechAutomatic=0x7f0b0011;
-        public static final int imageView1=0x7f0b0018;
+        public static final int imgDevice=0x7f0b0018;
         public static final int imgJointBody=0x7f0b001a;
         public static final int imgJointHead=0x7f0b001b;
         public static final int imgJointLArm=0x7f0b001d;
@@ -98,6 +99,7 @@ public final class R {
         public static final int lblSpeechRate=0x7f0b0012;
         public static final int lblSpeechVolume=0x7f0b0016;
         public static final int lstNetworkDevices=0x7f0b000e;
+        public static final int lyRemoteDevice=0x7f0b0044;
         public static final int pager=0x7f0b0006;
         public static final int pager_title_strip=0x7f0b0007;
         public static final int pgbInstallProgress=0x7f0b0005;
@@ -106,12 +108,14 @@ public final class R {
         public static final int seekBar2=0x7f0b0017;
         public static final int skbSpeechModulation=0x7f0b0015;
         public static final int swHotspot=0x7f0b0042;
-        public static final int textView1=0x7f0b0000;
-        public static final int textView2=0x7f0b0002;
         public static final int textView4=0x7f0b000c;
+        public static final int txtDevicename=0x7f0b0000;
         public static final int txtHost=0x7f0b0008;
+        public static final int txtNAOqi=0x7f0b0045;
         public static final int txtNaoName=0x7f0b0010;
         public static final int txtPort=0x7f0b000a;
+        public static final int txtSFTP=0x7f0b0002;
+        public static final int txtSSH=0x7f0b0046;
         public static final int txtSSID=0x7f0b0040;
         public static final int txtWPAKey=0x7f0b0041;
     }
@@ -153,6 +157,7 @@ public final class R {
         public static final int page_speech=0x7f030003;
         public static final int page_status=0x7f030004;
         public static final int page_wifi=0x7f030005;
+        public static final int remote_device=0x7f030006;
     }
     public static final class menu {
         public static final int install=0x7f0a0000;
@@ -161,8 +166,9 @@ public final class R {
     public static final class string {
         public static final int action_settings=0x7f080002;
         public static final int app_name=0x7f080000;
-        public static final int joints_control_header=0x7f08001d;
-        public static final int joints_img_description=0x7f08001e;
+        public static final int img_description=0x7f080023;
+        public static final int joints_control_header=0x7f080021;
+        public static final int joints_img_description=0x7f080022;
         public static final int net_connect=0x7f080005;
         public static final int net_devices=0x7f080006;
         public static final int net_host=0x7f080003;
@@ -173,22 +179,26 @@ public final class R {
         public static final int net_hotspot_enable_success=0x7f080011;
         public static final int net_hotspot_enabled=0x7f08000d;
         public static final int net_hotspot_enabled_failed=0x7f08000f;
+        public static final int net_naoqi=0x7f080015;
         public static final int net_port=0x7f080004;
+        public static final int net_restart_network_service=0x7f080014;
         public static final int net_scan_devices=0x7f080007;
+        public static final int net_sftp=0x7f080017;
+        public static final int net_ssh=0x7f080016;
         public static final int net_ssid=0x7f080008;
         public static final int net_ssid_default=0x7f08000b;
         public static final int net_unknown_device=0x7f080013;
         public static final int net_wpa_key=0x7f080009;
         public static final int net_wpa_key_default=0x7f08000c;
-        public static final int speech_automatic=0x7f080018;
-        public static final int speech_input=0x7f080014;
-        public static final int speech_modulation=0x7f080016;
-        public static final int speech_rate=0x7f080015;
-        public static final int speech_say=0x7f080019;
-        public static final int speech_volume=0x7f080017;
-        public static final int status_battery_state_img_Description=0x7f08001b;
-        public static final int status_change_name=0x7f08001c;
-        public static final int status_nao_name=0x7f08001a;
+        public static final int speech_automatic=0x7f08001c;
+        public static final int speech_input=0x7f080018;
+        public static final int speech_modulation=0x7f08001a;
+        public static final int speech_rate=0x7f080019;
+        public static final int speech_say=0x7f08001d;
+        public static final int speech_volume=0x7f08001b;
+        public static final int status_battery_state_img_Description=0x7f08001f;
+        public static final int status_change_name=0x7f080020;
+        public static final int status_nao_name=0x7f08001e;
         public static final int title_activity_install=0x7f080001;
     }
     public static final class style {

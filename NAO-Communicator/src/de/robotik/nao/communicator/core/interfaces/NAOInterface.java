@@ -1,11 +1,14 @@
 package de.robotik.nao.communicator.core.interfaces;
 
+import java.util.List;
+
 public interface NAOInterface {
 
 	/**
 	 * Connects to NAO
+	 * @return {@code true} if connecting process started, {@code false} otherwise
 	 */
-	public void connect();
+	public boolean connect();
 	
 	/**
 	 * Disconnect from NAO
@@ -38,8 +41,13 @@ public interface NAOInterface {
 	public boolean isNAO();
 	
 	/**
+	 * @return {@code true} if NAO has nao communication server running, {@code false} otherwise
+	 */
+	public boolean hasCommunicationServer();
+	
+	/**
 	 * @return Adress of remote host
 	 */
-	public String getHostAdress();
+	public List<String> getHostAdresses();
 	
 }

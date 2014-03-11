@@ -1,19 +1,19 @@
 package de.robotik.nao.communicator.network.interfaces;
 
-import android.net.nsd.NsdServiceInfo;
+import javax.jmdns.ServiceEvent;
 
 public interface NetworkServiceHandler {
 
 	/**
-	 * Adds a resolved {@link NsdServiceInfo} network service
-	 * @param service Resolved {@link NsdServiceInfo}
+	 * Adds a resolved {@link ServiceEvent} network service
+	 * @param service Resolved {@link ServiceEvent}
 	 */
-	public void addNetworkService(NsdServiceInfo service);
+	public void addNetworkService(ServiceEvent service);
 	
 	/**
-	 * Removes a resolved {@link NsdServiceInfo} network service
-	 * @param service Resolved {@link NsdServiceInfo}
+	 * Removes a resolved {@link ServiceEvent} network service
+	 * @param service Resolved {@link ServiceEvent}
 	 */
-	public void removeNetworkService(NsdServiceInfo service);
+	public void removeNetworkService(ServiceEvent service);
 	
 }
