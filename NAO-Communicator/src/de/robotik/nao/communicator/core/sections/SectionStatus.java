@@ -6,19 +6,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class PageSpeech extends Page {
+public class SectionStatus extends Section{
+
+	public SectionStatus() {}
 	
-	public PageSpeech() {}
-	
-	public PageSpeech(String title){
+	public SectionStatus(String title) {
 		super(title);
 	}
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+			Bundle savedInstanceState) {		
 		// connect ui widgets
-		rootView = inflater.inflate(R.layout.page_speech, container, false);
+		rootView = inflater.inflate(R.layout.page_status, container, false);
 		
 		
 		return rootView;

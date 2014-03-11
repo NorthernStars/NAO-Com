@@ -14,7 +14,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class PageWifi extends Page {
+public class SectionWifi extends Section {
 	
 	private Handler backgroundHandler = new Handler();
 	private Runnable backgroundRunnable = null;
@@ -26,7 +26,7 @@ public class PageWifi extends Page {
 	private View rootView;
 	private TextView lblHotspotStatus;
 
-	public PageWifi() {
+	public SectionWifi() {
 		super();
 	}
 	
@@ -34,7 +34,7 @@ public class PageWifi extends Page {
 	 * Constrctor
 	 * @param title
 	 */
-	public PageWifi(String title) {
+	public SectionWifi(String title) {
 		super(title);
 	}
 	

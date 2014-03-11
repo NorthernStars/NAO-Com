@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public abstract class Page extends Fragment {
+public abstract class Section extends Fragment {
 	
 	protected String title = "PAGE TITLE";
 	protected View rootView =  null;
@@ -14,7 +14,7 @@ public abstract class Page extends Fragment {
 	/**
 	 * Default constructor
 	 */
-	public Page(){
+	public Section(){
 		super();
 	}
 	
@@ -22,7 +22,7 @@ public abstract class Page extends Fragment {
 	 * Constructor
 	 * @param aTitle Title of section
 	 */
-	public Page(String aTitle){
+	public Section(String aTitle){
 		title = aTitle;
 	}
 

@@ -6,8 +6,8 @@ import java.util.Map;
 import android.net.nsd.NsdServiceInfo;
 import de.robotik.nao.communicator.core.interfaces.NAOInterface;
 import de.robotik.nao.communicator.network.NAOConnector;
-import de.robotik.nao.communicator.network.NetworkDataRecievedListener;
-import de.robotik.nao.communicator.network.NetworkServiceHandler;
+import de.robotik.nao.communicator.network.interfaces.NetworkDataRecievedListener;
+import de.robotik.nao.communicator.network.interfaces.NetworkServiceHandler;
 
 /**
  * Class for handle connection to remote nao
@@ -18,10 +18,10 @@ import de.robotik.nao.communicator.network.NetworkServiceHandler;
 public class RemoteNAO implements NAOInterface, NetworkDataRecievedListener, NetworkServiceHandler {
 
 	private static final String naoDefaultName = "unknown NAO"; 
-	public static final String naoNetworkServiceToken = "_nao._tcp";
-	public static final String naoqiNetworkServiceToken = "_naoqi._tcp";
-	public static final String sshNetworkServiceToken = "_ssh._tcp";
-	public static final String sftpNetworkServiceToken = "_sftp-ssh._tcp";
+	public static final String naoNetworkServiceToken = "_nao._tcp.local.";
+	public static final String naoqiNetworkServiceToken = "_naoqi._tcp.local.";
+	public static final String sshNetworkServiceToken = "_ssh._tcp.local.";
+	public static final String sftpNetworkServiceToken = "_sftp-ssh._tcp.local.";
 	
 	
 	private NAOConnector connector = null;

@@ -2,7 +2,7 @@ package de.robotik.nao.communicator.core.widgets;
 
 import de.northernstars.naocom.R;
 import de.robotik.nao.communicator.core.RemoteNAO;
-import de.robotik.nao.communicator.network.NetworkServiceHandler;
+import de.robotik.nao.communicator.network.interfaces.NetworkServiceHandler;
 import android.content.Context;
 import android.net.nsd.NsdServiceInfo;
 import android.view.Gravity;
@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 public class RemoteDevice extends LinearLayout implements NetworkServiceHandler {
 
-	public static final String workstationNetworkServiceToken = "_workstation._tcp.local";
+	public static final String workstationNetworkServiceToken = "_workstation._tcp.local.";
 	
 	private RemoteNAO nao;
 	private TextView txtName;

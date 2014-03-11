@@ -9,6 +9,8 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.robotik.nao.communicator.network.interfaces.NetworkDataRecievedListener;
+
 import android.net.nsd.NsdServiceInfo;
 
 public class NAOConnector extends Thread {
@@ -16,7 +18,7 @@ public class NAOConnector extends Thread {
 	public static final String defaultHost = "nao.local";
 	public static final int defaultPort = 9696;
 	public static final int defaultReadTimeout = 300;
-	public static final String serverNetworkServiceToken = "naocomserver";
+	public static final String serverNetworkServiceToken = "_naocomserver._tcp.local.";
 	
 	
 	private String host = defaultHost;

@@ -1,4 +1,4 @@
-package de.robotik.nao.communicator.network;
+package de.robotik.nao.communicator.network.interfaces;
 
 import android.net.nsd.NsdServiceInfo;
 
