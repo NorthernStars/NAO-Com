@@ -18,6 +18,12 @@
             android:text="@string/speech_input"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
+        <ExpandableListView
+            android:id="@+id/lstSavedText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+        </ExpandableListView>
+
         <EditText
             android:id="@+id/txtNaoName"
             android:layout_width="match_parent"
@@ -27,21 +33,39 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
 
             <CheckBox
                 android:id="@+id/chkSpeechAutomatic"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="0"
                 android:text="@string/speech_automatic" />
 
-            <Button
-                android:id="@+id/button1"
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:text="@string/speech_say" />
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_weight="3"
+                android:orientation="horizontal" >
+
+                <Button
+                    android:id="@+id/btnSayText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/speech_say"
+                    style="?android:attr/buttonStyle" />
+
+                <Button
+                    android:id="@+id/btnSaveText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/speech_save"
+                    style="?android:attr/buttonStyle" />
+
+            </LinearLayout>
+
         </LinearLayout>
 
         <LinearLayout
@@ -65,7 +89,7 @@
         </LinearLayout>
 
         <SeekBar
-            android:id="@+id/seekBar1"
+            android:id="@+id/skbSpeechRate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:max="200"
@@ -119,11 +143,18 @@
         </LinearLayout>
 
         <SeekBar
-            android:id="@+id/seekBar2"
+            android:id="@+id/skbSpeechVolume"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:max="100"
             android:progress="100" />
+
+        <ListView
+            android:id="@+id/lstSpeechHistory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+        </ListView>
+
     </LinearLayout>
 
 </ScrollView>

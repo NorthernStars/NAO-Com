@@ -30,10 +30,12 @@
     <string name="speech_modulation">Speech modulation:</string>
     <string name="speech_volume">Speech volume:</string>
     <string name="speech_automatic">automatic speech</string>
-    <string name="speech_say">Say</string>
+    <string name="speech_say">Say Text</string>
+    <string name="speech_save">Save Text</string>
     <string name="status_nao_name">NAO</string>
     <string name="status_battery_state_img_Description">bat state</string>
     <string name="status_change_name">Change NAOs name</string>
+    <string name="status_system_volume">System Volume</string>
     <string name="joints_control_header">Stiffness control</string>
     <string name="joints_img_description">stiffness</string>
     <string name="img_description">image</string>

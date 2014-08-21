@@ -2,6 +2,10 @@ package de.robotik.nao.communicator.network.data;
 
 public enum NAOCommands {
 
+	SYS_GET_INFO,
+	SYS_CONNECT,
+	SYS_DISCONNECT,
+	
 	SAY,
 	WALK,
 	STAND_UP,

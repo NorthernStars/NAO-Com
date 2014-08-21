@@ -9,6 +9,7 @@ import de.robotik.nao.communicator.core.sections.SectionConnect;
 import de.robotik.nao.communicator.core.sections.SectionSpeech;
 import de.robotik.nao.communicator.core.sections.SectionStatus;
 import de.robotik.nao.communicator.core.sections.SectionWifi;
+import de.robotik.nao.communicator.core.widgets.RemoteDevice;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -16,6 +17,8 @@ import android.support.v4.view.ViewPager;
 public class MainActivity extends FragmentActivity {
 
 	private static List<Section> sections = new ArrayList<Section>();
+	
+	private static RemoteDevice connectedDevice = null;
 	
 	private SectionsPagerAdapter mSectionsPagerAdapter;
 	private ViewPager mViewPager;
@@ -26,6 +29,7 @@ public class MainActivity extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
 		setContentView(R.layout.activity_main);		
 		
 		// add layouts
@@ -79,6 +83,24 @@ public class MainActivity extends FragmentActivity {
 	 */
 	public static List<Section> getSections() {
 		return sections;
+	}
+
+
+
+	/**
+	 * @return the connectedDevice
+	 */
+	public static RemoteDevice getConnectedDevice() {
+		return connectedDevice;
+	}
+
+
+
+	/**
+	 * @param connectedDevice the connectedDevice to set
+	 */
+	public static void setConnectedDevice(RemoteDevice connectedDevice) {
+		MainActivity.connectedDevice = connectedDevice;
 	}
 
 }

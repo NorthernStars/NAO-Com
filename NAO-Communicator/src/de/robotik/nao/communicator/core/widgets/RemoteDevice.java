@@ -1,18 +1,20 @@
 package de.robotik.nao.communicator.core.widgets;
 
 import javax.jmdns.ServiceEvent;
-
 import de.northernstars.naocom.R;
+import de.robotik.nao.communicator.core.MainActivity;
 import de.robotik.nao.communicator.core.RemoteNAO;
 import de.robotik.nao.communicator.network.interfaces.NetworkServiceHandler;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class RemoteDevice implements NetworkServiceHandler {
+public class RemoteDevice implements NetworkServiceHandler, OnClickListener {
 
 	public static final String workstationNetworkServiceToken = "_workstation._tcp.local.";
 	public static final String networkServiceLocalToken = ".local.";
@@ -27,7 +29,36 @@ public class RemoteDevice implements NetworkServiceHandler {
 	private TextView txtSFTP;
 	private ImageView imgLogo;	
 	
+	/**
+	 * Constructor
+	 * @param context	Layout {@link Context}
+	 * @param service	{@link ServiceEvent}
+	 */
 	public RemoteDevice(Context context, ServiceEvent service) {
+		this(context);
+		
+		// add network service
+		addNetworkService(service);
+	}
+	
+	/**
+	 * Constructor
+	 * @param context	Layout {@link Context}
+	 * @param host		{@link String} of remote host name
+	 * @param port		{@link Integer} of remote host port
+	 */
+	public RemoteDevice(Context context, String host, int port){
+		this(context);
+		
+		txtName.setText(host);
+	}
+	
+	/**
+	 * Default Constructor
+	 * @param context	Layout {@link Context}
+	 */
+	@SuppressLint("InflateParams")
+	public RemoteDevice(Context context){
 		nao = new RemoteNAO();
 		
 		// inflate detail layout
@@ -41,8 +72,7 @@ public class RemoteDevice implements NetworkServiceHandler {
 		txtSSH = (TextView) mView.findViewById(R.id.txtSSH);
 		txtSFTP = (TextView) mView.findViewById(R.id.txtSFTP);
 		
-		// add network service
-		addNetworkService(service);
+		mView.setOnClickListener(this);
 	}
 	
 	/**
@@ -174,6 +204,17 @@ public class RemoteDevice implements NetworkServiceHandler {
 	public void removeNetworkService(ServiceEvent service) {
 		nao.removeNetworkService(service);
 		updateView();
+	}
+
+	@Override
+	public void onClick(View v) {
+		// check if to disconnect from other nao
+		if( MainActivity.getConnectedDevice() != null ){
+			MainActivity.getConnectedDevice().getNao().disconnect();
+		}
+		if( getNao().connect() ){
+			MainActivity.setConnectedDevice( this );
+		}
 	}
 
 }

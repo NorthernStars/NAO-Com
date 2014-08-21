@@ -1,7 +1,6 @@
 package de.robotik.nao.communicator.network.data.response;
 
 import de.robotik.nao.communicator.network.data.AudioData;
-import de.robotik.nao.communicator.network.data.NAOCommands;
 import de.robotik.nao.communicator.network.data.StiffnessData;
 import de.robotik.nao.communicator.network.data.request.DataRequestPackage;
 
@@ -13,6 +12,7 @@ import de.robotik.nao.communicator.network.data.request.DataRequestPackage;
 public class DataResponsePackage {
 
 	public DataRequestPackage request;
+	public boolean requestSuccessfull;
 	
 	/**
 	 * Requested data
@@ -21,11 +21,5 @@ public class DataResponsePackage {
 	public int batteryLevel;
 	public StiffnessData stiffnessData;
 	public AudioData audioData;
-	
-	/**
-	 * Command to execute
-	 */
-	public NAOCommands command;
-	public String[] commandArguments;
 	
 }

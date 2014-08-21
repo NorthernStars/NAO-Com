@@ -1,12 +1,17 @@
 package de.robotik.nao.communicator.core;
 
+import java.net.InetAddress;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.jmdns.ServiceEvent;
 
+import org.apache.http.conn.util.InetAddressUtils;
+
 import de.robotik.nao.communicator.core.interfaces.NAOInterface;
+import de.robotik.nao.communicator.network.ConnectionState;
 import de.robotik.nao.communicator.network.NAOConnector;
 import de.robotik.nao.communicator.network.interfaces.NetworkDataRecievedListener;
 import de.robotik.nao.communicator.network.interfaces.NetworkServiceHandler;
@@ -53,6 +58,12 @@ public class RemoteNAO implements NAOInterface, NetworkDataRecievedListener, Net
 	@Override
 	public boolean connect(){
 		if( connector != null ){
+			
+			if( connector.getConnectionState() == ConnectionState.CONNECTION_CLOSED ){
+				connector = new NAOConnector(connector);
+			}
+			
+			connector.addNetworkDataRecievedListener(this);
 			connector.start();
 			return true;
 		}
@@ -60,6 +71,7 @@ public class RemoteNAO implements NAOInterface, NetworkDataRecievedListener, Net
 	}
 	@Override
 	public void disconnect(){
+		connector.removeNetworkDataRecievedListener(this);
 		connector.stopConnector();
 	}
 
@@ -77,6 +89,7 @@ public class RemoteNAO implements NAOInterface, NetworkDataRecievedListener, Net
 		if(connector == null){
 			connector = new NAOConnector(service);
 		}
+		
 		connector.addHostAdresses( service.getInfo().getHostAddresses() );
 		
 		// check for communication server or only nao

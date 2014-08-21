@@ -1,6 +1,8 @@
 package de.robotik.nao.communicator.core.sections;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +12,7 @@ import javax.jmdns.ServiceListener;
 
 import de.northernstars.naocom.R;
 import de.robotik.nao.communicator.core.InstallActivity;
+import de.robotik.nao.communicator.core.MainActivity;
 import de.robotik.nao.communicator.core.RemoteNAO;
 import de.robotik.nao.communicator.core.widgets.RemoteDevice;
 import de.robotik.nao.communicator.network.NAOConnector;
@@ -229,16 +232,25 @@ public class SectionConnect extends Section {
 		return new ServiceListener() {
 	        public void serviceResolved(ServiceEvent service) {	        	
 	        	// adding remote device to list
-//	        	Log.d(TAG, "----------------------");
-//	            Log.d(TAG, "Service name: " + service.getName());
-//	            Log.i(TAG, "Service type: " + service.getType());
-//	            Log.d(TAG, "Service host: " + service.getInfo().getServer());
-//	            for( String adrr : service.getInfo().getHostAddresses() ){
-//	            	Log.d(TAG, "Service host adress: " + adrr);
-//	            }
+	        	Log.i(TAG, "----------------------");
+	            Log.i(TAG, "Service name: " + service.getName());
+	            Log.i(TAG, "Service type: " + service.getType());
+	            Log.i(TAG, "Service host: " + service.getInfo().getServer());
+	            for( String adrr : service.getInfo().getHostAddresses() ){
+	            	Log.i(TAG, "Service host adress: " + adrr);
+	            }
 	        	
 	        	if( service.getInfo().getHostAddresses().length > 0 ){
+	        		
+	        		// try to resolve correct hostname
 	        		String host = service.getInfo().getHostAddresses()[0];
+					try {
+						host = InetAddress.getByName(host).getHostAddress();
+					} catch (UnknownHostException e) {
+						Log.e(TAG, "Resolving " + host + " was not successfull.");
+						e.printStackTrace();
+						return;
+					}
 	        		
 	        		// check if service already processing
 		        	while( servicesProcessing.contains(host) );
@@ -294,7 +306,7 @@ public class SectionConnect extends Section {
 	        public void serviceAdded(ServiceEvent service) {
 	            // Required to force serviceResolved to be called again
 	            // (after the first search)
-//	        	Log.d(TAG, "Service added: " + service.getType() + " : " + service.getName());
+	        	Log.d(TAG, "Service added: " + service.getType() + " : " + service.getName());
 	            jmDNS.requestServiceInfo(service.getType(), service.getName(), 1);
 	        }
 	    };
@@ -315,8 +327,50 @@ public class SectionConnect extends Section {
 			Log.i(TAG, "Connecting to " + host + ":" + port);
 			
 			// try to connect to nao
+			
+			// search for devices in list of devices
+        	boolean found = false;
+        	RemoteDevice device = null;
+        	for( RemoteDevice dev : devices ){
+        		if( dev.hasAdress(host) ){
+        			device = dev;
+        			found = true;
+        			break;
+        		}
+        	}
+        	
+        	if( !found ){
+        		
+        		device = new RemoteDevice(getActivity(), host, port);
+        		new AsyncTask<RemoteDevice, Void, RemoteDevice>(){
+        			
+					@Override
+					protected RemoteDevice doInBackground(
+							RemoteDevice... params) {
+						if( params.length > 0 ){
+							RemoteDevice device = params[0];
+							devices.add(device);
+							return device;
+						}
+						return null;
+					}
+					
+					protected void onPostExecute(RemoteDevice device) {
+						if( device != null ){
+							lstNetworkDevices.addView( device.getView() );
+						}
+						servicesProcessing.remove( device.getNao().getHostAdresses().get(0) );
+					};
+					
+	        	}.execute(new RemoteDevice[]{device});
+
+        	}
+        	
+			MainActivity.setConnectedDevice( device );
+			MainActivity.getConnectedDevice().getNao().connect();
+			
 			// TODO: Doing install on connection thread
-			showAksForServerInstallDialog(host, port);
+			//showAksForServerInstallDialog(host, port);
 			
 		}
 		else{
