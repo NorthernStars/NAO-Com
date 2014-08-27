@@ -20,4 +20,12 @@ public class StiffnessData {
 		return jointStiffness.get(joint);
 	}
 	
+	public String toString(){
+		String ret = "";
+		for( NAOJoints joint : jointStiffness.keySet() ){
+			ret += "\t" + joint + ":" + jointStiffness.get(joint) + "\n";
+		}
+		return ret;
+	}
+	
 }

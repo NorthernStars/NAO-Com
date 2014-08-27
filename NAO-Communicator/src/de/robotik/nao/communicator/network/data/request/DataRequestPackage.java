@@ -27,4 +27,15 @@ public class DataRequestPackage {
 		commandArguments = aArgs;
 	}
 	
+	public String toString(){
+		String ret = "";
+		
+		ret += type +  ":" + command;
+		for( String s : commandArguments ){
+			ret += "\n\t" + s;
+		}		
+		
+		return ret;
+	}
+	
 }

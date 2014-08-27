@@ -22,4 +22,15 @@ public class DataResponsePackage {
 	public StiffnessData stiffnessData;
 	public AudioData audioData;
 	
+	public String toString(){
+		String ret = "";
+		
+		ret += "REQUEST: " + request;
+		ret += "\nnaoName: " + naoName + "\tbatterylevel: " + batteryLevel;
+		ret += "\nstiffnessData:\n" + stiffnessData;
+		ret += "\naudioData:\n" + audioData;
+		
+		return ret;
+	}
+	
 }

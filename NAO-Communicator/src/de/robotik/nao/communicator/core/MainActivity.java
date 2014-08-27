@@ -10,12 +10,15 @@ import de.robotik.nao.communicator.core.sections.SectionSpeech;
 import de.robotik.nao.communicator.core.sections.SectionStatus;
 import de.robotik.nao.communicator.core.sections.SectionWifi;
 import de.robotik.nao.communicator.core.widgets.RemoteDevice;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 
 public class MainActivity extends FragmentActivity {
 
+	private static Context mContext;
+	
 	private static List<Section> sections = new ArrayList<Section>();
 	
 	private static RemoteDevice connectedDevice = null;
@@ -43,7 +46,17 @@ public class MainActivity extends FragmentActivity {
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
+		
+		mContext = getApplicationContext();
 
+	}
+	
+	/**
+	 * Static function to return {@link MainActivity} application context.
+	 * @return	{@link Context}
+	 */
+	public static Context getContext(){
+		return mContext;
 	}
 	
 	

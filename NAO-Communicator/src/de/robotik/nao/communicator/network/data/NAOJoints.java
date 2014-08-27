@@ -37,7 +37,7 @@ public enum NAOJoints {
 	RSchoulderRoll,
 	RElbowYaw,
 	RElbowRoll,
-	RElbowWristYaw,
+	RWristYaw,
 	RHand;
 	
 	

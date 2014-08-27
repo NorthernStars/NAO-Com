@@ -232,13 +232,13 @@ public class SectionConnect extends Section {
 		return new ServiceListener() {
 	        public void serviceResolved(ServiceEvent service) {	        	
 	        	// adding remote device to list
-	        	Log.i(TAG, "----------------------");
-	            Log.i(TAG, "Service name: " + service.getName());
-	            Log.i(TAG, "Service type: " + service.getType());
-	            Log.i(TAG, "Service host: " + service.getInfo().getServer());
-	            for( String adrr : service.getInfo().getHostAddresses() ){
-	            	Log.i(TAG, "Service host adress: " + adrr);
-	            }
+//	        	Log.i(TAG, "----------------------");
+//	            Log.i(TAG, "Service name: " + service.getName());
+//	            Log.i(TAG, "Service type: " + service.getType());
+//	            Log.i(TAG, "Service host: " + service.getInfo().getServer());
+//	            for( String adrr : service.getInfo().getHostAddresses() ){
+//	            	Log.i(TAG, "Service host adress: " + adrr);
+//	            }
 	        	
 	        	if( service.getInfo().getHostAddresses().length > 0 ){
 	        		
