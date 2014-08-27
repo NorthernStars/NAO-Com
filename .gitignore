@@ -7,7 +7,7 @@
 *.ear
 
 # Binary folder #
-bin/
+/bin/
 
 # Include libs folder #
 !/libs/*.jar
