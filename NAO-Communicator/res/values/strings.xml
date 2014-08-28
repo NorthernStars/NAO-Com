@@ -24,6 +24,8 @@
     <string name="net_unknown_host">Unknown host</string>
     <string name="net_connection_failed">Establishing connection failed</string>
     <string name="net_connected">Connected</string>
+    <string name="net_disconnected">Disconnected</string>
+    <string name="net_working">Working</string>
     <string name="net_restart_network_service">Restarting service &#8230;</string>
     <string name="net_naoqi">NAOqi</string>
     <string name="net_ssh">SSH</string>

@@ -7,7 +7,6 @@ public class DataRequestPackage {
 	/**
 	 * Command to execute
 	 */
-	public RequestType type;
 	public NAOCommands command;
 	public String[] commandArguments;
 	
@@ -15,22 +14,18 @@ public class DataRequestPackage {
 	 * Constructor
 	 */
 	public DataRequestPackage() {
-		type = RequestType.REQUEST;
 		command = NAOCommands.SYS_GET_INFO;
 		commandArguments = new String[0];
 	}
 	
 	
-	public DataRequestPackage(RequestType aType, NAOCommands aCommand, String[] aArgs) {
-		type = aType;
+	public DataRequestPackage(NAOCommands aCommand, String[] aArgs) {
 		command = aCommand;
 		commandArguments = aArgs;
 	}
 	
 	public String toString(){
-		String ret = "";
-		
-		ret += type +  ":" + command;
+		String ret = "" + command;
 		for( String s : commandArguments ){
 			ret += "\n\t" + s;
 		}		

@@ -1,5 +1,6 @@
 package de.robotik.nao.communicator.core;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,8 +10,11 @@ import javax.jmdns.ServiceEvent;
 import de.robotik.nao.communicator.core.interfaces.NAOInterface;
 import de.robotik.nao.communicator.network.ConnectionState;
 import de.robotik.nao.communicator.network.NAOConnector;
+import de.robotik.nao.communicator.network.NetworkDataRecievedListenerNotifier;
+import de.robotik.nao.communicator.network.data.NAOCommands;
 import de.robotik.nao.communicator.network.data.response.DataResponsePackage;
 import de.robotik.nao.communicator.network.interfaces.NetworkDataRecievedListener;
+import de.robotik.nao.communicator.network.interfaces.NetworkDataSender;
 import de.robotik.nao.communicator.network.interfaces.NetworkServiceHandler;
 
 /**
@@ -19,7 +23,7 @@ import de.robotik.nao.communicator.network.interfaces.NetworkServiceHandler;
  * @author Hannes Eilers
  *
  */
-public class RemoteNAO implements NAOInterface, NetworkDataRecievedListener, NetworkServiceHandler {
+public class RemoteNAO implements NAOInterface, NetworkDataSender, NetworkDataRecievedListener, NetworkServiceHandler {
 
 	public static final String naoNetworkServiceToken = "_nao._tcp.local.";
 	public static final String naoqiNetworkServiceToken = "_naoqi._tcp.local.";
@@ -30,6 +34,7 @@ public class RemoteNAO implements NAOInterface, NetworkDataRecievedListener, Net
 	private NAOConnector connector = null;
 	private Map<String, Boolean> services = new HashMap<String, Boolean>();	
 	private String name = null;
+	private List<NetworkDataRecievedListener> dataRecievedListener = new ArrayList<NetworkDataRecievedListener>();
 	
 	public RemoteNAO() {
 	}
@@ -50,22 +55,50 @@ public class RemoteNAO implements NAOInterface, NetworkDataRecievedListener, Net
 	public RemoteNAO(String host, int port) {
 		connector = new NAOConnector(host, port);
 	}
-
+	
+	@Override
+	public void addNetworkDataRecievedListener(NetworkDataRecievedListener listener){
+		dataRecievedListener.add(listener);
+	}
+	
+	@Override
+	public void removeNetworkDataRecievedListener(NetworkDataRecievedListener listener){
+		if( listener == null ){
+			dataRecievedListener.clear();
+		}
+		else{
+			dataRecievedListener.remove(listener);
+		}
+	}
+	
+	@Override
+	public void notifyDataRecievedListeners(DataResponsePackage data){
+		for( NetworkDataRecievedListener listener : dataRecievedListener ){
+			Runnable r = new NetworkDataRecievedListenerNotifier(listener, data);
+			new Thread(r).start();
+		}
+	}
 	
 	@Override
 	public boolean connect(){
 		if( connector != null ){
 			
 			if( connector.getConnectionState() != ConnectionState.CONNECTION_INIT ){
+
+				disconnect();
 				connector = new NAOConnector(connector);
-			}
+				
+			} 
 			
 			connector.addNetworkDataRecievedListener(this);
 			connector.start();
 			return true;
+
 		}
+		
 		return false;
 	}
+	
 	@Override
 	public void disconnect(){
 		connector.removeNetworkDataRecievedListener(this);
@@ -74,7 +107,12 @@ public class RemoteNAO implements NAOInterface, NetworkDataRecievedListener, Net
 
 	@Override
 	public void onNetworkDataRecieved(DataResponsePackage data) {
-		System.out.println("NEW DATA: " + data);
+		notifyDataRecievedListeners(data);
+		
+		if( data.request.command == NAOCommands.SYS_DISCONNECT
+				&& data.requestSuccessfull ){
+			MainActivity.getInstance().updateTitle( "[offline] NAO Communicator" );
+		}
 	}
 
 	@Override

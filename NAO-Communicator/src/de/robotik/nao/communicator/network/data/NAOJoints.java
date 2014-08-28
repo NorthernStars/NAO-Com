@@ -34,7 +34,7 @@ public enum NAOJoints {
 	
 	RArm,
 	RShoulderPitch,
-	RSchoulderRoll,
+	RShoulderRoll,
 	RElbowYaw,
 	RElbowRoll,
 	RWristYaw,

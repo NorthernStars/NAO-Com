@@ -26,7 +26,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 	@Override
 	public Fragment getItem(int position) {			
 		if( position < getCount() ){
-			return MainActivity.getSections().get(position);
+			return MainActivity.getInstance().getSections().get(position);
 		}		
 		return null;
 	}
@@ -37,7 +37,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 	 */
 	@Override
 	public int getCount() {
-		return MainActivity.getSections().size();
+		return MainActivity.getInstance().getSections().size();
 	}
 
 	/**
@@ -47,7 +47,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 	public CharSequence getPageTitle(int position) {
 		Locale locale = Locale.getDefault();
 		if( position < getCount() ){
-			return MainActivity.getSections().get(position).getTitle().toUpperCase(locale);
+			return MainActivity.getInstance().getSections().get(position).getTitle().toUpperCase(locale);
 		}
 		return null;
 	}

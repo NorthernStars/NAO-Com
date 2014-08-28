@@ -24,11 +24,11 @@ import de.northernstars.naocom.R;
 import de.robotik.nao.communicator.core.MainActivity;
 import de.robotik.nao.communicator.network.data.NAOCommands;
 import de.robotik.nao.communicator.network.data.request.DataRequestPackage;
-import de.robotik.nao.communicator.network.data.request.RequestType;
 import de.robotik.nao.communicator.network.data.response.DataResponsePackage;
 import de.robotik.nao.communicator.network.interfaces.NetworkDataRecievedListener;
+import de.robotik.nao.communicator.network.interfaces.NetworkDataSender;
 
-public class NAOConnector extends Thread {
+public class NAOConnector extends Thread implements NetworkDataSender {
 
 	public static final String TAG = NAOConnector.class.getName();
 	public static final String defaultHost = "nao.local";
@@ -39,7 +39,9 @@ public class NAOConnector extends Thread {
 	
 	
 	private List<String> hostAdresses = new ArrayList<String>();
+	private String host;
 	private int port = defaultPort;
+	private Gson gson = new Gson();
 	private BufferedReader in = null;
 	private OutputStream out = null;
 	
@@ -80,36 +82,28 @@ public class NAOConnector extends Thread {
 	}
 	
 	/**
-	 * Function if thread started
+	 * Try to connect to one of the available remote addresses.
+	 * @return	{@code true} if successful, {@code false} otherwise.
 	 */
-	@Override
-	public void run() {
+	private boolean connect(){
 		
-		String host = "";
-		
-		try{
-			
-			for( String h : hostAdresses ){
+		for( String h : hostAdresses ){
+			try{
 				host = h;
-				// create socket
-				System.out.println("try: " + host + ":" + port);
-				
-				System.out.println( "inet: " + InetAddress.getByName(host).getHostAddress() );
-				System.out.println( "inet: " + InetAddress.getByName(host).getHostName() );
-				
+				// create socket				
 				socket = new Socket( InetAddress.getByName(host).getHostAddress(), port ); 
 				socket.setSoTimeout(defaultReadTimeout);
 				in = new BufferedReader( new InputStreamReader(socket.getInputStream()) );
-				out = socket.getOutputStream();
-				Gson gson = new Gson();
-				
-				
+				out = socket.getOutputStream();		
+
 				// try to connect
 				int tries = connectionMaxTries;
 				while(!stop && socket != null && state == ConnectionState.CONNECTION_INIT && tries > 0){
 					
 					// send connection request
-					DataRequestPackage p = new DataRequestPackage(RequestType.CONNECT, NAOCommands.SYS_CONNECT, new String[0]);
+					DataRequestPackage p = new DataRequestPackage(
+							NAOCommands.SYS_CONNECT,
+							new String[0]);
 					String data = gson.toJson(p);
 					out.write(data.getBytes());
 					
@@ -117,45 +111,86 @@ public class NAOConnector extends Thread {
 					data = in.readLine();
 					
 					DataResponsePackage response = gson.fromJson(data, DataResponsePackage.class);
-					if( p.type == RequestType.CONNECT
-							&& response.request.command == NAOCommands.SYS_CONNECT
-							&& response.requestSuccessfull == true){
+					if( response.request.command == NAOCommands.SYS_CONNECT
+							&& response.requestSuccessfull){
 						state = ConnectionState.CONNECTION_ESTABLISHED;
+						notifyDataRecievedListeners(response);
+						return true;
 					}
 					
 					tries--;
 				}
 				
-				// Check if connecting was successfull
-				if( state != ConnectionState.CONNECTION_ESTABLISHED ){
-					throw new IOException("Could not connect to remote server.");
-				} else{
-					
-					new Handler(Looper.getMainLooper()).post(new Runnable() {						
-						@Override
-						public void run() {
-							Toast.makeText(MainActivity.getContext(), R.string.net_connected, Toast.LENGTH_SHORT).show();
-						}
-					});
-					
+			}catch(UnknownHostException e){
+				state = ConnectionState.CONNECTION_UNKNOWN_HOST;
+				Log.w(TAG, "Host unknown " + host);
+				
+				new Handler(Looper.getMainLooper()).post(new Runnable() {				
+					@Override
+					public void run() {
+						Toast.makeText(MainActivity.getInstance().getApplicationContext(),
+								R.string.net_unknown_host, Toast.LENGTH_SHORT).show();
+					}
+				});
+			} catch (IOException e) {
+				state = ConnectionState.CONNECTION_ESTABLISHED_FAILED;
+				Log.w(TAG, "IO Exception on connnection with " + host + ":" + port);
+				e.printStackTrace();
+			}
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Read data until thread gets stopped or connection gets an error
+	 */
+	private void readData(){
+		while( !stop && socket != null && state == ConnectionState.CONNECTION_ESTABLISHED ){
+			
+			// handle socket_CLOSED
+			try{
+				
+				String data = in.readLine();
+				if( data != null ){
+					DataResponsePackage p = gson.fromJson(data, DataResponsePackage.class);				
+					notifyDataRecievedListeners( p );
 				}
 				
-				while( !stop && socket != null && state == ConnectionState.CONNECTION_ESTABLISHED ){
-					
-					// handle socket_CLOSED
-					try{
-						String data = in.readLine();
-						if( data != null ){
-							
-							DataResponsePackage p = gson.fromJson(data, DataResponsePackage.class);
-							System.out.println("recieved: " + data);
-							
-							notifyDataRecievedListeners( p );						
-						
-						}
-					} catch( SocketTimeoutException e ){}
-					
-				}
+			} catch( SocketTimeoutException e ){				
+			} catch (IOException e) {
+				Log.e(TAG, "IOException on connnection with " + host + ":" + port);
+				state = ConnectionState.CONNECTION_ERROR;
+			}
+			
+		}
+	}
+	
+	/**
+	 * Try to disconnect.
+	 * @return	{@code true} if successful, {@code false} otherwise.
+	 */
+	private boolean disconnect(){
+		
+		try{
+			
+			// create disconnect request
+			DataRequestPackage p = new DataRequestPackage(
+					NAOCommands.SYS_DISCONNECT,
+					new String[0]);
+			
+			String data = gson.toJson(p);
+			out.write(data.getBytes());
+			
+			// wait for data
+			data = in.readLine();
+			
+			// analyse request
+			DataResponsePackage response = gson.fromJson(data, DataResponsePackage.class);
+			if( response.request.command == NAOCommands.SYS_DISCONNECT
+					&& response.requestSuccessfull){
+				
+				notifyDataRecievedListeners(response);
 				
 				// Close connections
 				in.close();
@@ -163,94 +198,91 @@ public class NAOConnector extends Thread {
 				socket.close();
 				socket = null;
 				state = ConnectionState.CONNECTION_CLOSED;
-				break;
+				
+				return true;	
 			}
 			
-		}catch(UnknownHostException e){
-			state = ConnectionState.CONNECTION_UNKNOWN_HOST;
-			e.printStackTrace();
+		} catch(IOException e) {
+			Log.w(TAG, "IOException on connnection with " + host + ":" + port);
+			state = ConnectionState.CONNECTION_ERROR;
+		} catch( NullPointerException e ){
+			Log.w(TAG, "NullPointerException on disconnect from " + host + ":" + port);
+			state = ConnectionState.CONNECTION_ERROR;
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Function if thread started
+	 */
+	@Override
+	public void run() {
+		
+		// try to connect
+		if( connect() ){
 			
-			new Handler(Looper.getMainLooper()).post(new Runnable() {				
+			// connected
+			new Handler(Looper.getMainLooper()).post(new Runnable() {						
 				@Override
 				public void run() {
-					Toast.makeText(MainActivity.getContext(), R.string.net_unknown_host, Toast.LENGTH_SHORT).show();
+					Toast.makeText(MainActivity.getInstance().getApplicationContext(),
+							R.string.net_connected, Toast.LENGTH_SHORT).show();
 				}
 			});
 			
-			Log.w(TAG, "Host unknown " + host);
-			return;
-		}catch(IOException e){
-			state = ConnectionState.CONNECTION_ESTABLISHED_FAILED;
-			e.printStackTrace();
+			// read data
+			readData();
 			
-			new Handler(Looper.getMainLooper()).post(new Runnable() {				
-				@Override
-				public void run() {
-					Toast.makeText(MainActivity.getContext(), R.string.net_connection_failed, Toast.LENGTH_SHORT).show();
-				}
-			});
+			// try to disconnect
+			if( disconnect() ){
+				MainActivity.getInstance().updateTitle("[offline] NAO Communicator");
+				
+				new Handler(Looper.getMainLooper()).post(new Runnable() {						
+					@Override
+					public void run() {
+						Toast.makeText(MainActivity.getInstance().getApplicationContext(),
+								R.string.net_disconnected, Toast.LENGTH_SHORT).show();
+					}
+				});
+			}
+			
+		} else {
 			
 			Log.e(TAG, "Establishing connection to " + host + ":" + port + " failed.");
-			return;
+			
+			new Handler(Looper.getMainLooper()).post(new Runnable() {				
+				@Override
+				public void run() {
+					Toast.makeText(MainActivity.getInstance().getApplicationContext(),
+							R.string.net_connection_failed, Toast.LENGTH_SHORT).show();
+				}
+			});
 		}
 		
-		// set stop state
-		state = ConnectionState.CONNECTION_CLOSED;
-	}
-	
-	/**
-	 * Notifies all listeners
-	 * @param data
-	 */
-	private void notifyDataRecievedListeners(DataResponsePackage data){
-		for( NetworkDataRecievedListener listener : dataRecievedListener ){
-			Runnable r = new NetworkDataRecievedListenerNotifier(listener, data);
-			new Thread(r).start();
-		}
-	}
-	
-	/**
-	 * Class of interface {@link Runnable} to notify a {@link NetworkDataRecievedListener}
-	 * @author Hannes Eilers
-	 *
-	 */
-	private class NetworkDataRecievedListenerNotifier implements Runnable{
-
-		private DataResponsePackage data;
-		private NetworkDataRecievedListener listener = null;
-		
-		public NetworkDataRecievedListenerNotifier(NetworkDataRecievedListener aListener, DataResponsePackage aData) {
-			data = aData;
-			listener = aListener;
-		}
-		
-		@Override
-		public void run() {
-			listener.onNetworkDataRecieved(data);
-		}
 		
 	}
 	
-	
-	/**
-	 * Adds a {@link NetworkDataRecievedListener} to this connector
-	 * @param listener {@link NetworkDataRecievedListener} to add
-	 */
+	@Override
 	public void addNetworkDataRecievedListener(NetworkDataRecievedListener listener){
 		dataRecievedListener.add(listener);
 	}
 	
-	/**
-	 * Removes a {@link NetworkDataRecievedListener} from this connector.
-	 * If {@code listener} is {@code null} all listeners are removed.
-	 * @param listener {@link NetworkDataRecievedListener} to remove or {@code null}
-	 */
+	@Override
 	public void removeNetworkDataRecievedListener(NetworkDataRecievedListener listener){
 		if( listener == null ){
 			dataRecievedListener.clear();
 		}
 		else{
 			dataRecievedListener.remove(listener);
+		}
+	}
+	
+	@Override
+	public void notifyDataRecievedListeners(DataResponsePackage data){
+		for( NetworkDataRecievedListener listener : dataRecievedListener ){
+			Runnable r = new NetworkDataRecievedListenerNotifier(listener, data);
+			new Thread(r).start();
 		}
 	}
 	

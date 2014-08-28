@@ -17,6 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="@dimen/activity_padding"
+        android:layout_marginStart="@dimen/activity_padding"
         android:orientation="vertical" >
 
         <TextView
@@ -43,6 +44,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/activity_padding"
+                android:layout_marginStart="@dimen/activity_padding"
                 android:text="@string/net_ssh"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/inactive_text" />
@@ -52,6 +54,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/activity_padding"
+                android:layout_marginStart="@dimen/activity_padding"
                 android:text="@string/net_sftp"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/inactive_text" />

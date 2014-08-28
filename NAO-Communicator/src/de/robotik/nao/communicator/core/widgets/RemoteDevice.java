@@ -1,6 +1,7 @@
 package de.robotik.nao.communicator.core.widgets;
 
 import javax.jmdns.ServiceEvent;
+
 import de.northernstars.naocom.R;
 import de.robotik.nao.communicator.core.MainActivity;
 import de.robotik.nao.communicator.core.RemoteNAO;
@@ -27,7 +28,7 @@ public class RemoteDevice implements NetworkServiceHandler, OnClickListener {
 	private TextView txtNAOqi;
 	private TextView txtSSH;
 	private TextView txtSFTP;
-	private ImageView imgLogo;	
+	private ImageView imgLogo;
 	
 	/**
 	 * Constructor
@@ -209,12 +210,19 @@ public class RemoteDevice implements NetworkServiceHandler, OnClickListener {
 	@Override
 	public void onClick(View v) {
 		// check if to disconnect from other nao
-		if( MainActivity.getConnectedDevice() != null ){
-			MainActivity.getConnectedDevice().getNao().disconnect();
+		RemoteDevice remoteDevice = MainActivity.getInstance().getConnectedDevice();
+		boolean isTheSame = false;
+
+		if(  remoteDevice != null ){
+			isTheSame = remoteDevice.hasAdress( getNao().getHostAdresses().get(0) );
+			remoteDevice.getNao().disconnect();
+			MainActivity.getInstance().setConnectedDevice( null );
 		}
-		if( getNao().connect() ){
-			MainActivity.setConnectedDevice( this );
+		
+		if( !isTheSame && getNao().connect() ){
+			MainActivity.getInstance().setConnectedDevice( this );
 		}
+		
 	}
 
 }

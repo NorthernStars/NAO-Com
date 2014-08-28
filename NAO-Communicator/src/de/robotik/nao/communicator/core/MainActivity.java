@@ -10,19 +10,26 @@ import de.robotik.nao.communicator.core.sections.SectionSpeech;
 import de.robotik.nao.communicator.core.sections.SectionStatus;
 import de.robotik.nao.communicator.core.sections.SectionWifi;
 import de.robotik.nao.communicator.core.widgets.RemoteDevice;
-import android.content.Context;
+import de.robotik.nao.communicator.network.NetworkDataRecievedListenerNotifier;
+import de.robotik.nao.communicator.network.data.NAOCommands;
+import de.robotik.nao.communicator.network.data.response.DataResponsePackage;
+import de.robotik.nao.communicator.network.interfaces.NetworkDataRecievedListener;
+import de.robotik.nao.communicator.network.interfaces.NetworkDataSender;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 
-public class MainActivity extends FragmentActivity {
-
-	private static Context mContext;
+public class MainActivity extends FragmentActivity implements NetworkDataRecievedListener, NetworkDataSender {
 	
-	private static List<Section> sections = new ArrayList<Section>();
+	private static MainActivity INSTANCE;
 	
-	private static RemoteDevice connectedDevice = null;
+	private List<Section> mSections = new ArrayList<Section>();	
+	private RemoteDevice mConnectedDevice = null;
+	private List<NetworkDataRecievedListener> dataRecievedListener = new ArrayList<NetworkDataRecievedListener>();
 	
+	private String mTitle = "[offline] NAO Communicator";
 	private SectionsPagerAdapter mSectionsPagerAdapter;
 	private ViewPager mViewPager;
 
@@ -33,7 +40,10 @@ public class MainActivity extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		setContentView(R.layout.activity_main);		
+		INSTANCE = this;
+		
+		setContentView(R.layout.activity_main);	
+		updateTitle(mTitle);
 		
 		// add layouts
 		createPageFragmentLayouts();
@@ -45,29 +55,19 @@ public class MainActivity extends FragmentActivity {
 
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.pager);
-		mViewPager.setAdapter(mSectionsPagerAdapter);
-		
-		mContext = getApplicationContext();
+		mViewPager.setAdapter(mSectionsPagerAdapter);		
 
 	}
 	
-	/**
-	 * Static function to return {@link MainActivity} application context.
-	 * @return	{@link Context}
-	 */
-	public static Context getContext(){
-		return mContext;
-	}
-	
 	
 	
 	/**
-	 * @param sectionName
+	 * @param aSectionName
 	 * @return {@link Section} with parameter {@code sectionName} as title.
 	 */
-	public static Section getSection(String sectionName){
-		for( Section section : sections ){
-			if( section.getTitle().equals(sectionName) ){
+	public Section getSection(String aSectionName){
+		for( Section section : mSections ){
+			if( section.getTitle().equals(aSectionName) ){
 				return section;
 			}
 		}
@@ -80,13 +80,13 @@ public class MainActivity extends FragmentActivity {
 	 * Adds layouts for fragment pages
 	 */
 	private void createPageFragmentLayouts(){
-		if( sections.size() == 0 ){
+		if( mSections.size() == 0 ){
 			
 			// Add all new sections here
-			sections.add( new SectionConnect("Connect") );
-			sections.add( new SectionWifi("Hotspot") );
-			sections.add( new SectionStatus("NAO") );
-			sections.add( new SectionSpeech("Speech") );
+			mSections.add( new SectionConnect("Connect") );
+			mSections.add( new SectionWifi("Hotspot") );
+			mSections.add( new SectionStatus("NAO") );
+			mSections.add( new SectionSpeech("Speech") );
 			
 		}
 	}
@@ -94,26 +94,85 @@ public class MainActivity extends FragmentActivity {
 	/**
 	 * @return the sections
 	 */
-	public static List<Section> getSections() {
-		return sections;
+	public List<Section> getSections() {
+		return mSections;
 	}
-
-
 
 	/**
 	 * @return the connectedDevice
 	 */
-	public static RemoteDevice getConnectedDevice() {
-		return connectedDevice;
+	public RemoteDevice getConnectedDevice() {
+		return mConnectedDevice;
+	}
+
+	/**
+	 * @param aConnectedDevice the connectedDevice to set
+	 */
+	public void setConnectedDevice(RemoteDevice aConnectedDevice) {
+		if( mConnectedDevice != null ){
+			mConnectedDevice.getNao().removeNetworkDataRecievedListener(this);
+		}
+		mConnectedDevice = aConnectedDevice;
+		
+		if( mConnectedDevice != null ){
+			mConnectedDevice.getNao().addNetworkDataRecievedListener(this);
+		}
+	}
+	
+	/**
+	 * Update action bar title
+	 * @param aTitle	{@link String} for new title
+	 */
+	public void updateTitle(String aTitle){
+		mTitle = aTitle;
+		new Handler(Looper.getMainLooper()).post(new Runnable() {			
+			@Override
+			public void run() {
+				setTitle( mTitle );
+			}
+		});
+	}
+	
+	@Override
+	public void onNetworkDataRecieved(DataResponsePackage data) {
+		if( data.request.command == NAOCommands.SYS_DISCONNECT && data.requestSuccessfull ){
+			updateTitle( "[offline] NAO Communicator" );
+		} else {
+			updateTitle( "[" + data.batteryLevel + "%] " + data.naoName );
+		}
+		notifyDataRecievedListeners(data);
+	}
+
+	/**
+	 * @return the iNSTANCE
+	 */
+	public static MainActivity getInstance() {
+		return INSTANCE;
 	}
 
 
 
-	/**
-	 * @param connectedDevice the connectedDevice to set
-	 */
-	public static void setConnectedDevice(RemoteDevice connectedDevice) {
-		MainActivity.connectedDevice = connectedDevice;
+	@Override
+	public void addNetworkDataRecievedListener(NetworkDataRecievedListener listener){
+		dataRecievedListener.add(listener);
+	}
+	
+	@Override
+	public void removeNetworkDataRecievedListener(NetworkDataRecievedListener listener){
+		if( listener == null ){
+			dataRecievedListener.clear();
+		}
+		else{
+			dataRecievedListener.remove(listener);
+		}
+	}
+	
+	@Override
+	public void notifyDataRecievedListeners(DataResponsePackage data){
+		for( NetworkDataRecievedListener listener : dataRecievedListener ){
+			Runnable r = new NetworkDataRecievedListenerNotifier(listener, data);
+			new Thread(r).start();
+		}
 	}
 
 }

@@ -8,7 +8,6 @@ package de.robotik.nao.communicator.network.data;
 public class AudioData {
 	
 	public float masterVolume;
-	public float audioVolume;
 	public float speechVolume;
 	public String speechVoice;
 	public String speechLanguage;

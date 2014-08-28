@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_column="0"
-        android:layout_gravity="right"
+        android:layout_gravity="end"
         android:layout_row="0"
         android:text="@string/net_host"
         android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -29,7 +29,7 @@
     <TextView
         android:id="@+id/lblJointHead"
         android:layout_column="0"
-        android:layout_gravity="right"
+        android:layout_gravity="end"
         android:layout_row="1"
         android:text="@string/net_port"
         android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -58,7 +58,7 @@
         android:layout_height="wrap_content"
         android:layout_column="0"
         android:layout_columnSpan="2"
-        android:layout_gravity="left"
+        android:layout_gravity="start"
         android:layout_marginTop="20dp"
         android:layout_row="3"
         android:gravity="center"
@@ -86,7 +86,7 @@
         android:layout_width="fill_parent"
         android:layout_column="0"
         android:layout_columnSpan="2"
-        android:layout_gravity="left"
+        android:layout_gravity="start"
         android:layout_row="5"
         android:text="@string/net_scan_devices" />
 

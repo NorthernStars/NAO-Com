@@ -366,8 +366,8 @@ public class SectionConnect extends Section {
 
         	}
         	
-			MainActivity.setConnectedDevice( device );
-			MainActivity.getConnectedDevice().getNao().connect();
+			MainActivity.getInstance().setConnectedDevice( device );
+			MainActivity.getInstance().getConnectedDevice().getNao().connect();
 			
 			// TODO: Doing install on connection thread
 			//showAksForServerInstallDialog(host, port);
