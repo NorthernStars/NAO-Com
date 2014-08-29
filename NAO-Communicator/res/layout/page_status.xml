@@ -17,9 +17,10 @@
             android:layout_height="wrap_content" >
 
             <TextView
-                android:id="@+id/txtDevicename"
+                android:id="@+id/txtStatusDevicename"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/activity_padding"
                 android:layout_marginRight="@dimen/activity_padding"
                 android:layout_weight="1"
                 android:text="@string/status_nao_name"
@@ -27,7 +28,7 @@
                 android:textColor="@color/blue" />
 
             <ImageView
-                android:id="@+id/imgDevice"
+                android:id="@+id/imgStatusBattery"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
@@ -36,14 +37,28 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/btnSayText"
+            android:id="@+id/btnStatusChangeNaoName"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:text="@string/status_change_name" />
 
+         <TextView
+            android:id="@+id/lblStatusAutonomousLife"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_padding"
+            android:text="@string/autonomous_life"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/blue" />
+        
+        <Spinner
+            android:id="@+id/spAutonomousLife"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
         <TextView
-            android:id="@+id/lblSystemVolume"
+            android:id="@+id/lblStatusSystemVolume"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/activity_padding"
@@ -59,7 +74,23 @@
             android:progress="50" />
 
         <TextView
-            android:id="@+id/lblInstallStatus"
+            android:id="@+id/lblStatusPlayerVolume"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_padding"
+            android:text="@string/status_player_volume"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/blue" />
+
+        <SeekBar
+            android:id="@+id/skbStatusPlayerVolume"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="100"
+            android:progress="50" />
+
+        <TextView
+            android:id="@+id/lblStatusStiffness"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/activity_padding"
@@ -76,9 +107,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginEnd="@dimen/activity_padding"
                 android:layout_marginRight="@dimen/activity_padding"
                 android:layout_weight="1"
-                android:gravity="left|center_vertical"
+                android:gravity="start|center_vertical"
                 android:minHeight="@dimen/label_button_min_height"
                 android:text="@joint/Body"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -103,9 +135,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginEnd="@dimen/activity_padding"
                 android:layout_marginRight="@dimen/activity_padding"
                 android:layout_weight="1"
-                android:gravity="left|center_vertical"
+                android:gravity="start|center_vertical"
                 android:minHeight="@dimen/label_button_min_height"
                 android:text="@joint/Head"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -119,7 +152,7 @@
                 android:contentDescription="@string/joints_img_description"
                 android:src="@drawable/stiffness_gray" />
         </LinearLayout>
-
+        
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
@@ -129,9 +162,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginEnd="@dimen/activity_padding"
                 android:layout_marginRight="@dimen/activity_padding"
                 android:layout_weight="1"
-                android:gravity="left|center_vertical"
+                android:gravity="start|center_vertical"
                 android:minHeight="@dimen/label_button_min_height"
                 android:text="@joint/LArm"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -155,9 +189,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginEnd="@dimen/activity_padding"
                 android:layout_marginRight="@dimen/activity_padding"
                 android:layout_weight="1"
-                android:gravity="left|center_vertical"
+                android:gravity="start|center_vertical"
                 android:minHeight="@dimen/label_button_min_height"
                 android:text="@joint/RArm"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -181,9 +216,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginEnd="@dimen/activity_padding"
                 android:layout_marginRight="@dimen/activity_padding"
                 android:layout_weight="1"
-                android:gravity="left|center_vertical"
+                android:gravity="start|center_vertical"
                 android:minHeight="@dimen/label_button_min_height"
                 android:text="@joint/LLeg"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -207,9 +243,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginEnd="@dimen/activity_padding"
                 android:layout_marginRight="@dimen/activity_padding"
                 android:layout_weight="1"
-                android:gravity="left|center_vertical"
+                android:gravity="start|center_vertical"
                 android:minHeight="@dimen/label_button_min_height"
                 android:text="@joint/RLeg"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -233,9 +270,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginEnd="@dimen/activity_padding"
                 android:layout_marginRight="@dimen/activity_padding"
                 android:layout_weight="1"
-                android:gravity="left|center_vertical"
+                android:gravity="start|center_vertical"
                 android:minHeight="@dimen/label_button_min_height"
                 android:text="@joint/LHand"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -259,9 +297,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginEnd="@dimen/activity_padding"
                 android:layout_marginRight="@dimen/activity_padding"
                 android:layout_weight="1"
-                android:gravity="left|center_vertical"
+                android:gravity="start|center_vertical"
                 android:minHeight="@dimen/label_button_min_height"
                 android:text="@joint/RHand"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -276,7 +315,7 @@
                 android:src="@drawable/stiffness_gray" />
         </LinearLayout>
 
-        <LinearLayout
+       <!--  <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/activity_padding" >
@@ -286,9 +325,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginEnd="@dimen/activity_padding"
                 android:layout_marginRight="@dimen/activity_padding"
                 android:layout_weight="1"
-                android:gravity="left|center_vertical"
+                android:gravity="start|center_vertical"
                 android:minHeight="@dimen/label_button_min_height"
                 android:text="@joint/LShoulder"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -312,9 +352,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginEnd="@dimen/activity_padding"
                 android:layout_marginRight="@dimen/activity_padding"
                 android:layout_weight="1"
-                android:gravity="left|center_vertical"
+                android:gravity="start|center_vertical"
                 android:minHeight="@dimen/label_button_min_height"
                 android:text="@joint/RShoulder"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -338,9 +379,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginEnd="@dimen/activity_padding"
                 android:layout_marginRight="@dimen/activity_padding"
                 android:layout_weight="1"
-                android:gravity="left|center_vertical"
+                android:gravity="start|center_vertical"
                 android:minHeight="@dimen/label_button_min_height"
                 android:text="@joint/LElbow"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -364,9 +406,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginEnd="@dimen/activity_padding"
                 android:layout_marginRight="@dimen/activity_padding"
                 android:layout_weight="1"
-                android:gravity="left|center_vertical"
+                android:gravity="start|center_vertical"
                 android:minHeight="@dimen/label_button_min_height"
                 android:text="@joint/RElbow"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -390,9 +433,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginEnd="@dimen/activity_padding"
                 android:layout_marginRight="@dimen/activity_padding"
                 android:layout_weight="1"
-                android:gravity="left|center_vertical"
+                android:gravity="start|center_vertical"
                 android:minHeight="@dimen/label_button_min_height"
                 android:text="@joint/LWrist"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -416,9 +460,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginEnd="@dimen/activity_padding"
                 android:layout_marginRight="@dimen/activity_padding"
                 android:layout_weight="1"
-                android:gravity="left|center_vertical"
+                android:gravity="start|center_vertical"
                 android:minHeight="@dimen/label_button_min_height"
                 android:text="@joint/RWrist"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -443,9 +488,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginEnd="@dimen/activity_padding"
                 android:layout_marginRight="@dimen/activity_padding"
                 android:layout_weight="1"
-                android:gravity="left|center_vertical"
+                android:gravity="start|center_vertical"
                 android:minHeight="@dimen/label_button_min_height"
                 android:text="@joint/LHip"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -469,9 +515,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginEnd="@dimen/activity_padding"
                 android:layout_marginRight="@dimen/activity_padding"
                 android:layout_weight="1"
-                android:gravity="left|center_vertical"
+                android:gravity="start|center_vertical"
                 android:minHeight="@dimen/label_button_min_height"
                 android:text="@joint/RHip"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -495,9 +542,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginEnd="@dimen/activity_padding"
                 android:layout_marginRight="@dimen/activity_padding"
                 android:layout_weight="1"
-                android:gravity="left|center_vertical"
+                android:gravity="start|center_vertical"
                 android:minHeight="@dimen/label_button_min_height"
                 android:text="@joint/LKnee"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -521,9 +569,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginEnd="@dimen/activity_padding"
                 android:layout_marginRight="@dimen/activity_padding"
                 android:layout_weight="1"
-                android:gravity="left|center_vertical"
+                android:gravity="start|center_vertical"
                 android:minHeight="@dimen/label_button_min_height"
                 android:text="@joint/RKnee"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -547,9 +596,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginEnd="@dimen/activity_padding"
                 android:layout_marginRight="@dimen/activity_padding"
                 android:layout_weight="1"
-                android:gravity="left|center_vertical"
+                android:gravity="start|center_vertical"
                 android:minHeight="@dimen/label_button_min_height"
                 android:text="@joint/LAnkle"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -573,9 +623,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginEnd="@dimen/activity_padding"
                 android:layout_marginRight="@dimen/activity_padding"
                 android:layout_weight="1"
-                android:gravity="left|center_vertical"
+                android:gravity="start|center_vertical"
                 android:minHeight="@dimen/label_button_min_height"
                 android:text="@joint/RAnkle"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -589,6 +640,21 @@
                 android:contentDescription="@string/joints_img_description"
                 android:src="@drawable/stiffness_gray" />
         </LinearLayout>
+         -->
+         
+         <Button
+            android:id="@+id/btnStatusLeftHand"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="@string/joints_control_lhand" />
+         
+         <Button
+            android:id="@+id/btnStatusRightHand"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="@string/joints_control_rhand" />
 
         <TextView
             android:id="@+id/txtSFTP"

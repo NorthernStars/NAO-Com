@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.jmdns.ServiceEvent;
 
 import de.robotik.nao.communicator.core.interfaces.NAOInterface;
+import de.robotik.nao.communicator.core.widgets.RemoteDevice;
 import de.robotik.nao.communicator.network.ConnectionState;
 import de.robotik.nao.communicator.network.NAOConnector;
 import de.robotik.nao.communicator.network.NetworkDataRecievedListenerNotifier;
@@ -54,6 +55,18 @@ public class RemoteNAO implements NAOInterface, NetworkDataSender, NetworkDataRe
 	 */
 	public RemoteNAO(String host, int port) {
 		connector = new NAOConnector(host, port);
+	}
+	
+	/**
+	 * @return	{@code true} if remote NAO is connected, {@code false} otherwise.
+	 */
+	public boolean isConnected(){
+		if( connector != null
+				&& connector.getConnectionState() == ConnectionState.CONNECTION_ESTABLISHED ){
+			return true;
+		}
+		
+		return false;
 	}
 	
 	@Override
@@ -118,7 +131,10 @@ public class RemoteNAO implements NAOInterface, NetworkDataSender, NetworkDataRe
 	@Override
 	public void addNetworkService(ServiceEvent service) {
 		String serviceType = service.getType();
-		services.put(serviceType, true);
+		
+		synchronized (services) {
+			services.put(serviceType, true);
+		}		
 		
 		// check connector and add host adresses
 		if(connector == null){
@@ -135,7 +151,9 @@ public class RemoteNAO implements NAOInterface, NetworkDataSender, NetworkDataRe
 
 	@Override
 	public void removeNetworkService(ServiceEvent service) {
-		services.remove(service.getType());
+		synchronized (services) {
+			services.remove(service.getType());
+		}
 	}
 
 	@Override
@@ -178,13 +196,53 @@ public class RemoteNAO implements NAOInterface, NetworkDataSender, NetworkDataRe
 	 * @return Status of the service
 	 */
 	private boolean getServiceStatus(String serviceToken){
-		for( String key : services.keySet() ){
-			if( key.contains(serviceToken) ){
-				return services.get(key);
+		synchronized (services) {
+			for( String key : services.keySet() ){
+				if( key.contains(serviceToken) ){
+					return services.get(key);
+				}
 			}
+		}		
+		
+		return false;
+	}
+	
+	/**
+	 * @return	Currently connected {@link RemoteNAO} or {@code null} if none connected.
+	 */
+	public static RemoteNAO getCurrentRemoteNao(){
+		RemoteDevice remoteDevice = MainActivity.getInstance().getConnectedDevice();
+		if( remoteDevice != null
+				&& remoteDevice.getNao() != null
+				&& remoteDevice.getNao().isConnected() ){
+			return remoteDevice.getNao();
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * Send {@link NAOCommands} to remote NAO.
+	 * @param aCommand	{@link NAOCommands} to send.
+	 * @param aArgs		Array of {@link String} arguments to for {@code aCommand}.
+	 * @return			{@code true} if successful, {@code false} otherwise.
+	 */
+	public static boolean sendCommand(NAOCommands aCommand, String[] aArgs){
+		RemoteNAO nao = getCurrentRemoteNao();
+		if( nao != null ){
+			return nao.connector.sendCommand(aCommand, aArgs);
 		}
 		
 		return false;
+	}
+	
+	/**
+	 * Send {@link NAOCommands} to remote NAO.
+	 * @param aCommand	{@link NAOCommands} to send.
+	 * @return			{@code true} if successful, {@code false} otherwise.
+	 */
+	public static boolean sendCommand(NAOCommands aCommand){
+		return sendCommand(aCommand, new String[]{});
 	}
 	
 }

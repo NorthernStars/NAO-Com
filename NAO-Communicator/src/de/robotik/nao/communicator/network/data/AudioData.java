@@ -7,7 +7,8 @@ package de.robotik.nao.communicator.network.data;
  */
 public class AudioData {
 	
-	public float masterVolume;
+	public int masterVolume;
+	public float playerVolume;
 	public float speechVolume;
 	public String speechVoice;
 	public String speechLanguage;
@@ -20,6 +21,7 @@ public class AudioData {
 
 	public String toString(){
 		String ret = "\tmasterVolume: " + masterVolume
+				+ "\n\tplayerVolume: " + playerVolume
 				+ "\n\tspeechVolume: " + speechVolume
 				+ "\n\tspeechVoice: " + speechVoice
 				+ "\n\tspeechLanguage: " + speechLanguage

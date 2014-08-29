@@ -156,7 +156,7 @@ public class RemoteDevice implements NetworkServiceHandler, OnClickListener {
 	}
 
 	/**
-	 * @return Underlaying {@link RemoteNAO} object
+	 * @return Underlying {@link RemoteNAO} object
 	 */
 	public RemoteNAO getNao() {
 		return nao;

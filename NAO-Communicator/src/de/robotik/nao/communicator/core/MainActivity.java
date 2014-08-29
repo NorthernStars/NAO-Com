@@ -2,7 +2,6 @@ package de.robotik.nao.communicator.core;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import de.northernstars.naocom.R;
 import de.robotik.nao.communicator.core.sections.Section;
 import de.robotik.nao.communicator.core.sections.SectionConnect;
@@ -55,7 +54,7 @@ public class MainActivity extends FragmentActivity implements NetworkDataRecieve
 
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.pager);
-		mViewPager.setAdapter(mSectionsPagerAdapter);		
+		mViewPager.setAdapter(mSectionsPagerAdapter);
 
 	}
 	
@@ -144,13 +143,28 @@ public class MainActivity extends FragmentActivity implements NetworkDataRecieve
 	}
 
 	/**
-	 * @return the iNSTANCE
+	 * @return Current {@link MainActivity} instance.
 	 */
 	public static MainActivity getInstance() {
 		return INSTANCE;
 	}
+	
+	/**
+	 * @return Current {@link ViewPager}
+	 */
+	public ViewPager getViewPager() {
+		return mViewPager;
+	}
 
 
+	@Override
+	protected void onStop() {
+		super.onStop();
+		RemoteNAO nao = RemoteNAO.getCurrentRemoteNao();
+		if( nao != null ){
+			nao.disconnect();
+		}
+	}
 
 	@Override
 	public void addNetworkDataRecievedListener(NetworkDataRecievedListener listener){

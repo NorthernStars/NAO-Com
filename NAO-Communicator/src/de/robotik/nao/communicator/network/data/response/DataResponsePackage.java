@@ -1,6 +1,7 @@
 package de.robotik.nao.communicator.network.data.response;
 
 import de.robotik.nao.communicator.network.data.AudioData;
+import de.robotik.nao.communicator.network.data.NAOAutonomousLifeStates;
 import de.robotik.nao.communicator.network.data.StiffnessData;
 import de.robotik.nao.communicator.network.data.request.DataRequestPackage;
 
@@ -19,6 +20,7 @@ public class DataResponsePackage {
 	 */
 	public String naoName;
 	public int batteryLevel;
+	public NAOAutonomousLifeStates lifeState;
 	public StiffnessData stiffnessData;
 	public AudioData audioData;
 	

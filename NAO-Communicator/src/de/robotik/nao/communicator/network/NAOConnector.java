@@ -263,6 +263,31 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 		
 	}
 	
+	/**
+	 * Send {@link NAOCommands} to remote NAO.
+	 * @param aCommand	{@link NAOCommands} to send.
+	 * @param aArgs		Array of {@link String} arguments to for {@code aCommand}.
+	 * @return			{@code true} if successful, {@code false} otherwise.
+	 */
+	public synchronized boolean sendCommand(NAOCommands aCommand, String[] aArgs){
+		if( state == ConnectionState.CONNECTION_ESTABLISHED ){
+			try{
+				
+				DataRequestPackage p = new DataRequestPackage(aCommand, aArgs);
+				String data = gson.toJson(p);
+				out.write( data.getBytes() );
+				return true;
+				
+			} catch(IOException err) {
+				Log.e(TAG, "IOException on sending "
+						+ aCommand + " to " + host + ":" + port);
+				stopConnector();
+			}
+		}
+		
+		return false;
+	}
+	
 	@Override
 	public void addNetworkDataRecievedListener(NetworkDataRecievedListener listener){
 		dataRecievedListener.add(listener);
