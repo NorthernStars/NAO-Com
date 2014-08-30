@@ -44,7 +44,7 @@ public class SectionStatus extends Section implements
 	private boolean disableSending = false;
 	private boolean created = true;
 	
-	private SwipeRefreshLayout swipeLayout;
+	private SwipeRefreshLayout swipeStatus;
 	
 	private TextView txtStatusDeviceName;
 	private ImageView imgStatusBattery;
@@ -104,7 +104,7 @@ public class SectionStatus extends Section implements
 		rootView = inflater.inflate(R.layout.page_status, container, false);
 		
 		// get widgets
-		swipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipeStatus);
+		swipeStatus = (SwipeRefreshLayout) findViewById(R.id.swipeStatus);
 		
 		txtStatusDeviceName = (TextView) findViewById(R.id.txtStatusDevicename);
 		imgStatusBattery = (ImageView) findViewById(R.id.imgStatusBattery);
@@ -139,8 +139,8 @@ public class SectionStatus extends Section implements
 //		(imgJointRAnkle = (ImageView) findViewById(R.id.imgJointRAnkle)).setOnClickListener(this);
 		
 		// set swipe layout
-		swipeLayout.setOnRefreshListener(this);
-		swipeLayout.setColorSchemeResources(
+		swipeStatus.setOnRefreshListener(this);
+		swipeStatus.setColorSchemeResources(
 				R.color.darkerblue,
 				R.color.darkblue,
 				R.color.blue,
@@ -169,7 +169,7 @@ public class SectionStatus extends Section implements
 	}
 
 	@Override
-	public void onNetworkDataRecieved(DataResponsePackage data) {
+	public synchronized void onNetworkDataRecieved(DataResponsePackage data) {
 		currentResponseData = data;
 		
 		MainActivity.getInstance().runOnUiThread(new Runnable() {			
@@ -214,7 +214,7 @@ public class SectionStatus extends Section implements
 				int position = adapterAutonomousLifeStates.getPosition( currentResponseData.lifeState );
 				spAutonomousLife.setSelection(position);
 				
-				swipeLayout.setRefreshing(false);
+				swipeStatus.setRefreshing(false);
 				disableSending = false;
 			}
 		});		
@@ -454,7 +454,7 @@ public class SectionStatus extends Section implements
 	@Override
 	public void onRefresh() {
 		if( !RemoteNAO.sendCommand(NAOCommands.SYS_GET_INFO) ){
-			swipeLayout.setRefreshing(false);
+			swipeStatus.setRefreshing(false);
 		}
 	}
 

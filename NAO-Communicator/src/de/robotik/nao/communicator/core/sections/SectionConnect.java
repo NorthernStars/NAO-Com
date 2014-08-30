@@ -21,6 +21,8 @@ import android.net.wifi.WifiManager;
 import android.net.wifi.WifiManager.MulticastLock;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +31,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
-public class SectionConnect extends Section {
+public class SectionConnect extends Section implements OnRefreshListener {
 	
 	private MulticastLock lock;
 	private JmDNS jmDNS = null;
@@ -38,6 +40,8 @@ public class SectionConnect extends Section {
 	private String TAG = getClass().getName();
 	private List<RemoteDevice> devices = new ArrayList<RemoteDevice>();
 	private static List<String> servicesProcessing = new ArrayList<String>();
+	
+	private SwipeRefreshLayout swipeConnect;
 	
 	private LinearLayout lstNetworkDevices;
 	private Button btnScanDevices;
@@ -66,11 +70,20 @@ public class SectionConnect extends Section {
 		rootView = inflater.inflate(R.layout.page_connect, container, false);
 		
 		// get ui widgets
+		swipeConnect = (SwipeRefreshLayout) findViewById(R.id.swipeConnect);
 		Button btnConnect = (Button) findViewById(R.id.btnConnect);
 		btnScanDevices = (Button) findViewById(R.id.btnScanDevices);
 		EditText txtHost = (EditText) findViewById(R.id.txtHost);
 		EditText txtPort = (EditText) findViewById(R.id.txtPort);
 		lstNetworkDevices = (LinearLayout) findViewById(R.id.lstNetworkDevices);
+		
+		// set swipe layout
+		swipeConnect.setOnRefreshListener(this);
+		swipeConnect.setColorSchemeResources(
+				R.color.darkerblue,
+				R.color.darkblue,
+				R.color.blue,
+				R.color.lighterblue);
 		
 		// add default host and port
 		txtHost.setText( NAOConnector.defaultHost );
@@ -87,32 +100,39 @@ public class SectionConnect extends Section {
 		btnScanDevices.setOnClickListener( new View.OnClickListener() {			
 			@Override
 			public void onClick(View v) {
-				// clear lists
-				lstNetworkDevices.removeAllViews();
-				devices.clear();
-				
-				// start discovering of network services
-				(new AsyncTask<Void, Void, Void>() {					
-					protected void onPreExecute() {
-						btnScanDevices.setEnabled(false);
-						btnScanDevices.setText(R.string.net_restart_network_service);
-					};
-					
-					@Override
-					protected Void doInBackground(Void... params) {
-						discoverNetworkServices();
-						return null;
-					}
-					
-					protected void onPostExecute(Void result) {
-						btnScanDevices.setText(R.string.net_scan_devices);
-						btnScanDevices.setEnabled(true);
-					};
-				}).execute();
+				restartJmDNSService();
 			}
 		} );
 		
 		return rootView;
+	}
+	
+	/**
+	 * Restarts network service discovery
+	 */
+	private void restartJmDNSService(){
+		// clear lists
+		lstNetworkDevices.removeAllViews();
+		devices.clear();
+		
+		// start discovering of network services
+		(new AsyncTask<Void, Void, Void>() {					
+			protected void onPreExecute() {
+				btnScanDevices.setEnabled(false);
+				btnScanDevices.setText(R.string.net_restart_network_service);
+			};
+			
+			@Override
+			protected Void doInBackground(Void... params) {
+				discoverNetworkServices();
+				return null;
+			}
+			
+			protected void onPostExecute(Void result) {
+				btnScanDevices.setText(R.string.net_scan_devices);
+				btnScanDevices.setEnabled(true);
+			};
+		}).execute();
 	}
 	
 	
@@ -239,6 +259,8 @@ public class SectionConnect extends Section {
 //	            for( String adrr : service.getInfo().getHostAddresses() ){
 //	            	Log.i(TAG, "Service host adress: " + adrr);
 //	            }
+	        	
+	        	swipeConnect.setRefreshing(false);
 	        	
 	        	if( service.getInfo().getHostAddresses().length > 0 ){
 	        		
@@ -391,6 +413,11 @@ public class SectionConnect extends Section {
 	public void showAksForServerInstallDialog(String host, int port){
 		InstallActivity.AskForInstallDialog dialog = new InstallActivity.AskForInstallDialog(host, port);
 		dialog.show(getFragmentManager(), "Install");
+	}
+
+	@Override
+	public void onRefresh() {
+		restartJmDNSService();
 	}
 	
 }
