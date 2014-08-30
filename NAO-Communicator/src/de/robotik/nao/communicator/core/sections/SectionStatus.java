@@ -10,6 +10,8 @@ import de.robotik.nao.communicator.network.data.NAOCommands;
 import de.robotik.nao.communicator.network.data.NAOJoints;
 import de.robotik.nao.communicator.network.data.response.DataResponsePackage;
 import de.robotik.nao.communicator.network.interfaces.NetworkDataRecievedListener;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -22,6 +24,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -217,6 +220,9 @@ public class SectionStatus extends Section implements
 		});		
 	}
 	
+	/**
+	 * Updates the stiffness images for the joints.
+	 */
 	private void updateJointImages(){
 		Map<NAOJoints, Float> jointStiffness = currentResponseData.stiffnessData.getJointStiffness();
 		for( NAOJoints joint : jointStiffness.keySet() ){
@@ -256,6 +262,11 @@ public class SectionStatus extends Section implements
 		}
 	}
 	
+	/**
+	 * Sets image of a joint.
+	 * @param aImage		{@link ImageView} of the image.
+	 * @param aStiffness	{@link Float} stiffness of the joint.
+	 */
 	private void setJointImage(ImageView aImage, float aStiffness){
 		if( aStiffness == 0.0f ){
 			aImage.setImageResource(R.drawable.stiffness_green);
@@ -264,6 +275,32 @@ public class SectionStatus extends Section implements
 		} else {
 			aImage.setImageResource(R.drawable.stiffness_orange);
 		}
+	}
+	
+	/**
+	 * Shows a dialog to change NAOs name.
+	 */
+	private void showChangeNaoNameDialog(){
+		final EditText input = new EditText( MainActivity.getInstance() );
+		input.setText( txtStatusDeviceName.getText() );
+		
+		AlertDialog.Builder dialog = new AlertDialog.Builder( MainActivity.getInstance())
+			.setTitle(R.string.status_change_name)
+			.setMessage(R.string.status_change_name_msg)
+			.setView(input)
+			.setPositiveButton(R.string.btnOK, new DialogInterface.OnClickListener() {				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					String name = input.getText().toString();
+					RemoteNAO.sendCommand(NAOCommands.SET_NAO_NAME,
+							new String[]{name});
+				}
+			})
+			.setNegativeButton(R.string.btnCancel, new DialogInterface.OnClickListener() {				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {}
+			});
+		dialog.show();
 	}
 
 	@Override
@@ -309,83 +346,90 @@ public class SectionStatus extends Section implements
 	@Override
 	public void onClick(View v) {
 		if( !disableSending ){
-			Map<NAOJoints, Float> jointStiffness = currentResponseData.stiffnessData.getJointStiffness();
 		
 			switch( v.getId() ){
 			case R.id.btnStatusChangeNaoName:
+				showChangeNaoNameDialog();
 				break;
-			case R.id.imgJointBody:
-				RemoteNAO.sendCommand(
-					NAOCommands.SET_JOINT_STIFFNESS,
-					new String[]{
-							NAOJoints.Body.name(),
-							(jointStiffness.get(NAOJoints.Body) < 1.0f ? "1.0" : "0.0") });
-				break;
-			case R.id.imgJointHead:
-				RemoteNAO.sendCommand(
-						NAOCommands.SET_JOINT_STIFFNESS,
-						new String[]{
-								NAOJoints.Head.name(),
-								(jointStiffness.get(NAOJoints.Head) < 1.0f ? "1.0" : "0.0") });
-				break;
-			case R.id.imgJointLArm:
-				RemoteNAO.sendCommand(
-						NAOCommands.SET_JOINT_STIFFNESS,
-						new String[]{
-								NAOJoints.LArm.name(),
-								(jointStiffness.get(NAOJoints.LArm) < 1.0f ? "1.0" : "0.0") });
-				break;
-			case R.id.imgJointLHand:
-				RemoteNAO.sendCommand(
-						NAOCommands.SET_JOINT_STIFFNESS,
-						new String[]{
-								NAOJoints.LHand.name(),
-								(jointStiffness.get(NAOJoints.LHand) < 1.0f ? "1.0" : "0.0") });
-				break;
-			case R.id.imgJointLLeg:
-				RemoteNAO.sendCommand(
-						NAOCommands.SET_JOINT_STIFFNESS,
-						new String[]{
-								NAOJoints.LLeg.name(),
-								(jointStiffness.get(NAOJoints.LLeg) < 1.0f ? "1.0" : "0.0") });
-				break;
-			case R.id.imgJointRArm:
-				RemoteNAO.sendCommand(
-						NAOCommands.SET_JOINT_STIFFNESS,
-						new String[]{
-								NAOJoints.RArm.name(),
-								(jointStiffness.get(NAOJoints.RArm) < 1.0f ? "1.0" : "0.0") });
-				break;
-			case R.id.imgJointRHand:
-				RemoteNAO.sendCommand(
-						NAOCommands.SET_JOINT_STIFFNESS,
-						new String[]{
-								NAOJoints.RHand.name(),
-								(jointStiffness.get(NAOJoints.RHand) < 1.0f ? "1.0" : "0.0") });
-				break;
-			case R.id.imgJointRLeg:
-				RemoteNAO.sendCommand(
-						NAOCommands.SET_JOINT_STIFFNESS,
-						new String[]{
-								NAOJoints.RLeg.name(),
-								(jointStiffness.get(NAOJoints.RLeg) < 1.0f ? "1.0" : "0.0") });
-				break;
+			}
 			
-			case R.id.btnStatusLeftHand:
-				RemoteNAO.sendCommand(
-					NAOCommands.OPEN_HAND,
-					new String[]{
-							NAOJoints.LHand.name(),
-							(currentResponseData.stiffnessData.isLeftHandOpen() ? "False" : "True") });
-				break;
-			
-			case R.id.btnStatusRightHand:
-				RemoteNAO.sendCommand(
+			if( currentResponseData != null && currentResponseData.stiffnessData != null ){
+				Map<NAOJoints, Float> jointStiffness = currentResponseData.stiffnessData.getJointStiffness();
+					
+				switch( v.getId() ){
+				case R.id.imgJointBody:
+					RemoteNAO.sendCommand(
+						NAOCommands.SET_JOINT_STIFFNESS,
+						new String[]{
+								NAOJoints.Body.name(),
+								(jointStiffness.get(NAOJoints.Body) < 1.0f ? "1.0" : "0.0") });
+					break;
+				case R.id.imgJointHead:
+					RemoteNAO.sendCommand(
+							NAOCommands.SET_JOINT_STIFFNESS,
+							new String[]{
+									NAOJoints.Head.name(),
+									(jointStiffness.get(NAOJoints.Head) < 1.0f ? "1.0" : "0.0") });
+					break;
+				case R.id.imgJointLArm:
+					RemoteNAO.sendCommand(
+							NAOCommands.SET_JOINT_STIFFNESS,
+							new String[]{
+									NAOJoints.LArm.name(),
+									(jointStiffness.get(NAOJoints.LArm) < 1.0f ? "1.0" : "0.0") });
+					break;
+				case R.id.imgJointLHand:
+					RemoteNAO.sendCommand(
+							NAOCommands.SET_JOINT_STIFFNESS,
+							new String[]{
+									NAOJoints.LHand.name(),
+									(jointStiffness.get(NAOJoints.LHand) < 1.0f ? "1.0" : "0.0") });
+					break;
+				case R.id.imgJointLLeg:
+					RemoteNAO.sendCommand(
+							NAOCommands.SET_JOINT_STIFFNESS,
+							new String[]{
+									NAOJoints.LLeg.name(),
+									(jointStiffness.get(NAOJoints.LLeg) < 1.0f ? "1.0" : "0.0") });
+					break;
+				case R.id.imgJointRArm:
+					RemoteNAO.sendCommand(
+							NAOCommands.SET_JOINT_STIFFNESS,
+							new String[]{
+									NAOJoints.RArm.name(),
+									(jointStiffness.get(NAOJoints.RArm) < 1.0f ? "1.0" : "0.0") });
+					break;
+				case R.id.imgJointRHand:
+					RemoteNAO.sendCommand(
+							NAOCommands.SET_JOINT_STIFFNESS,
+							new String[]{
+									NAOJoints.RHand.name(),
+									(jointStiffness.get(NAOJoints.RHand) < 1.0f ? "1.0" : "0.0") });
+					break;
+				case R.id.imgJointRLeg:
+					RemoteNAO.sendCommand(
+							NAOCommands.SET_JOINT_STIFFNESS,
+							new String[]{
+									NAOJoints.RLeg.name(),
+									(jointStiffness.get(NAOJoints.RLeg) < 1.0f ? "1.0" : "0.0") });
+					break;
+				
+				case R.id.btnStatusLeftHand:
+					RemoteNAO.sendCommand(
 						NAOCommands.OPEN_HAND,
 						new String[]{
-								NAOJoints.RHand.name(),
-								(currentResponseData.stiffnessData.isRightHandOpen() ? "False" : "True") });
-				break;
+								NAOJoints.LHand.name(),
+								(currentResponseData.stiffnessData.isLeftHandOpen() ? "False" : "True") });
+					break;
+				
+				case R.id.btnStatusRightHand:
+					RemoteNAO.sendCommand(
+							NAOCommands.OPEN_HAND,
+							new String[]{
+									NAOJoints.RHand.name(),
+									(currentResponseData.stiffnessData.isRightHandOpen() ? "False" : "True") });
+					break;
+				}
 			}
 			
 		}
