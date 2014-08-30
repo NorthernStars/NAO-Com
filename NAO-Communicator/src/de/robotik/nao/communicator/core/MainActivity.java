@@ -185,7 +185,6 @@ public class MainActivity extends FragmentActivity implements NetworkDataRecieve
 	public void notifyDataRecievedListeners(DataResponsePackage data){
 		for( NetworkDataRecievedListener listener : dataRecievedListener ){
 			Runnable r = new NetworkDataRecievedListenerNotifier(listener, data);
-			System.out.println("notify " + listener);
 			new Thread(r).start();
 		}
 	}

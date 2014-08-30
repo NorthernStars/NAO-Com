@@ -12,6 +12,8 @@ import de.robotik.nao.communicator.network.data.response.DataResponsePackage;
 import de.robotik.nao.communicator.network.interfaces.NetworkDataRecievedListener;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -31,12 +33,15 @@ public class SectionStatus extends Section implements
 	OnPageChangeListener,
 	OnSeekBarChangeListener,
 	OnClickListener,
-	OnItemSelectedListener{
+	OnItemSelectedListener,
+	OnRefreshListener{
 
 	private DataResponsePackage currentResponseData;
 	private ArrayAdapter<NAOAutonomousLifeStates> adapterAutonomousLifeStates;
 	private boolean disableSending = false;
 	private boolean created = true;
+	
+	private SwipeRefreshLayout swipeLayout;
 	
 	private TextView txtStatusDeviceName;
 	private ImageView imgStatusBattery;
@@ -96,6 +101,8 @@ public class SectionStatus extends Section implements
 		rootView = inflater.inflate(R.layout.page_status, container, false);
 		
 		// get widgets
+		swipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipeStatus);
+		
 		txtStatusDeviceName = (TextView) findViewById(R.id.txtStatusDevicename);
 		imgStatusBattery = (ImageView) findViewById(R.id.imgStatusBattery);
 		btnStatusChangeNaoName = (Button) findViewById(R.id.btnStatusChangeNaoName);
@@ -127,6 +134,14 @@ public class SectionStatus extends Section implements
 //		(imgJointRKnee = (ImageView) findViewById(R.id.imgJointRKnee)).setOnClickListener(this);
 //		(imgJointlAnkle = (ImageView) findViewById(R.id.imgJointlAnkle)).setOnClickListener(this);
 //		(imgJointRAnkle = (ImageView) findViewById(R.id.imgJointRAnkle)).setOnClickListener(this);
+		
+		// set swipe layout
+		swipeLayout.setOnRefreshListener(this);
+		swipeLayout.setColorSchemeResources(
+				R.color.darkerblue,
+				R.color.darkblue,
+				R.color.blue,
+				R.color.lighterblue);
 		
 		// set spinner items
 		adapterAutonomousLifeStates = new ArrayAdapter<NAOAutonomousLifeStates>(
@@ -196,6 +211,7 @@ public class SectionStatus extends Section implements
 				int position = adapterAutonomousLifeStates.getPosition( currentResponseData.lifeState );
 				spAutonomousLife.setSelection(position);
 				
+				swipeLayout.setRefreshing(false);
 				disableSending = false;
 			}
 		});		
@@ -390,5 +406,12 @@ public class SectionStatus extends Section implements
 
 	@Override
 	public void onNothingSelected(AdapterView<?> parent) {}
+
+	@Override
+	public void onRefresh() {
+		if( !RemoteNAO.sendCommand(NAOCommands.SYS_GET_INFO) ){
+			swipeLayout.setRefreshing(false);
+		}
+	}
 
 }
