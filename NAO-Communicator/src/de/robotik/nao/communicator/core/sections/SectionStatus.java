@@ -11,8 +11,6 @@ import de.robotik.nao.communicator.network.data.NAOJoints;
 import de.robotik.nao.communicator.network.data.response.DataResponsePackage;
 import de.robotik.nao.communicator.network.interfaces.NetworkDataRecievedListener;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,6 +35,8 @@ public class SectionStatus extends Section implements
 
 	private DataResponsePackage currentResponseData;
 	private ArrayAdapter<NAOAutonomousLifeStates> adapterAutonomousLifeStates;
+	private boolean disableSending = false;
+	private boolean created = true;
 	
 	private TextView txtStatusDeviceName;
 	private ImageView imgStatusBattery;
@@ -89,6 +89,8 @@ public class SectionStatus extends Section implements
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		
+		created = true;
 		
 		// connect ui widgets
 		rootView = inflater.inflate(R.layout.page_status, container, false);
@@ -152,9 +154,11 @@ public class SectionStatus extends Section implements
 	public void onNetworkDataRecieved(DataResponsePackage data) {
 		currentResponseData = data;
 		
-		new Handler(Looper.getMainLooper()).post(new Runnable() {			
+		MainActivity.getInstance().runOnUiThread(new Runnable() {			
 			@Override
 			public void run() {
+				
+				disableSending = true;
 				
 				txtStatusDeviceName.setText( currentResponseData.naoName );
 				skbSystemVolume.setProgress( currentResponseData.audioData.masterVolume );				
@@ -192,6 +196,7 @@ public class SectionStatus extends Section implements
 				int position = adapterAutonomousLifeStates.getPosition( currentResponseData.lifeState );
 				spAutonomousLife.setSelection(position);
 				
+				disableSending = false;
 			}
 		});		
 	}
@@ -254,7 +259,7 @@ public class SectionStatus extends Section implements
 	@Override
 	public void onPageSelected(int aPosition) {
 		Section selectedSection = MainActivity.getInstance().getSections().get(aPosition);
-		if( selectedSection == this ){			
+		if( selectedSection == this && !disableSending ){			
 			RemoteNAO.sendCommand( NAOCommands.SYS_GET_INFO );
 		}
 	}
@@ -267,111 +272,120 @@ public class SectionStatus extends Section implements
 
 	@Override
 	public void onStopTrackingTouch(SeekBar seekBar) {
-		int progress = seekBar.getProgress();
-		if( seekBar == skbSystemVolume ){
-			
-			RemoteNAO.sendCommand(
-				NAOCommands.SET_SYSTEM_VOLUME,
-				new String[]{ Integer.toString(progress) });
-			
-		} else if( seekBar == skbPlayerVolume ){
-			
-			RemoteNAO.sendCommand(
-					NAOCommands.SET_PLAYER_VOLUME,
-					new String[]{ Float.toString(progress/100.0f) });
-			
-		}	
+		if( !disableSending ){
+			int progress = seekBar.getProgress();
+			if( seekBar == skbSystemVolume ){
+				
+				RemoteNAO.sendCommand(
+					NAOCommands.SET_SYSTEM_VOLUME,
+					new String[]{ Integer.toString(progress) });
+				
+			} else if( seekBar == skbPlayerVolume ){
+				
+				RemoteNAO.sendCommand(
+						NAOCommands.SET_PLAYER_VOLUME,
+						new String[]{ Float.toString(progress/100.0f) });
+				
+			}
+		}
 	}
 
 	@Override
 	public void onClick(View v) {
-		Map<NAOJoints, Float> jointStiffness = currentResponseData.stiffnessData.getJointStiffness();
+		if( !disableSending ){
+			Map<NAOJoints, Float> jointStiffness = currentResponseData.stiffnessData.getJointStiffness();
 		
-		switch( v.getId() ){
-		case R.id.btnStatusChangeNaoName:
-			break;
-		case R.id.imgJointBody:
-			RemoteNAO.sendCommand(
-				NAOCommands.SET_JOINT_STIFFNESS,
-				new String[]{
-						NAOJoints.Body.name(),
-						(jointStiffness.get(NAOJoints.Body) < 1.0f ? "1.0" : "0.0") });
-			break;
-		case R.id.imgJointHead:
-			RemoteNAO.sendCommand(
+			switch( v.getId() ){
+			case R.id.btnStatusChangeNaoName:
+				break;
+			case R.id.imgJointBody:
+				RemoteNAO.sendCommand(
 					NAOCommands.SET_JOINT_STIFFNESS,
 					new String[]{
-							NAOJoints.Head.name(),
-							(jointStiffness.get(NAOJoints.Head) < 1.0f ? "1.0" : "0.0") });
-			break;
-		case R.id.imgJointLArm:
-			RemoteNAO.sendCommand(
-					NAOCommands.SET_JOINT_STIFFNESS,
-					new String[]{
-							NAOJoints.LArm.name(),
-							(jointStiffness.get(NAOJoints.LArm) < 1.0f ? "1.0" : "0.0") });
-			break;
-		case R.id.imgJointLHand:
-			RemoteNAO.sendCommand(
-					NAOCommands.SET_JOINT_STIFFNESS,
-					new String[]{
-							NAOJoints.LHand.name(),
-							(jointStiffness.get(NAOJoints.LHand) < 1.0f ? "1.0" : "0.0") });
-			break;
-		case R.id.imgJointLLeg:
-			RemoteNAO.sendCommand(
-					NAOCommands.SET_JOINT_STIFFNESS,
-					new String[]{
-							NAOJoints.LLeg.name(),
-							(jointStiffness.get(NAOJoints.LLeg) < 1.0f ? "1.0" : "0.0") });
-			break;
-		case R.id.imgJointRArm:
-			RemoteNAO.sendCommand(
-					NAOCommands.SET_JOINT_STIFFNESS,
-					new String[]{
-							NAOJoints.RArm.name(),
-							(jointStiffness.get(NAOJoints.RArm) < 1.0f ? "1.0" : "0.0") });
-			break;
-		case R.id.imgJointRHand:
-			RemoteNAO.sendCommand(
-					NAOCommands.SET_JOINT_STIFFNESS,
-					new String[]{
-							NAOJoints.RHand.name(),
-							(jointStiffness.get(NAOJoints.RHand) < 1.0f ? "1.0" : "0.0") });
-			break;
-		case R.id.imgJointRLeg:
-			RemoteNAO.sendCommand(
-					NAOCommands.SET_JOINT_STIFFNESS,
-					new String[]{
-							NAOJoints.RLeg.name(),
-							(jointStiffness.get(NAOJoints.RLeg) < 1.0f ? "1.0" : "0.0") });
-			break;
-		
-		case R.id.btnStatusLeftHand:
-			RemoteNAO.sendCommand(
-				NAOCommands.OPEN_HAND,
-				new String[]{
-						NAOJoints.LHand.name(),
-						(currentResponseData.stiffnessData.isLeftHandOpen() ? "False" : "True") });
-			break;
-		
-		case R.id.btnStatusRightHand:
-			RemoteNAO.sendCommand(
+							NAOJoints.Body.name(),
+							(jointStiffness.get(NAOJoints.Body) < 1.0f ? "1.0" : "0.0") });
+				break;
+			case R.id.imgJointHead:
+				RemoteNAO.sendCommand(
+						NAOCommands.SET_JOINT_STIFFNESS,
+						new String[]{
+								NAOJoints.Head.name(),
+								(jointStiffness.get(NAOJoints.Head) < 1.0f ? "1.0" : "0.0") });
+				break;
+			case R.id.imgJointLArm:
+				RemoteNAO.sendCommand(
+						NAOCommands.SET_JOINT_STIFFNESS,
+						new String[]{
+								NAOJoints.LArm.name(),
+								(jointStiffness.get(NAOJoints.LArm) < 1.0f ? "1.0" : "0.0") });
+				break;
+			case R.id.imgJointLHand:
+				RemoteNAO.sendCommand(
+						NAOCommands.SET_JOINT_STIFFNESS,
+						new String[]{
+								NAOJoints.LHand.name(),
+								(jointStiffness.get(NAOJoints.LHand) < 1.0f ? "1.0" : "0.0") });
+				break;
+			case R.id.imgJointLLeg:
+				RemoteNAO.sendCommand(
+						NAOCommands.SET_JOINT_STIFFNESS,
+						new String[]{
+								NAOJoints.LLeg.name(),
+								(jointStiffness.get(NAOJoints.LLeg) < 1.0f ? "1.0" : "0.0") });
+				break;
+			case R.id.imgJointRArm:
+				RemoteNAO.sendCommand(
+						NAOCommands.SET_JOINT_STIFFNESS,
+						new String[]{
+								NAOJoints.RArm.name(),
+								(jointStiffness.get(NAOJoints.RArm) < 1.0f ? "1.0" : "0.0") });
+				break;
+			case R.id.imgJointRHand:
+				RemoteNAO.sendCommand(
+						NAOCommands.SET_JOINT_STIFFNESS,
+						new String[]{
+								NAOJoints.RHand.name(),
+								(jointStiffness.get(NAOJoints.RHand) < 1.0f ? "1.0" : "0.0") });
+				break;
+			case R.id.imgJointRLeg:
+				RemoteNAO.sendCommand(
+						NAOCommands.SET_JOINT_STIFFNESS,
+						new String[]{
+								NAOJoints.RLeg.name(),
+								(jointStiffness.get(NAOJoints.RLeg) < 1.0f ? "1.0" : "0.0") });
+				break;
+			
+			case R.id.btnStatusLeftHand:
+				RemoteNAO.sendCommand(
 					NAOCommands.OPEN_HAND,
 					new String[]{
-							NAOJoints.RHand.name(),
-							(currentResponseData.stiffnessData.isRightHandOpen() ? "False" : "True") });
-			break;
+							NAOJoints.LHand.name(),
+							(currentResponseData.stiffnessData.isLeftHandOpen() ? "False" : "True") });
+				break;
+			
+			case R.id.btnStatusRightHand:
+				RemoteNAO.sendCommand(
+						NAOCommands.OPEN_HAND,
+						new String[]{
+								NAOJoints.RHand.name(),
+								(currentResponseData.stiffnessData.isRightHandOpen() ? "False" : "True") });
+				break;
+			}
+			
 		}
 	}
 
 	@Override
 	public void onItemSelected(AdapterView<?> parent, View view, int position,
 			long id) {
-		NAOAutonomousLifeStates state = (NAOAutonomousLifeStates) parent.getItemAtPosition(position);
-		RemoteNAO.sendCommand(
-				NAOCommands.SET_LIFE_STATE,
-				new String[]{ state.name() });
+		if( !disableSending && !created ){
+			NAOAutonomousLifeStates state = (NAOAutonomousLifeStates) parent.getItemAtPosition(position);
+			RemoteNAO.sendCommand(
+					NAOCommands.SET_LIFE_STATE,
+					new String[]{ state.name() });
+		}
+		
+		created = false;
 	}
 
 	@Override

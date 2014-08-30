@@ -1,5 +1,6 @@
 package de.robotik.nao.communicator.network;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -13,8 +14,6 @@ import java.util.List;
 
 import javax.jmdns.ServiceEvent;
 
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -93,7 +92,7 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 				// create socket				
 				socket = new Socket( InetAddress.getByName(host).getHostAddress(), port ); 
 				socket.setSoTimeout(defaultReadTimeout);
-				in = new BufferedReader( new InputStreamReader(socket.getInputStream()) );
+				in = new BufferedReader( new InputStreamReader( new BufferedInputStream(socket.getInputStream()) ) );
 				out = socket.getOutputStream();		
 
 				// try to connect
@@ -125,7 +124,7 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 				state = ConnectionState.CONNECTION_UNKNOWN_HOST;
 				Log.w(TAG, "Host unknown " + host);
 				
-				new Handler(Looper.getMainLooper()).post(new Runnable() {				
+				MainActivity.getInstance().runOnUiThread( new Runnable() {				
 					@Override
 					public void run() {
 						Toast.makeText(MainActivity.getInstance().getApplicationContext(),
@@ -153,7 +152,7 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 				
 				String data = in.readLine();
 				if( data != null ){
-					DataResponsePackage p = gson.fromJson(data, DataResponsePackage.class);				
+					DataResponsePackage p = gson.fromJson(data, DataResponsePackage.class);
 					notifyDataRecievedListeners( p );
 				}
 				
@@ -223,7 +222,7 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 		if( connect() ){
 			
 			// connected
-			new Handler(Looper.getMainLooper()).post(new Runnable() {						
+			MainActivity.getInstance().runOnUiThread( new Runnable() {						
 				@Override
 				public void run() {
 					Toast.makeText(MainActivity.getInstance().getApplicationContext(),
@@ -238,7 +237,7 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 			if( disconnect() ){
 				MainActivity.getInstance().updateTitle("[offline] NAO Communicator");
 				
-				new Handler(Looper.getMainLooper()).post(new Runnable() {						
+				MainActivity.getInstance().runOnUiThread( new Runnable() {						
 					@Override
 					public void run() {
 						Toast.makeText(MainActivity.getInstance().getApplicationContext(),
@@ -251,7 +250,7 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 			
 			Log.e(TAG, "Establishing connection to " + host + ":" + port + " failed.");
 			
-			new Handler(Looper.getMainLooper()).post(new Runnable() {				
+			MainActivity.getInstance().runOnUiThread( new Runnable() {				
 				@Override
 				public void run() {
 					Toast.makeText(MainActivity.getInstance().getApplicationContext(),
