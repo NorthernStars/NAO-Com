@@ -215,12 +215,12 @@ public class MainActivity extends FragmentActivity implements
 
 
 	@Override
-	protected void onStop() {
-		super.onStop();
+	protected void onStop() {		
 		RemoteNAO nao = RemoteNAO.getCurrentRemoteNao();
 		if( nao != null ){
 			nao.disconnect();
 		}
+		super.onStop();
 	}
 
 	@Override
