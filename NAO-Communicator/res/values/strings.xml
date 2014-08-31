@@ -3,6 +3,8 @@
 
     <string name="app_name">NAO Communicator</string>
     <string name="menu_title">Menu</string>
+    <string name="menu_open">Open menu</string>
+    <string name="menu_close">Close menu</string>
     <string name="title_activity_install">Communication Server Installation</string>
     <string name="action_settings">Settings</string>
     <string name="btnOK">OK</string>

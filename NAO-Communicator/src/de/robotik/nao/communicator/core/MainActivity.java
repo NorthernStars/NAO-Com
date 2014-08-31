@@ -15,12 +15,16 @@ import de.robotik.nao.communicator.network.data.NAOCommands;
 import de.robotik.nao.communicator.network.data.response.DataResponsePackage;
 import de.robotik.nao.communicator.network.interfaces.NetworkDataRecievedListener;
 import de.robotik.nao.communicator.network.interfaces.NetworkDataSender;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -43,6 +47,7 @@ public class MainActivity extends FragmentActivity implements
 	private SectionsPagerAdapter mSectionsPagerAdapter;
 	private ViewPager mViewPager;
 	private DrawerLayout mDrawerLayout;
+	private ActionBarDrawerToggle mDrawerToggle;
 	private LinearLayout mMenu;
 	private ListView mMenueListView;
 	private String[] mMenuItems;
@@ -73,6 +78,7 @@ public class MainActivity extends FragmentActivity implements
 		
 		// set up left slide menu
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		mDrawerLayout.setDrawerShadow( R.drawable.drawer_shadow, GravityCompat.START );
 		mMenu = (LinearLayout) findViewById(R.id.menu);
 		mMenueListView = (ListView) findViewById(R.id.lstMenu);
 		mMenuItems = getResources().getStringArray(R.array.menu_items);
@@ -81,6 +87,31 @@ public class MainActivity extends FragmentActivity implements
 		
 		mMenueListView.setOnItemClickListener(this);
 		mMenueListView.setItemChecked(0, true);
+		
+		// enable ActionBar app icon to behave as action to toggle nav drawer
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setHomeButtonEnabled(true);
+        
+     // ActionBarDrawerToggle ties together the the proper interactions
+        // between the sliding drawer and the action bar app icon
+        mDrawerToggle = new ActionBarDrawerToggle(
+                this,					/* host Activity */
+                mDrawerLayout,			/* DrawerLayout object */
+                R.drawable.ic_drawer,	/* nav drawer image to replace 'Up' caret */
+                R.string.menu_open,		/* "open drawer" description for accessibility */
+                R.string.menu_close		/* "close drawer" description for accessibility */
+                ) {
+            public void onDrawerClosed(View view) {
+                getActionBar().setTitle(mTitle);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+
+            public void onDrawerOpened(View drawerView) {
+                getActionBar().setTitle(mTitle);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+        };
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
 
 	}
 	
@@ -208,6 +239,20 @@ public class MainActivity extends FragmentActivity implements
 	}
 	
 	@Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+	
+	@Override
 	public void notifyDataRecievedListeners(DataResponsePackage data){
 		for( NetworkDataRecievedListener listener : dataRecievedListener ){
 			Runnable r = new NetworkDataRecievedListenerNotifier(listener, data);
@@ -215,6 +260,19 @@ public class MainActivity extends FragmentActivity implements
 		}
 	}
 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if( mDrawerToggle.onOptionsItemSelected(item) ){
+			// menu item clicked
+			if( mDrawerLayout.isDrawerOpen(mMenu) ){
+				mDrawerLayout.closeDrawer(mMenu);
+			} else {
+				mDrawerLayout.openDrawer(mMenu);
+			}
+		}
+		
+		return super.onOptionsItemSelected(item);
+	}
 
 
 	@Override
