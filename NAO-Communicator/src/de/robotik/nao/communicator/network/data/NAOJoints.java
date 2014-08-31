@@ -9,35 +9,11 @@ public enum NAOJoints {
 	HeadPitch,
 	
 	LArm,
-	LShoulderPitch,
-	LShoulderRoll,
-	LElbowYaw,
-	LElbowRoll,
-	LWristYaw,
-	LHand,
-	
+	LHand,	
 	LLeg,
-	LHipYawPitch,
-	LHipRoll,
-	LHipPitch,
-	LKneePitch,
-	LAnklePitch,
-	LAnkleRoll,
-	
-	RLeg,
-	RHipYawPitch,
-	RHipRoll,
-	RHipPitch,
-	RKneePitch,
-	RAnklePitch,
-	RAnkleRoll,
-	
+
+	RLeg,	
 	RArm,
-	RShoulderPitch,
-	RShoulderRoll,
-	RElbowYaw,
-	RElbowRoll,
-	RWristYaw,
 	RHand;
 	
 	

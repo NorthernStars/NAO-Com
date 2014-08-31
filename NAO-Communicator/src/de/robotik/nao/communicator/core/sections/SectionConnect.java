@@ -77,6 +77,16 @@ public class SectionConnect extends Section implements OnRefreshListener {
 		EditText txtPort = (EditText) findViewById(R.id.txtPort);
 		lstNetworkDevices = (LinearLayout) findViewById(R.id.lstNetworkDevices);
 		
+		// set devices from list
+		lstNetworkDevices.removeAllViews();
+		for( RemoteDevice device : devices ){
+			ViewGroup parent = (ViewGroup) device.getView().getParent();
+			if( parent != null ){
+				parent.removeView( device.getView() );
+			}
+			lstNetworkDevices.addView( device.getView() );
+		}
+		
 		// set swipe layout
 		swipeConnect.setOnRefreshListener(this);
 		swipeConnect.setColorSchemeResources(
