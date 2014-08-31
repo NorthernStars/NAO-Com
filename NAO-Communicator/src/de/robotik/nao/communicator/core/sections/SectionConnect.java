@@ -38,7 +38,7 @@ public class SectionConnect extends Section implements OnRefreshListener {
 	private ServiceListener jmDNSServiceListener = null;
 		
 	private String TAG = getClass().getName();
-	private List<RemoteDevice> devices = new ArrayList<RemoteDevice>();
+	private static List<RemoteDevice> devices = new ArrayList<RemoteDevice>();
 	private static List<String> servicesProcessing = new ArrayList<String>();
 	
 	private SwipeRefreshLayout swipeConnect;
@@ -108,12 +108,33 @@ public class SectionConnect extends Section implements OnRefreshListener {
 	}
 	
 	/**
+	 * Clears list of devices, except connected devices.
+	 */
+	private void clearDevicesList(){
+		List<RemoteDevice> vDevicesBackup = new ArrayList<RemoteDevice>(devices);
+		for( RemoteDevice device : vDevicesBackup ){
+			if( !device.getNao().isConnected() ){
+				devices.remove(device);
+				lstNetworkDevices.removeView( device.getView() );
+			}
+		}
+	}
+	
+	/**
+	 * Updates devices backgrounds
+	 */
+	public static void updateRemoteDevicesBackgrounds(){
+		for( RemoteDevice device : devices ){
+			device.updateDeviceBackground();
+		}
+	}
+	
+	/**
 	 * Restarts network service discovery
 	 */
 	private void restartJmDNSService(){
 		// clear lists
-		lstNetworkDevices.removeAllViews();
-		devices.clear();
+		clearDevicesList();
 		
 		// start discovering of network services
 		(new AsyncTask<Void, Void, Void>() {					

@@ -8,6 +8,7 @@ import de.robotik.nao.communicator.core.RemoteNAO;
 import de.robotik.nao.communicator.network.interfaces.NetworkServiceHandler;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +16,9 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class RemoteDevice implements NetworkServiceHandler, OnClickListener {
+public class RemoteDevice implements
+	NetworkServiceHandler,
+	OnClickListener {
 
 	public static final String workstationNetworkServiceToken = "_workstation._tcp.local.";
 	public static final String networkServiceLocalToken = ".local.";
@@ -209,7 +212,7 @@ public class RemoteDevice implements NetworkServiceHandler, OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		// check if to disconnect from other nao
+		// check if to disconnect from other NAO
 		RemoteDevice remoteDevice = MainActivity.getInstance().getConnectedDevice();
 		boolean isTheSame = false;
 
@@ -221,8 +224,28 @@ public class RemoteDevice implements NetworkServiceHandler, OnClickListener {
 		
 		if( !isTheSame && getNao().connect() ){
 			MainActivity.getInstance().setConnectedDevice( this );
+			
 		}
 		
+	}
+
+	/**
+	 * Updates device background depending on its connection state.
+	 */
+	public void updateDeviceBackground() {	
+			MainActivity.getInstance().runOnUiThread(new Runnable() {				
+				@Override
+				public void run() {
+					// check if connected > set background color
+					if( getNao().isConnected() ) {
+						getView().setBackgroundColor(
+								getView().getResources().getColor(R.color.lighterlightblue) );
+					} else {
+						// set transparent background
+						getView().setBackgroundColor( Color.TRANSPARENT );
+					}
+				}
+			});
 	}
 
 }

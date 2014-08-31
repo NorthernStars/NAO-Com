@@ -21,6 +21,7 @@ import com.google.gson.Gson;
 
 import de.northernstars.naocom.R;
 import de.robotik.nao.communicator.core.MainActivity;
+import de.robotik.nao.communicator.core.sections.SectionConnect;
 import de.robotik.nao.communicator.network.data.NAOCommands;
 import de.robotik.nao.communicator.network.data.request.DataRequestPackage;
 import de.robotik.nao.communicator.network.data.response.DataResponsePackage;
@@ -222,6 +223,7 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 		if( connect() ){
 			
 			// connected
+			SectionConnect.updateRemoteDevicesBackgrounds();
 			MainActivity.getInstance().runOnUiThread( new Runnable() {						
 				@Override
 				public void run() {
@@ -245,11 +247,13 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 					}
 				});
 			}
+			SectionConnect.updateRemoteDevicesBackgrounds();
 			
 		} else {
 			
 			Log.e(TAG, "Establishing connection to " + host + ":" + port + " failed.");
 			
+			SectionConnect.updateRemoteDevicesBackgrounds();
 			MainActivity.getInstance().runOnUiThread( new Runnable() {				
 				@Override
 				public void run() {
