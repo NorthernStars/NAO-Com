@@ -2,6 +2,7 @@ package de.robotik.nao.communicator.core;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import de.northernstars.naocom.R;
 import de.robotik.nao.communicator.core.sections.Section;
 import de.robotik.nao.communicator.core.sections.SectionConnect;
@@ -19,8 +20,18 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 
-public class MainActivity extends FragmentActivity implements NetworkDataRecievedListener, NetworkDataSender {
+public class MainActivity extends FragmentActivity implements
+	NetworkDataRecievedListener,
+	NetworkDataSender,
+	OnItemClickListener{
 	
 	private static MainActivity INSTANCE;
 	
@@ -31,6 +42,10 @@ public class MainActivity extends FragmentActivity implements NetworkDataRecieve
 	private String mTitle = "[offline] NAO Communicator";
 	private SectionsPagerAdapter mSectionsPagerAdapter;
 	private ViewPager mViewPager;
+	private DrawerLayout mDrawerLayout;
+	private LinearLayout mMenu;
+	private ListView mMenueListView;
+	private String[] mMenuItems;
 
 	/**
 	 * Called if activity created
@@ -47,7 +62,7 @@ public class MainActivity extends FragmentActivity implements NetworkDataRecieve
 		// add layouts
 		createPageFragmentLayouts();
 		
-		// Create the adapter that will return a fragment for each of the three
+		// Create the adapter that will return a fragment for each of
 		// primary sections of the app.
 		mSectionsPagerAdapter = new SectionsPagerAdapter(
 				getSupportFragmentManager());
@@ -55,6 +70,17 @@ public class MainActivity extends FragmentActivity implements NetworkDataRecieve
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
+		
+		// set up left slide menu
+		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		mMenu = (LinearLayout) findViewById(R.id.menu);
+		mMenueListView = (ListView) findViewById(R.id.lstMenu);
+		mMenuItems = getResources().getStringArray(R.array.menu_items);
+		mMenueListView.setAdapter( new ArrayAdapter<String>(this,
+				R.layout.menu_list_item, mMenuItems) );
+		
+		mMenueListView.setOnItemClickListener(this);
+		mMenueListView.setItemChecked(0, true);
 
 	}
 	
@@ -84,7 +110,7 @@ public class MainActivity extends FragmentActivity implements NetworkDataRecieve
 			// Add all new sections here
 			mSections.add( new SectionConnect("Connect") );
 			mSections.add( new SectionWifi("Hotspot") );
-			mSections.add( new SectionStatus("NAO") );
+			mSections.add( new SectionStatus("NAO Status") );
 			mSections.add( new SectionSpeech("Speech") );
 			
 		}
@@ -187,6 +213,16 @@ public class MainActivity extends FragmentActivity implements NetworkDataRecieve
 			Runnable r = new NetworkDataRecievedListenerNotifier(listener, data);
 			new Thread(r).start();
 		}
+	}
+
+
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id) {
+		mViewPager.setCurrentItem(position);
+		mMenueListView.setItemChecked(position, true);
+		mDrawerLayout.closeDrawer(mMenu);
 	}
 
 }
