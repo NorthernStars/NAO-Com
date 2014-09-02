@@ -434,9 +434,9 @@ public class SectionStatus extends Section implements
 					wrongValueCounter.put( skbSystemVolume, 0 );
 				}
 				
-				// check if player volume differs for more than 3 times
+				// check if player volume differs for more than 2 times
 				if( skbPlayerVolume.getProgress() != currentResponseData.audioData.playerVolume
-						&& wrongValueCounter.get(skbPlayerVolume) < 3 ){
+						&& wrongValueCounter.get(skbPlayerVolume) < 2 ){
 					wrongValueCounter.put( skbPlayerVolume, wrongValueCounter.get(skbPlayerVolume)+1 );
 				} else {
 					skbPlayerVolume.setProgress( (int)(currentResponseData.audioData.playerVolume * 100.0f) );

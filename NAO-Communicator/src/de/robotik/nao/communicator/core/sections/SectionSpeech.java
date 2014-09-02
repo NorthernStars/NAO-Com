@@ -17,7 +17,10 @@ import de.robotik.nao.communicator.network.data.NAOCommands;
 import de.robotik.nao.communicator.network.data.response.DataResponsePackage;
 import de.robotik.nao.communicator.network.interfaces.NetworkDataRecievedListener;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.text.Editable;
@@ -51,6 +54,8 @@ public class SectionSpeech extends Section implements
 	
 	private static final int HISTORY_LENGTH = 10;
 	private static final String SAVED_TEXT_FILE = "savedTexts";
+	private static final String PREFERENCES_SPEECH_RATE = "speechRate";
+	private static final String PREFERENCES_SPEECH_MODULATION = "speechModulation";
 	
 	private SwipeRefreshLayout swipeSpeech;
 	private EditText txtSpeechInputText;
@@ -73,6 +78,7 @@ public class SectionSpeech extends Section implements
 	
 	private DataResponsePackage lastResponsePackage;
 	private Map<View, Integer> wrongValueCounter = new HashMap<View, Integer>();
+	private SharedPreferences mSettings;
 	
 	public SectionSpeech() {}
 	
@@ -106,6 +112,11 @@ public class SectionSpeech extends Section implements
 		// set wrong vlaue counter
 		wrongValueCounter.put(skbSpeechVolume, 0);
 		
+		// set seekbar default values
+		mSettings = PreferenceManager.getDefaultSharedPreferences( getActivity() );
+		skbSpeechRate.setProgress( mSettings.getInt(PREFERENCES_SPEECH_RATE, 100) );
+		skbSpeechModulation.setProgress( mSettings.getInt(PREFERENCES_SPEECH_MODULATION, 100) );
+
 		// set seekbar progresses
 		lblSpeechModulation.setText( Integer.toString(skbSpeechModulation.getProgress()) + "%" );
 		lblSpeechRate.setText( Integer.toString(skbSpeechRate.getProgress()) + "%" );
@@ -387,17 +398,25 @@ public class SectionSpeech extends Section implements
 	@Override
 	public void onStopTrackingTouch(SeekBar seekBar) {
 		int progress = seekBar.getProgress();
+		Editor edit = mSettings.edit();
 		
 		if( seekBar == skbSpeechModulation ){
 			lblSpeechModulation.setText( Integer.toString(progress) + "%" );			
+			edit.putInt(PREFERENCES_SPEECH_MODULATION, progress);			
+			
 		} else if( seekBar == skbSpeechRate ){
 			lblSpeechRate.setText( Integer.toString(progress) + "%" );
+			edit.putInt(PREFERENCES_SPEECH_RATE, progress);
+			
+			
 		} else if( seekBar == skbSpeechVolume ){			
 			lblSpeechVolume.setText( Integer.toString(progress) + "%" );
 			RemoteNAO.sendCommand(
 					NAOCommands.SET_SPEECH_VOLUME,
 					new String[]{ Float.toString( (float)(progress)/100.0f ) } );
 		}
+		
+		edit.apply();
 	}
 	
 	@Override
@@ -410,9 +429,9 @@ public class SectionSpeech extends Section implements
 							
 				int vVolume = (int)(lastResponsePackage.audioData.speechVolume * 100.0f);
 				
-				// check if speech volume differs for more than 3 times.
+				// check if speech volume differs for more than 2 times.
 				if( skbSpeechVolume.getProgress() != vVolume
-						&& wrongValueCounter.get(skbSpeechVolume) < 3 ){
+						&& wrongValueCounter.get(skbSpeechVolume) < 2 ){
 					wrongValueCounter.put( skbSpeechVolume, wrongValueCounter.get(skbSpeechVolume)+1 );
 				} else {
 					lblSpeechVolume.setText( Integer.toString(vVolume) + "%" );
