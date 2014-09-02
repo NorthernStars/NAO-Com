@@ -417,6 +417,7 @@ public class SectionStatus extends Section implements
 				disableSending = true;
 				
 				txtStatusDeviceName.setText( currentResponseData.naoName );
+				
 				skbSystemVolume.setProgress( currentResponseData.audioData.masterVolume );				
 				skbPlayerVolume.setProgress( (int)(currentResponseData.audioData.playerVolume * 100.0f) );
 				

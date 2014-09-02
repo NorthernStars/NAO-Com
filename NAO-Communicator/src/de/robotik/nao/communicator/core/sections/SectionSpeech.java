@@ -26,7 +26,6 @@ import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.LinearLayout;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -43,7 +42,6 @@ public class SectionSpeech extends Section implements
 	NetworkDataRecievedListener,
 	OnRefreshListener,
 	OnClickListener,
-	OnItemClickListener,
 	OnItemSelectedListener,
 	OnFocusChangeListener,
 	OnSeekBarChangeListener,
@@ -235,15 +233,26 @@ public class SectionSpeech extends Section implements
 	private void addToHistory(String aText){
 		aText = aText.trim();
 		
-		if( !isInHistory(aText) && aText.length() > 0 ){
+		if( aText.length() > 0 ){
 			
+			// check if text is already in history > delete to bring to front
+			if( isInHistory(aText) ){
+				int position = mHistory.indexOf(aText);
+				System.out.println("is in history: " + position);
+				mHistory.remove(position);
+				lstSpeechHistory.removeViewAt( lstSpeechHistory.getChildCount() -1 - position );
+			}
+			
+			// add new TextView to first position in list
 			TextView txt = new TextView(getActivity());
 			txt.setText( aText );
+			txt.setOnClickListener(this);
+			txt.setTextAppearance(getActivity(), android.R.style.TextAppearance_Medium);
 			mHistory.add( aText );
-			lstSpeechHistory.addView( txt );
+			lstSpeechHistory.addView( txt, 0 );
 			
 			while( mHistory.size() > HISTORY_LENGTH ){
-				lstSpeechHistory.removeViewAt(0);
+				lstSpeechHistory.removeViewAt( lstSpeechHistory.getChildCount()-1 );
 				mHistory.remove(0);
 			}
 		}
@@ -262,6 +271,21 @@ public class SectionSpeech extends Section implements
 		}
 		
 		return false;
+	}
+	
+	/**
+	 * Checks if a {@link View} is in history list.
+	 * @param v		{@link View}
+	 * @return		{@link Integer} position of {@code v} in history,
+	 * 				{@code -1} if {@code v} is not in history.
+	 */
+	private int isInHistory(View v){
+		for( int i = 0; i < lstSpeechHistory.getChildCount(); i++ ){
+			if( lstSpeechHistory.getChildAt(i) == v ){
+				return i;
+			}
+		}
+		return -1;
 	}
 
 	@Override
@@ -299,13 +323,11 @@ public class SectionSpeech extends Section implements
 			// remove saved text item
 			int position = lstSavedText.getSelectedItemPosition();
 			removeFromSavedText(position);
+			
+		} else if( isInHistory(v) >= 0 ){
+			int position = lstSpeechHistory.getChildCount() - 1 - isInHistory(v);
+			txtSpeechInputText.setText( mHistory.get(position) );
 		}
-	}
-
-	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position,
-			long id) {
-		txtSpeechInputText.setText( mHistory.get(position) );
 	}
 
 	@Override
@@ -374,21 +396,17 @@ public class SectionSpeech extends Section implements
 	}
 	
 	@Override
-	public void onNetworkDataRecieved(DataResponsePackage data) {
-		if( data.audioData != null ){
-			
-			lastResponsePackage = data;
-			
-			getActivity().runOnUiThread( new Runnable(){
-				@Override
-				public void run() {
-					int vVolume = (int)(lastResponsePackage.audioData.speechVolume * 100.0f);
-					lblSpeechVolume.setText( Integer.toString(vVolume) + "%" );
-					skbSpeechVolume.setProgress( vVolume );
-				}
-			});
-			
-		}
+	public void onNetworkDataRecieved(DataResponsePackage data) {			
+		lastResponsePackage = data;
+		
+		MainActivity.getInstance().runOnUiThread( new Runnable(){
+			@Override
+			public void run() {
+				int vVolume = (int)(lastResponsePackage.audioData.speechVolume * 100.0f);
+				lblSpeechVolume.setText( Integer.toString(vVolume) + "%" );
+				skbSpeechVolume.setProgress( vVolume );
+			}
+		});			
 	}
 
 }

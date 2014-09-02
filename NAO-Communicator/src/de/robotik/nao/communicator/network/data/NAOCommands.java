@@ -3,6 +3,7 @@ package de.robotik.nao.communicator.network.data;
 public enum NAOCommands {
 
 	SYS_GET_INFO,
+	SYS_SEND_INFO,
 	SYS_CONNECT,
 	SYS_DISCONNECT,
 	
