@@ -6,7 +6,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.northernstars.naocom.R;
 import de.robotik.nao.communicator.core.MainActivity;
@@ -65,12 +67,12 @@ public class SectionSpeech extends Section implements
 	private SeekBar skbSpeechVolume;
 	private LinearLayout lstSpeechHistory;
 	
-	private List<String> mHistory = new ArrayList<String>();
-	
+	private List<String> mHistory = new ArrayList<String>();	
 	private List<String> mSavedText = new ArrayList<String>();
 	private ArrayAdapter<String> mSavedTextAdapter;
 	
 	private DataResponsePackage lastResponsePackage;
+	private Map<View, Integer> wrongValueCounter = new HashMap<View, Integer>();
 	
 	public SectionSpeech() {}
 	
@@ -100,6 +102,9 @@ public class SectionSpeech extends Section implements
 		lblSpeechVolume = (TextView) findViewById(R.id.lblSpeechVolume);
 		skbSpeechVolume = (SeekBar) findViewById(R.id.skbSpeechVolume);
 		lstSpeechHistory = (LinearLayout) findViewById(R.id.lstSpeechHistory);
+		
+		// set wrong vlaue counter
+		wrongValueCounter.put(skbSpeechVolume, 0);
 		
 		// set seekbar progresses
 		lblSpeechModulation.setText( Integer.toString(skbSpeechModulation.getProgress()) + "%" );
@@ -402,9 +407,19 @@ public class SectionSpeech extends Section implements
 		MainActivity.getInstance().runOnUiThread( new Runnable(){
 			@Override
 			public void run() {
+							
 				int vVolume = (int)(lastResponsePackage.audioData.speechVolume * 100.0f);
-				lblSpeechVolume.setText( Integer.toString(vVolume) + "%" );
-				skbSpeechVolume.setProgress( vVolume );
+				
+				// check if speech volume differs for more than 3 times.
+				if( skbSpeechVolume.getProgress() != vVolume
+						&& wrongValueCounter.get(skbSpeechVolume) < 3 ){
+					wrongValueCounter.put( skbSpeechVolume, wrongValueCounter.get(skbSpeechVolume)+1 );
+				} else {
+					lblSpeechVolume.setText( Integer.toString(vVolume) + "%" );
+					skbSpeechVolume.setProgress( vVolume );
+					wrongValueCounter.put( skbSpeechVolume, 0 );
+				}
+				
 			}
 		});			
 	}
