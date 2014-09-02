@@ -167,58 +167,6 @@ public class SectionStatus extends Section implements
 		
 		return rootView;
 	}
-
-	@Override
-	public synchronized void onNetworkDataRecieved(DataResponsePackage data) {
-		currentResponseData = data;
-		
-		MainActivity.getInstance().runOnUiThread(new Runnable() {			
-			@Override
-			public void run() {
-				
-				disableSending = true;
-				
-				txtStatusDeviceName.setText( currentResponseData.naoName );
-				skbSystemVolume.setProgress( currentResponseData.audioData.masterVolume );				
-				skbPlayerVolume.setProgress( (int)(currentResponseData.audioData.playerVolume * 100.0f) );
-				
-				int battery = currentResponseData.batteryLevel;
-				if( battery >= 100 ){
-					imgStatusBattery.setImageResource(R.drawable.bat_level_5);
-				} else if( battery >= 80 ){
-					imgStatusBattery.setImageResource(R.drawable.bat_level_4);
-				} else if( battery >= 60 ){
-					imgStatusBattery.setImageResource(R.drawable.bat_level_3);
-				} else if( battery >= 40 ){
-					imgStatusBattery.setImageResource(R.drawable.bat_level_2);
-				}  else if( battery >= 20 ){
-					imgStatusBattery.setImageResource(R.drawable.bat_level_1);
-				} else {
-					imgStatusBattery.setImageResource(R.drawable.bat_level_0);
-				}
-				
-				updateJointImages();
-				
-				if( currentResponseData.stiffnessData.isLeftHandOpen() ){
-					btnStatusLeftHand.setText(R.string.joints_control_lhand_close);
-				} else {
-					btnStatusLeftHand.setText(R.string.joints_control_lhand_open);
-				}
-				
-				if( currentResponseData.stiffnessData.isRightHandOpen() ){
-					btnStatusRightHand.setText(R.string.joints_control_rhand_close);
-				} else {
-					btnStatusRightHand.setText(R.string.joints_control_rhand_open);
-				}
-				
-				int position = adapterAutonomousLifeStates.getPosition( currentResponseData.lifeState );
-				spAutonomousLife.setSelection(position);
-				
-				swipeStatus.setRefreshing(false);
-				disableSending = false;
-			}
-		});		
-	}
 	
 	/**
 	 * Updates the stiffness images for the joints.
@@ -456,6 +404,58 @@ public class SectionStatus extends Section implements
 		if( !RemoteNAO.sendCommand(NAOCommands.SYS_GET_INFO) ){
 			swipeStatus.setRefreshing(false);
 		}
+	}
+	
+	@Override
+	public synchronized void onNetworkDataRecieved(DataResponsePackage data) {
+		currentResponseData = data;
+		
+		MainActivity.getInstance().runOnUiThread(new Runnable() {			
+			@Override
+			public void run() {
+				
+				disableSending = true;
+				
+				txtStatusDeviceName.setText( currentResponseData.naoName );
+				skbSystemVolume.setProgress( currentResponseData.audioData.masterVolume );				
+				skbPlayerVolume.setProgress( (int)(currentResponseData.audioData.playerVolume * 100.0f) );
+				
+				int battery = currentResponseData.batteryLevel;
+				if( battery >= 100 ){
+					imgStatusBattery.setImageResource(R.drawable.bat_level_5);
+				} else if( battery >= 80 ){
+					imgStatusBattery.setImageResource(R.drawable.bat_level_4);
+				} else if( battery >= 60 ){
+					imgStatusBattery.setImageResource(R.drawable.bat_level_3);
+				} else if( battery >= 40 ){
+					imgStatusBattery.setImageResource(R.drawable.bat_level_2);
+				}  else if( battery >= 20 ){
+					imgStatusBattery.setImageResource(R.drawable.bat_level_1);
+				} else {
+					imgStatusBattery.setImageResource(R.drawable.bat_level_0);
+				}
+				
+				updateJointImages();
+				
+				if( currentResponseData.stiffnessData.isLeftHandOpen() ){
+					btnStatusLeftHand.setText(R.string.joints_control_lhand_close);
+				} else {
+					btnStatusLeftHand.setText(R.string.joints_control_lhand_open);
+				}
+				
+				if( currentResponseData.stiffnessData.isRightHandOpen() ){
+					btnStatusRightHand.setText(R.string.joints_control_rhand_close);
+				} else {
+					btnStatusRightHand.setText(R.string.joints_control_rhand_open);
+				}
+				
+				int position = adapterAutonomousLifeStates.getPosition( currentResponseData.lifeState );
+				spAutonomousLife.setSelection(position);
+				
+				swipeStatus.setRefreshing(false);
+				disableSending = false;
+			}
+		});		
 	}
 
 }

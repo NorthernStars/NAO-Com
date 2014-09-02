@@ -40,8 +40,10 @@
     <string name="speech_modulation">Speech modulation:</string>
     <string name="speech_volume">Speech volume:</string>
     <string name="speech_automatic">automatic speech</string>
+    <string name="speech_history">History:</string>
     <string name="speech_say">Say Text</string>
     <string name="speech_save">Save Text</string>
+    <string name="speech_remove_item">Remove item</string>
     <string name="status_nao_name">NAO</string>
     <string name="status_battery_state_img_Description">bat state</string>
     <string name="status_change_name">Change NAOs name</string>
@@ -59,7 +61,5 @@
     <string name="autonomous_life">Autonomous life</string>
     <string name="autonomous_life_state_"></string>
     <string name="img_description">image</string>
-    
-   
 
 </resources>
