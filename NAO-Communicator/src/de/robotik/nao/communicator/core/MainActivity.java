@@ -6,6 +6,7 @@ import java.util.List;
 import de.northernstars.naocom.R;
 import de.robotik.nao.communicator.core.sections.Section;
 import de.robotik.nao.communicator.core.sections.SectionConnect;
+import de.robotik.nao.communicator.core.sections.SectionLed;
 import de.robotik.nao.communicator.core.sections.SectionSpeech;
 import de.robotik.nao.communicator.core.sections.SectionStatus;
 import de.robotik.nao.communicator.core.sections.SectionWifi;
@@ -92,7 +93,7 @@ public class MainActivity extends FragmentActivity implements
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
         
-     // ActionBarDrawerToggle ties together the the proper interactions
+        // ActionBarDrawerToggle ties together the the proper interactions
         // between the sliding drawer and the action bar app icon
         mDrawerToggle = new ActionBarDrawerToggle(
                 this,					/* host Activity */
@@ -143,6 +144,7 @@ public class MainActivity extends FragmentActivity implements
 			mSections.add( new SectionWifi("Hotspot") );
 			mSections.add( new SectionStatus("NAO Status") );
 			mSections.add( new SectionSpeech("Speech") );
+			mSections.add( new SectionLed("LEDs") );
 			
 		}
 	}

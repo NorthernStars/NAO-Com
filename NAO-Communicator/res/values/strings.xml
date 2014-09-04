@@ -63,5 +63,16 @@
     <string name="autonomous_life">Autonomous life</string>
     <string name="autonomous_life_state_"></string>
     <string name="img_description">image</string>
+    <string name="led_happy">Happy</string>
+    <string name="led_angry">Angry</string>
+    <string name="led_laugh">Laugh</string>
+    <string name="led_cautious">Cautious</string>
+    <string name="led_thinking">Thinking</string>
+    <string name="led_mischievous">Mischievous</string>
+    <string name="led_disco">Disco</string>
+    <string name="led_blink">Blink</string>
+    <string name="led_circle_eyes">Circle Eyes</string>
+    <string name="led_flash">Flash</string>
+    <string name="led_repeat">Repeat led animation</string>
 
 </resources>
