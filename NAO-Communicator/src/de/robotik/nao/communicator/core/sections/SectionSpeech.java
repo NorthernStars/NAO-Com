@@ -6,10 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import de.northernstars.naocom.R;
 import de.robotik.nao.communicator.core.MainActivity;
 import de.robotik.nao.communicator.core.RemoteNAO;
@@ -71,13 +68,19 @@ public class SectionSpeech extends Section implements
 	private TextView lblSpeechVolume;
 	private SeekBar skbSpeechVolume;
 	private LinearLayout lstSpeechHistory;
+	private Spinner spSpeechLanguage;
+	private Spinner spSpeechVoice;
 	
 	private List<String> mHistory = new ArrayList<String>();	
 	private List<String> mSavedText = new ArrayList<String>();
+	private List<String> mSpeechLanguages = new ArrayList<String>();
+	private List<String> mSpeechVoices = new ArrayList<String>();
+	
 	private ArrayAdapter<String> mSavedTextAdapter;
+	private ArrayAdapter<String> mSpeechLanguagesAdapter;
+	private ArrayAdapter<String> mSpeechVoicesAdapter;
 	
 	private DataResponsePackage lastResponsePackage;
-	private Map<View, Integer> wrongValueCounter = new HashMap<View, Integer>();
 	private SharedPreferences mSettings;
 	
 	public SectionSpeech() {}
@@ -108,9 +111,8 @@ public class SectionSpeech extends Section implements
 		lblSpeechVolume = (TextView) findViewById(R.id.lblSpeechVolume);
 		skbSpeechVolume = (SeekBar) findViewById(R.id.skbSpeechVolume);
 		lstSpeechHistory = (LinearLayout) findViewById(R.id.lstSpeechHistory);
-		
-		// set wrong vlaue counter
-		wrongValueCounter.put(skbSpeechVolume, 0);
+		spSpeechLanguage = (Spinner) findViewById(R.id.spSpeechLanguage);
+		spSpeechVoice = (Spinner) findViewById(R.id.spSpeechVoice);
 		
 		// set seekbar default values
 		mSettings = PreferenceManager.getDefaultSharedPreferences( getActivity() );
@@ -141,6 +143,18 @@ public class SectionSpeech extends Section implements
 		lstSavedText.setAdapter(mSavedTextAdapter);
 		lstSavedText.setOnItemSelectedListener(this);
 		loadSavedTextsFromFile();
+		
+		// set language and voice adapter
+		mSpeechLanguagesAdapter = new ArrayAdapter<String>(getActivity(),
+				R.layout.menu_list_item,
+				mSpeechLanguages);
+		mSpeechVoicesAdapter = new ArrayAdapter<String>(getActivity(),
+				R.layout.menu_list_item,
+				mSpeechVoices);
+		spSpeechLanguage.setAdapter(mSpeechLanguagesAdapter);
+		spSpeechVoice.setAdapter(mSpeechVoicesAdapter);
+		spSpeechLanguage.setOnItemSelectedListener(this);
+		spSpeechVoice.setOnItemSelectedListener(this);
 		
 		// set swipe layout
 		swipeSpeech.setOnRefreshListener(this);
@@ -349,7 +363,17 @@ public class SectionSpeech extends Section implements
 	@Override
 	public void onItemSelected(AdapterView<?> parent, View view, int position,
 			long id) {
-		txtSpeechInputText.setText( mSavedText.get(position) );
+		if( parent == lstSavedText ){
+			txtSpeechInputText.setText( mSavedText.get(position) );
+		} else if( parent == spSpeechLanguage ){
+			resetWrongValueCounter(spSpeechLanguage);
+			RemoteNAO.sendCommand( NAOCommands.SET_SPEECH_LANGUAGE,
+					new String[]{ mSpeechLanguages.get(position) } );
+		} else if( parent == spSpeechVoice ){
+			resetWrongValueCounter(spSpeechVoice);
+			RemoteNAO.sendCommand( NAOCommands.SET_SPEECH_VOICE,
+					new String[]{ mSpeechVoices.get(position) } );
+		}
 	}
 
 	@Override
@@ -428,16 +452,39 @@ public class SectionSpeech extends Section implements
 			public void run() {
 							
 				int vVolume = (int)(lastResponsePackage.audioData.speechVolume * 100.0f);
-				
-				// check if speech volume differs for more than 2 times.
 				if( skbSpeechVolume.getProgress() != vVolume
-						&& wrongValueCounter.get(skbSpeechVolume) < 2 ){
-					wrongValueCounter.put( skbSpeechVolume, wrongValueCounter.get(skbSpeechVolume)+1 );
-				} else {
+						&& !incrementWrongValueCounter(skbSpeechVolume) ){
 					lblSpeechVolume.setText( Integer.toString(vVolume) + "%" );
 					skbSpeechVolume.setProgress( vVolume );
-					wrongValueCounter.put( skbSpeechVolume, 0 );
 				}
+				
+				// check for languages
+				String vSetLanguage = lastResponsePackage.audioData.speechLanguage; 
+				if( mSpeechLanguages.size() == 0 || !mSpeechLanguages.contains(vSetLanguage) ){
+					mSpeechLanguages.clear();
+					for( String vLanguage : lastResponsePackage.audioData.speechLanguagesList ){
+						mSpeechLanguages.add(vLanguage);
+					}
+					mSpeechLanguagesAdapter.notifyDataSetChanged();
+				} else if( spSpeechLanguage.getSelectedItemPosition() != mSpeechLanguages.indexOf(vSetLanguage)
+						&& !incrementWrongValueCounter(spSpeechLanguage) ){
+					spSpeechLanguage.setSelection( mSpeechLanguages.indexOf(vSetLanguage) );
+				}
+				
+				// check for voices
+				String vSetVoice = lastResponsePackage.audioData.speechVoice;
+				if( mSpeechVoices.size() == 0 || !mSpeechVoices.contains(vSetVoice) ){
+					mSpeechVoices.clear();
+					for( String vVoice : lastResponsePackage.audioData.speechVoicesList ){
+						mSpeechVoices.add(vVoice);
+					}
+					mSpeechVoicesAdapter.notifyDataSetChanged();
+				} else if( spSpeechVoice.getSelectedItemPosition() != mSpeechVoices.indexOf(vSetVoice)
+						&& !incrementWrongValueCounter(spSpeechVoice) ){
+					spSpeechVoice.setSelection( mSpeechVoices.indexOf(vSetVoice) );
+				}
+				
+				swipeSpeech.setRefreshing(false);
 				
 			}
 		});			

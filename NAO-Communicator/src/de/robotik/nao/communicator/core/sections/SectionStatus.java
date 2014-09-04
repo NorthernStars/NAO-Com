@@ -1,6 +1,5 @@
 package de.robotik.nao.communicator.core.sections;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import de.northernstars.naocom.R;
@@ -43,9 +42,7 @@ public class SectionStatus extends Section implements
 	private DataResponsePackage currentResponseData;
 	private ArrayAdapter<NAOAutonomousLifeStates> adapterAutonomousLifeStates;
 	private boolean disableSending = false;
-	private boolean created = true;
-	
-	private Map<View, Integer> wrongValueCounter = new HashMap<View, Integer>();
+	private boolean created = true;	
 	
 	private SwipeRefreshLayout swipeStatus;
 	
@@ -140,10 +137,6 @@ public class SectionStatus extends Section implements
 //		(imgJointRKnee = (ImageView) findViewById(R.id.imgJointRKnee)).setOnClickListener(this);
 //		(imgJointlAnkle = (ImageView) findViewById(R.id.imgJointlAnkle)).setOnClickListener(this);
 //		(imgJointRAnkle = (ImageView) findViewById(R.id.imgJointRAnkle)).setOnClickListener(this);
-		
-		// set value counter
-		wrongValueCounter.put(skbSystemVolume, 0);
-		wrongValueCounter.put(skbPlayerVolume, 0);
 		
 		// set swipe layout
 		swipeStatus.setOnRefreshListener(this);
@@ -425,22 +418,16 @@ public class SectionStatus extends Section implements
 				
 				txtStatusDeviceName.setText( currentResponseData.naoName );
 				
-				// check if system volume differs for more than 3 times
+				// check if system volume differs for more than 2 times
 				if( skbSystemVolume.getProgress() != currentResponseData.audioData.masterVolume
-						&& wrongValueCounter.get(skbSystemVolume) < 3 ){
-					wrongValueCounter.put( skbSystemVolume, wrongValueCounter.get(skbSystemVolume)+1 );
-				} else {
+						&& !incrementWrongValueCounter(skbSystemVolume) ){
 					skbSystemVolume.setProgress( currentResponseData.audioData.masterVolume );
-					wrongValueCounter.put( skbSystemVolume, 0 );
 				}
 				
 				// check if player volume differs for more than 2 times
 				if( skbPlayerVolume.getProgress() != currentResponseData.audioData.playerVolume
-						&& wrongValueCounter.get(skbPlayerVolume) < 2 ){
-					wrongValueCounter.put( skbPlayerVolume, wrongValueCounter.get(skbPlayerVolume)+1 );
-				} else {
+						&& !incrementWrongValueCounter(skbPlayerVolume) ){
 					skbPlayerVolume.setProgress( (int)(currentResponseData.audioData.playerVolume * 100.0f) );
-					wrongValueCounter.put( skbPlayerVolume, 0 );
 				}
 				
 				// set battery level
@@ -474,7 +461,10 @@ public class SectionStatus extends Section implements
 				}
 				
 				int position = adapterAutonomousLifeStates.getPosition( currentResponseData.lifeState );
-				spAutonomousLife.setSelection(position);
+				if( spAutonomousLife.getSelectedItemPosition() != position
+						&& !incrementWrongValueCounter(spAutonomousLife)){
+					spAutonomousLife.setSelection(position);
+				}
 				
 				swipeStatus.setRefreshing(false);
 				disableSending = false;

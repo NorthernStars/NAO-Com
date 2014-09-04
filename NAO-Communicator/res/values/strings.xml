@@ -44,6 +44,8 @@
     <string name="speech_say">Say Text</string>
     <string name="speech_save">Save Text</string>
     <string name="speech_remove_item">Remove item</string>
+    <string name="speech_language">Language:</string>
+    <string name="speech_voice">Voice:</string>
     <string name="status_nao_name">NAO</string>
     <string name="status_battery_state_img_Description">bat state</string>
     <string name="status_change_name">Change NAOs name</string>
