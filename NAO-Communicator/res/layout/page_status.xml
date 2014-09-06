@@ -2,13 +2,13 @@
 <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/swipeStatus"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:padding="@dimen/activity_padding" >
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="false"
-        android:padding="@dimen/activity_padding" >
+        android:fillViewport="false" >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -17,328 +17,367 @@
             android:gravity="center"
             android:orientation="vertical" >
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/lblStatusGeneral"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                android:background="@color/lightblue"
+                android:gravity="center"
+                android:padding="@dimen/padding_text_title"
+                android:text="@string/status_general" />
 
-                <TextView
-                    android:id="@+id/txtStatusDevicename"
+            <LinearLayout
+                android:id="@+id/divStatusGeneral"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/activity_padding"
-                    android:layout_marginRight="@dimen/activity_padding"
-                    android:layout_weight="1"
-                    android:text="@string/status_nao_name"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@color/blue" />
+                    android:layout_marginTop="@dimen/activity_padding" >
 
-                <ImageView
-                    android:id="@+id/imgStatusBattery"
+                    <TextView
+                        android:id="@+id/txtStatusDevicename"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/activity_padding"
+                        android:layout_marginRight="@dimen/activity_padding"
+                        android:layout_weight="1"
+                        android:text="@string/status_nao_name"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@color/blue" />
+
+                    <ImageView
+                        android:id="@+id/imgStatusBattery"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:contentDescription="@string/status_battery_state_img_Description"
+                        android:src="@drawable/bat_level_0" />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btnStatusChangeNaoName"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text="@string/status_change_name" />
+
+                <TextView
+                    android:id="@+id/lblStatusAutonomousLife"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0"
-                    android:contentDescription="@string/status_battery_state_img_Description"
-                    android:src="@drawable/bat_level_0" />
+                    android:layout_marginTop="@dimen/activity_padding"
+                    android:text="@string/autonomous_life"
+                    android:textColor="@color/blue" />
+
+                <Spinner
+                    android:id="@+id/spAutonomousLife"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
             </LinearLayout>
 
-            <Button
-                android:id="@+id/btnStatusChangeNaoName"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:text="@string/status_change_name" />
-
             <TextView
-                android:id="@+id/lblStatusAutonomousLife"
-                android:layout_width="wrap_content"
+                android:id="@+id/lblStatusVolume"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/activity_padding"
-                android:text="@string/autonomous_life"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/blue" />
+                android:background="@color/lightblue"
+                android:gravity="center"
+                android:padding="@dimen/padding_text_title"
+                android:text="@string/status_volume" />
 
-            <Spinner
-                android:id="@+id/spAutonomousLife"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:id="@+id/lblStatusSystemVolume"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_padding"
-                android:text="@string/status_system_volume"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/blue" />
-
-            <SeekBar
-                android:id="@+id/skbSystemVolume"
+            <LinearLayout
+                android:id="@+id/divStatusVolume"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:max="100"
-                android:progress="50" />
+                android:orientation="vertical" >
 
-            <TextView
-                android:id="@+id/lblStatusPlayerVolume"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_padding"
-                android:text="@string/status_player_volume"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/blue" />
+                <TextView
+                    android:id="@+id/lblStatusSystemVolume"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/activity_padding"
+                    android:text="@string/status_system_volume"
+                    android:textColor="@color/blue" />
 
-            <SeekBar
-                android:id="@+id/skbStatusPlayerVolume"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:max="100"
-                android:progress="50" />
+                <SeekBar
+                    android:id="@+id/skbSystemVolume"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:max="100"
+                    android:progress="50" />
+
+                <TextView
+                    android:id="@+id/lblStatusPlayerVolume"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/activity_padding"
+                    android:text="@string/status_player_volume"
+                    android:textColor="@color/blue" />
+
+                <SeekBar
+                    android:id="@+id/skbStatusPlayerVolume"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:max="100"
+                    android:progress="50" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/lblStatusStiffness"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/activity_padding"
-                android:text="@string/joints_control_header"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/blue" />
+                android:background="@color/lightblue"
+                android:gravity="center"
+                android:padding="@dimen/padding_text_title"
+                android:text="@string/joints_control_header" />
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
-
-                <TextView
-                    android:id="@+id/lblJointBody"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginEnd="@dimen/activity_padding"
-                    android:layout_marginRight="@dimen/activity_padding"
-                    android:layout_weight="1"
-                    android:gravity="start|center_vertical"
-                    android:minHeight="@dimen/label_button_min_height"
-                    android:text="@joint/Body"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
-
-                <ImageView
-                    android:id="@+id/imgJointBody"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="0"
-                    android:contentDescription="@string/joints_img_description"
-                    android:src="@drawable/stiffness_gray" />
-            </LinearLayout>
-
-            <LinearLayout
+                android:id="@+id/divStatusStiffness"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_padding" >
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:id="@+id/lblJointBody"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginEnd="@dimen/activity_padding"
+                        android:layout_marginRight="@dimen/activity_padding"
+                        android:layout_weight="1"
+                        android:gravity="start|center_vertical"
+                        android:minHeight="@dimen/label_button_min_height"
+                        android:text="@joint/Body"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                    <ImageView
+                        android:id="@+id/imgJointBody"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="0"
+                        android:contentDescription="@string/joints_img_description"
+                        android:src="@drawable/stiffness_gray" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/activity_padding" >
+
+                    <TextView
+                        android:id="@+id/lblJointHead"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginEnd="@dimen/activity_padding"
+                        android:layout_marginRight="@dimen/activity_padding"
+                        android:layout_weight="1"
+                        android:gravity="start|center_vertical"
+                        android:minHeight="@dimen/label_button_min_height"
+                        android:text="@joint/Head"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                    <ImageView
+                        android:id="@+id/imgJointHead"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="0"
+                        android:contentDescription="@string/joints_img_description"
+                        android:src="@drawable/stiffness_gray" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:id="@+id/lblJointLArm"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginEnd="@dimen/activity_padding"
+                        android:layout_marginRight="@dimen/activity_padding"
+                        android:layout_weight="1"
+                        android:gravity="start|center_vertical"
+                        android:minHeight="@dimen/label_button_min_height"
+                        android:text="@joint/LArm"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                    <ImageView
+                        android:id="@+id/imgJointLArm"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="0"
+                        android:contentDescription="@string/joints_img_description"
+                        android:src="@drawable/stiffness_gray" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:id="@+id/lblJointRArm"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginEnd="@dimen/activity_padding"
+                        android:layout_marginRight="@dimen/activity_padding"
+                        android:layout_weight="1"
+                        android:gravity="start|center_vertical"
+                        android:minHeight="@dimen/label_button_min_height"
+                        android:text="@joint/RArm"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                    <ImageView
+                        android:id="@+id/imgJointRArm"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="0"
+                        android:contentDescription="@string/joints_img_description"
+                        android:src="@drawable/stiffness_gray" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:id="@+id/lblJointLLeg"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginEnd="@dimen/activity_padding"
+                        android:layout_marginRight="@dimen/activity_padding"
+                        android:layout_weight="1"
+                        android:gravity="start|center_vertical"
+                        android:minHeight="@dimen/label_button_min_height"
+                        android:text="@joint/LLeg"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                    <ImageView
+                        android:id="@+id/imgJointLLeg"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="0"
+                        android:contentDescription="@string/joints_img_description"
+                        android:src="@drawable/stiffness_gray" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:id="@+id/lblJointRLeg"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginEnd="@dimen/activity_padding"
+                        android:layout_marginRight="@dimen/activity_padding"
+                        android:layout_weight="1"
+                        android:gravity="start|center_vertical"
+                        android:minHeight="@dimen/label_button_min_height"
+                        android:text="@joint/RLeg"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                    <ImageView
+                        android:id="@+id/imgJointRLeg"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="0"
+                        android:contentDescription="@string/joints_img_description"
+                        android:src="@drawable/stiffness_gray" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:id="@+id/lblJointLHand"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginEnd="@dimen/activity_padding"
+                        android:layout_marginRight="@dimen/activity_padding"
+                        android:layout_weight="1"
+                        android:gravity="start|center_vertical"
+                        android:minHeight="@dimen/label_button_min_height"
+                        android:text="@joint/LHand"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                    <ImageView
+                        android:id="@+id/imgJointLHand"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="0"
+                        android:contentDescription="@string/joints_img_description"
+                        android:src="@drawable/stiffness_gray" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:id="@+id/lblJointRHand"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginEnd="@dimen/activity_padding"
+                        android:layout_marginRight="@dimen/activity_padding"
+                        android:layout_weight="1"
+                        android:gravity="start|center_vertical"
+                        android:minHeight="@dimen/label_button_min_height"
+                        android:text="@joint/RHand"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                    <ImageView
+                        android:id="@+id/imgJointRHand"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="0"
+                        android:contentDescription="@string/joints_img_description"
+                        android:src="@drawable/stiffness_gray" />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btnStatusLeftHand"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text="@string/joints_control_lhand" />
+
+                <Button
+                    android:id="@+id/btnStatusRightHand"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text="@string/joints_control_rhand" />
 
                 <TextView
-                    android:id="@+id/lblJointHead"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginEnd="@dimen/activity_padding"
-                    android:layout_marginRight="@dimen/activity_padding"
-                    android:layout_weight="1"
-                    android:gravity="start|center_vertical"
-                    android:minHeight="@dimen/label_button_min_height"
-                    android:text="@joint/Head"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
-
-                <ImageView
-                    android:id="@+id/imgJointHead"
+                    android:id="@+id/txtSFTP"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="0"
-                    android:contentDescription="@string/joints_img_description"
-                    android:src="@drawable/stiffness_gray" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
-
-                <TextView
-                    android:id="@+id/lblJointLArm"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginEnd="@dimen/activity_padding"
-                    android:layout_marginRight="@dimen/activity_padding"
-                    android:layout_weight="1"
-                    android:gravity="start|center_vertical"
-                    android:minHeight="@dimen/label_button_min_height"
-                    android:text="@joint/LArm"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
-
-                <ImageView
-                    android:id="@+id/imgJointLArm"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="0"
-                    android:contentDescription="@string/joints_img_description"
-                    android:src="@drawable/stiffness_gray" />
             </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
-
-                <TextView
-                    android:id="@+id/lblJointRArm"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginEnd="@dimen/activity_padding"
-                    android:layout_marginRight="@dimen/activity_padding"
-                    android:layout_weight="1"
-                    android:gravity="start|center_vertical"
-                    android:minHeight="@dimen/label_button_min_height"
-                    android:text="@joint/RArm"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
-
-                <ImageView
-                    android:id="@+id/imgJointRArm"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="0"
-                    android:contentDescription="@string/joints_img_description"
-                    android:src="@drawable/stiffness_gray" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
-
-                <TextView
-                    android:id="@+id/lblJointLLeg"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginEnd="@dimen/activity_padding"
-                    android:layout_marginRight="@dimen/activity_padding"
-                    android:layout_weight="1"
-                    android:gravity="start|center_vertical"
-                    android:minHeight="@dimen/label_button_min_height"
-                    android:text="@joint/LLeg"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
-
-                <ImageView
-                    android:id="@+id/imgJointLLeg"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="0"
-                    android:contentDescription="@string/joints_img_description"
-                    android:src="@drawable/stiffness_gray" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
-
-                <TextView
-                    android:id="@+id/lblJointRLeg"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginEnd="@dimen/activity_padding"
-                    android:layout_marginRight="@dimen/activity_padding"
-                    android:layout_weight="1"
-                    android:gravity="start|center_vertical"
-                    android:minHeight="@dimen/label_button_min_height"
-                    android:text="@joint/RLeg"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
-
-                <ImageView
-                    android:id="@+id/imgJointRLeg"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="0"
-                    android:contentDescription="@string/joints_img_description"
-                    android:src="@drawable/stiffness_gray" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
-
-                <TextView
-                    android:id="@+id/lblJointLHand"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginEnd="@dimen/activity_padding"
-                    android:layout_marginRight="@dimen/activity_padding"
-                    android:layout_weight="1"
-                    android:gravity="start|center_vertical"
-                    android:minHeight="@dimen/label_button_min_height"
-                    android:text="@joint/LHand"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
-
-                <ImageView
-                    android:id="@+id/imgJointLHand"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="0"
-                    android:contentDescription="@string/joints_img_description"
-                    android:src="@drawable/stiffness_gray" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
-
-                <TextView
-                    android:id="@+id/lblJointRHand"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginEnd="@dimen/activity_padding"
-                    android:layout_marginRight="@dimen/activity_padding"
-                    android:layout_weight="1"
-                    android:gravity="start|center_vertical"
-                    android:minHeight="@dimen/label_button_min_height"
-                    android:text="@joint/RHand"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
-
-                <ImageView
-                    android:id="@+id/imgJointRHand"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="0"
-                    android:contentDescription="@string/joints_img_description"
-                    android:src="@drawable/stiffness_gray" />
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/btnStatusLeftHand"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:text="@string/joints_control_lhand" />
-
-            <Button
-                android:id="@+id/btnStatusRightHand"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:text="@string/joints_control_rhand" />
-
-            <TextView
-                android:id="@+id/txtSFTP"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
         </LinearLayout>
     </ScrollView>
 

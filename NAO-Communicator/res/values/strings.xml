@@ -46,10 +46,12 @@
     <string name="speech_remove_item">Remove item</string>
     <string name="speech_language">Language:</string>
     <string name="speech_voice">Voice:</string>
+    <string name="status_general">General</string>
     <string name="status_nao_name">NAO</string>
     <string name="status_battery_state_img_Description">bat state</string>
     <string name="status_change_name">Change NAOs name</string>
     <string name="status_change_name_msg">Enter new name for NAO (needs NAO restart):</string>
+    <string name="status_volume">Volume</string>
     <string name="status_system_volume">System Volume</string>
     <string name="status_player_volume">Player Volume</string>
     <string name="joints_control_header">Stiffness control</string>
@@ -74,5 +76,28 @@
     <string name="led_circle_eyes">Circle Eyes</string>
     <string name="led_flash">Flash</string>
     <string name="led_repeat">Repeat led animation</string>
+    <string name="led_left_eye">Left eye</string>
+    <string name="led_right_eye">Right eye</string>
+    <string name="functions_basic">Basic functions</string>
+    <string name="functions_basic_hello">Hello</string>
+    <string name="functions_basic_stand_up">Stand up</string>
+    <string name="functions_basic_sit_down">Sit down</string>
+    <string name="functions_basic_wipe_forehead">Wipe forehead</string>
+    <string name="functions_basic_shake_hands">Shake hands</string>
+    <string name="functions_tracker">Tracker functions</string>
+    <string name="functions_tracker_face">Face tracker</string>
+    <string name="functions_tracker_red_ball">Red ball tracker</string>
+    <string name="functions_dance">Dances</string>
+    <string name="functions_dance_thai_chi">Thai Chi</string>
+    <string name="functions_dance_gangnam_style">Gangnam Style</string>
+    <string name="functions_dance_evolution_of_dance">Evol. of Dance</string>
+    <string name="functions_dance_caravan_palace">Caranvan Palace</string>
+    <string name="functions_dance_vangelis_dance">Vangelis Dance</string>
+    <string name="functions_dance_eye_of_the_tiger">Eye of the tiger</string>
+    <string name="functions_custom">Custom functions</string>
+    <string name="functions_custom_new">New custom event</string>
+    <string name="functions_custom_almemory_key">ALMemory Key:</string>
+    <string name="functions_custom_event_name">Event name:</string>
+    <string name="functions_custom_add">Add new event</string>
 
 </resources>

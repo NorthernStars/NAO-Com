@@ -9,7 +9,7 @@
     <TextView
         android:id="@+id/txtDevicename"
         android:layout_column="0"
-        android:layout_gravity="right|center"
+        android:layout_gravity="end|center"
         android:layout_row="0"
         android:text="@string/net_ssid"
         android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -29,7 +29,7 @@
     <EditText
         android:id="@+id/txtWPAKey"
         android:layout_column="1"
-        android:layout_gravity="left|top"
+        android:layout_gravity="start|top"
         android:layout_row="1"
         android:ems="10"
         android:inputType="textVisiblePassword"
@@ -38,7 +38,7 @@
     <TextView
         android:id="@+id/lblJointHead"
         android:layout_column="0"
-        android:layout_gravity="right|center"
+        android:layout_gravity="end|center"
         android:layout_row="1"
         android:text="@string/net_wpa_key"
         android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -56,7 +56,7 @@
         android:id="@+id/lblHotspotStatus"
         android:layout_column="0"
         android:layout_columnSpan="2"
-        android:layout_gravity="left"
+        android:layout_gravity="start"
         android:layout_row="3"
         android:text="@string/net_hotspot_disabled"
         android:textAppearance="?android:attr/textAppearanceSmall" />

@@ -6,6 +6,7 @@ import java.util.List;
 import de.northernstars.naocom.R;
 import de.robotik.nao.communicator.core.sections.Section;
 import de.robotik.nao.communicator.core.sections.SectionConnect;
+import de.robotik.nao.communicator.core.sections.SectionFunctions;
 import de.robotik.nao.communicator.core.sections.SectionLed;
 import de.robotik.nao.communicator.core.sections.SectionSpeech;
 import de.robotik.nao.communicator.core.sections.SectionStatus;
@@ -145,6 +146,7 @@ public class MainActivity extends FragmentActivity implements
 			mSections.add( new SectionStatus("NAO Status") );
 			mSections.add( new SectionSpeech("Speech") );
 			mSections.add( new SectionLed("LEDs") );
+			mSections.add( new SectionFunctions("Functions") );
 			
 		}
 	}

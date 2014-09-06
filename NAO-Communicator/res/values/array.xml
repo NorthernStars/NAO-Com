@@ -7,6 +7,7 @@
         <item>NAO Status</item>
         <item>Speech</item>
         <item>LEDs</item>
+        <item>Functions</item>
     </string-array>
 
 </resources>
