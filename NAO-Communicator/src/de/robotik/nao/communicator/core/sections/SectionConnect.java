@@ -73,9 +73,9 @@ public class SectionConnect extends Section implements OnRefreshListener {
 		swipeConnect = (SwipeRefreshLayout) findViewById(R.id.swipeConnect);
 		Button btnConnect = (Button) findViewById(R.id.btnConnect);
 		btnScanDevices = (Button) findViewById(R.id.btnScanDevices);
-		EditText txtHost = (EditText) findViewById(R.id.txtHost);
-		EditText txtPort = (EditText) findViewById(R.id.txtPort);
-		lstNetworkDevices = (LinearLayout) findViewById(R.id.lstNetworkDevices);
+		EditText txtHost = (EditText) findViewById(R.id.txtConnectHost);
+		EditText txtPort = (EditText) findViewById(R.id.txtConnectPort);
+		lstNetworkDevices = (LinearLayout) findViewById(R.id.lstConnectDevices);
 		
 		// set devices from list
 		lstNetworkDevices.removeAllViews();
@@ -374,8 +374,8 @@ public class SectionConnect extends Section implements OnRefreshListener {
 		if( manualConnect ){
 			
 			// manual connection
-			String host = ((EditText) findViewById(R.id.txtHost)).getText().toString().trim();
-			int port = Integer.parseInt( ((EditText) findViewById(R.id.txtPort)).getText().toString().trim() );
+			String host = ((EditText) findViewById(R.id.txtConnectHost)).getText().toString().trim();
+			int port = Integer.parseInt( ((EditText) findViewById(R.id.txtConnectPort)).getText().toString().trim() );
 			
 			Log.i(TAG, "Connecting to " + host + ":" + port);
 			

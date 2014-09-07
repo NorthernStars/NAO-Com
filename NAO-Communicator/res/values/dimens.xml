@@ -2,9 +2,13 @@
 <resources>
 
     <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="activity_padding">10dp</dimen>
-    <dimen name="label_button_min_height">35dp</dimen>
-    <dimen name="horizontal_line_height">3dp</dimen>
-    <dimen name="padding_text_title">4dp</dimen>
+    <dimen name="padding">10dp</dimen>
+    <dimen name="width_menu">240dp</dimen>
+    <dimen name="height_min_joint_label">35dp</dimen>
+    <dimen name="padding_section_header">4dp</dimen>
+    <dimen name="padding_action_bar">4dp</dimen>
+    <dimen name="padding_button">2dp</dimen>
+    <dimen name="margin_button">1dp</dimen>
+    <dimen name="margin_section_header">2dp</dimen>
 
 </resources>

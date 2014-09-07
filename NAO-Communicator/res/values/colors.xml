@@ -17,6 +17,7 @@
     <item name="darkerblue" type="color">#FF0088aa</item>
     <item name="inactive_text" type="color">#FF888888</item>
     <item name="black_text" type="color">#FF000000</item>
+    <item name="white_text" type="color">#FFFFFFFF</item>
     <item name="horizontal_line" type="color">#FF888888</item>
 
 </resources>

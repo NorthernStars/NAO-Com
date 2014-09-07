@@ -3,7 +3,7 @@
     android:id="@+id/swipeConnect"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/activity_padding" >
+    android:padding="@dimen/padding" >
 
     <GridLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -13,9 +13,8 @@
         android:rowCount="6" >
 
         <TextView
-            android:id="@+id/txtDevicename"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/lblConnectHost"
+            style="@style/Text"
             android:layout_column="0"
             android:layout_gravity="end"
             android:layout_row="0"
@@ -23,7 +22,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <EditText
-            android:id="@+id/txtHost"
+            android:id="@+id/txtConnectHost"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_column="1"
@@ -33,7 +32,8 @@
             android:inputType="text" />
 
         <TextView
-            android:id="@+id/lblJointHead"
+            android:id="@+id/lblConnectPort"
+            style="@style/Text"
             android:layout_column="0"
             android:layout_gravity="end"
             android:layout_row="1"
@@ -41,7 +41,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <EditText
-            android:id="@+id/txtPort"
+            android:id="@+id/txtConnectPort"
             android:layout_column="1"
             android:layout_gravity="fill_horizontal"
             android:layout_row="1"
@@ -50,7 +50,8 @@
 
         <Button
             android:id="@+id/btnConnect"
-            android:layout_width="wrap_content"
+            style="@style/Button"
+            android:layout_width="match_parent"
             android:layout_column="0"
             android:layout_columnSpan="2"
             android:layout_gravity="fill_horizontal|top"
@@ -59,18 +60,12 @@
             android:text="@string/net_connect" />
 
         <TextView
-            android:id="@+id/textView4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:id="@+id/lblConnectDevices"
+            style="@style/ItemTitle"
             android:layout_column="0"
             android:layout_columnSpan="2"
-            android:layout_gravity="start"
-            android:layout_marginTop="20dp"
             android:layout_row="3"
-            android:gravity="center"
-            android:text="@string/net_devices"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/blue" />
+            android:text="@string/net_devices" />
 
         <ScrollView
             android:id="@+id/scrollView1"
@@ -80,7 +75,7 @@
             android:layout_row="4" >
 
             <LinearLayout
-                android:id="@+id/lstNetworkDevices"
+                android:id="@+id/lstConnectDevices"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical" >
@@ -89,7 +84,8 @@
 
         <Button
             android:id="@+id/btnScanDevices"
-            android:layout_width="fill_parent"
+            style="@style/Button"
+            android:layout_width="match_parent"
             android:layout_column="0"
             android:layout_columnSpan="2"
             android:layout_gravity="start"

@@ -3,7 +3,7 @@
     android:id="@+id/swipeSpeech"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/activity_padding" >
+    android:padding="@dimen/padding" >
 
     <ScrollView
         android:layout_width="match_parent"
@@ -18,8 +18,7 @@
 
             <TextView
                 android:id="@+id/txtSpeechInput"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/ItemTitle"
                 android:text="@string/speech_input"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -50,167 +49,153 @@
                     android:src="@drawable/ic_action_discard" />
             </LinearLayout>
 
-            <LinearLayout
+            <CheckBox
+                android:id="@+id/chkSpeechAutomatic"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" >
+                android:text="@string/speech_automatic" />
 
-                <CheckBox
-                    android:id="@+id/chkSpeechAutomatic"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal" >
+
+                <Button
+                    android:id="@+id/btnSayText"
+                    style="@style/Button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0"
-                    android:text="@string/speech_automatic" />
+                    android:layout_weight="1"
+                    android:text="@string/speech_say" />
+
+                <Button
+                    android:id="@+id/btnSaveText"
+                    style="@style/Button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/speech_save" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/lblSpeechSettingsTitle"
+                style="@style/SectionHeader"
+                android:text="@string/settings" />
+
+            <LinearLayout
+                android:id="@+id/divSpeechSettings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone" >
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_weight="3"
-                    android:orientation="horizontal" >
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
 
-                    <Button
-                        android:id="@+id/btnSayText"
-                        style="?android:attr/buttonStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/speech_say" />
+                    <TextView
+                        android:id="@+id/lblSpeechLanguageTitle"
+                        style="@style/ItemTitle"
+                        android:text="@string/speech_language" />
 
-                    <Button
-                        android:id="@+id/btnSaveText"
-                        style="?android:attr/buttonStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/speech_save" />
+                    <Spinner
+                        android:id="@+id/spSpeechLanguage"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/lblSpeechVoiceTitle"
+                        style="@style/ItemTitle"
+                        android:text="@string/speech_voice" />
+
+                    <Spinner
+                        android:id="@+id/spSpeechVoice"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
                 </LinearLayout>
-            </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" >
-
-                <TextView
-                    android:id="@+id/lblSpeechLanguageTitle"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/speech_language"
-                    android:textAppearance="?android:attr/textAppearanceSmall" />
+                    android:layout_marginTop="@dimen/padding"
+                    android:gravity="center" >
 
-                <Spinner
-                    android:id="@+id/spSpeechLanguage"
+                    <TextView
+                        android:id="@+id/lblSpeechRateTitle"
+                        style="@style/Text"
+                        android:text="@string/speech_rate" />
+
+                    <TextView
+                        android:id="@+id/lblSpeechRate"
+                        style="@style/Text" />
+                </LinearLayout>
+
+                <SeekBar
+                    android:id="@+id/skbSpeechRate"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:max="200"
+                    android:progress="100" />
 
-                <TextView
-                    android:id="@+id/lblSpeechVoiceTitle"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/speech_voice"
-                    android:textAppearance="?android:attr/textAppearanceSmall" />
+                    android:layout_marginTop="@dimen/padding"
+                    android:gravity="center" >
 
-                <Spinner
-                    android:id="@+id/spSpeechVoice"
+                    <TextView
+                        android:id="@+id/lblSeechModulationTitle"
+                        style="@style/Text"
+                        android:text="@string/speech_modulation" />
+
+                    <TextView
+                        android:id="@+id/lblSpeechModulation"
+                        style="@style/Text" />
+                </LinearLayout>
+
+                <SeekBar
+                    android:id="@+id/skbSpeechModulation"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:max="150"
+                    android:progress="100" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding"
+                    android:gravity="center" >
+
+                    <TextView
+                        android:id="@+id/lblSpeechVolumeTitle"
+                        style="@style/Text"
+                        android:text="@string/speech_volume" />
+
+                    <TextView
+                        android:id="@+id/lblSpeechVolume"
+                        style="@style/Text" />
+                </LinearLayout>
+
+                <SeekBar
+                    android:id="@+id/skbSpeechVolume"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:max="100"
+                    android:progress="100" />
             </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_padding"
-                android:gravity="center" >
-
-                <TextView
-                    android:id="@+id/lblSpeechRateTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/speech_rate"
-                    android:textAppearance="?android:attr/textAppearanceSmall" />
-
-                <TextView
-                    android:id="@+id/lblSpeechRate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall" />
-            </LinearLayout>
-
-            <SeekBar
-                android:id="@+id/skbSpeechRate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:max="200"
-                android:progress="100" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_padding"
-                android:gravity="center" >
-
-                <TextView
-                    android:id="@+id/lblSeechModulationTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/speech_modulation"
-                    android:textAppearance="?android:attr/textAppearanceSmall" />
-
-                <TextView
-                    android:id="@+id/lblSpeechModulation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall" />
-            </LinearLayout>
-
-            <SeekBar
-                android:id="@+id/skbSpeechModulation"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:max="150"
-                android:progress="100" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_padding"
-                android:gravity="center" >
-
-                <TextView
-                    android:id="@+id/lblSpeechVolumeTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/speech_volume"
-                    android:textAppearance="?android:attr/textAppearanceSmall" />
-
-                <TextView
-                    android:id="@+id/lblSpeechVolume"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall" />
-            </LinearLayout>
-
-            <SeekBar
-                android:id="@+id/skbSpeechVolume"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:max="100"
-                android:progress="100" />
 
             <TextView
                 android:id="@+id/lblSpeechHistoryTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/lightblue"
-                android:gravity="center"
-                android:padding="@dimen/padding_text_title"
-                android:text="@string/speech_history"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                style="@style/SectionHeader"
+                android:text="@string/speech_history" />
 
             <LinearLayout
                 android:id="@+id/lstSpeechHistory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" >
+                android:orientation="vertical"
+                android:visibility="gone" >
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

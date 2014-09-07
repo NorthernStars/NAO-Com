@@ -6,7 +6,7 @@
     <string name="menu_open">Open menu</string>
     <string name="menu_close">Close menu</string>
     <string name="title_activity_install">Communication Server Installation</string>
-    <string name="action_settings">Settings</string>
+    <string name="settings">Settings</string>
     <string name="btnOK">OK</string>
     <string name="btnCancel">Cancel</string>
     <string name="net_host">Host:</string>
@@ -46,12 +46,11 @@
     <string name="speech_remove_item">Remove item</string>
     <string name="speech_language">Language:</string>
     <string name="speech_voice">Voice:</string>
-    <string name="status_general">General</string>
     <string name="status_nao_name">NAO</string>
     <string name="status_battery_state_img_Description">bat state</string>
     <string name="status_change_name">Change NAOs name</string>
     <string name="status_change_name_msg">Enter new name for NAO (needs NAO restart):</string>
-    <string name="status_volume">Volume</string>
+    <string name="status_volume">System Volume</string>
     <string name="status_system_volume">System Volume</string>
     <string name="status_player_volume">Player Volume</string>
     <string name="joints_control_header">Stiffness control</string>

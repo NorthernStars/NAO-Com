@@ -3,7 +3,7 @@
     android:id="@+id/swipeStatus"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/activity_padding" >
+    android:padding="@dimen/padding" >
 
     <ScrollView
         android:layout_width="match_parent"
@@ -13,94 +13,68 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/activity_padding"
-            android:gravity="center"
             android:orientation="vertical" >
 
-            <TextView
-                android:id="@+id/lblStatusGeneral"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/lightblue"
-                android:gravity="center"
-                android:padding="@dimen/padding_text_title"
-                android:text="@string/status_general" />
-
             <LinearLayout
-                android:id="@+id/divStatusGeneral"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" >
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/activity_padding" >
-
-                    <TextView
-                        android:id="@+id/txtStatusDevicename"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/activity_padding"
-                        android:layout_marginRight="@dimen/activity_padding"
-                        android:layout_weight="1"
-                        android:text="@string/status_nao_name"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:textColor="@color/blue" />
-
-                    <ImageView
-                        android:id="@+id/imgStatusBattery"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0"
-                        android:contentDescription="@string/status_battery_state_img_Description"
-                        android:src="@drawable/bat_level_0" />
-                </LinearLayout>
-
-                <Button
-                    android:id="@+id/btnStatusChangeNaoName"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:text="@string/status_change_name" />
+                android:layout_height="wrap_content" >
 
                 <TextView
-                    android:id="@+id/lblStatusAutonomousLife"
+                    android:id="@+id/txtStatusDevicename"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="@dimen/padding"
+                    android:paddingRight="@dimen/padding"
+                    android:paddingStart="@dimen/padding"
+                    android:text="@string/status_nao_name"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <ImageView
+                    android:id="@+id/imgStatusBattery"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/activity_padding"
-                    android:text="@string/autonomous_life"
-                    android:textColor="@color/blue" />
-
-                <Spinner
-                    android:id="@+id/spAutonomousLife"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_weight="0"
+                    android:contentDescription="@string/status_battery_state_img_Description"
+                    android:src="@drawable/bat_level_0" />
             </LinearLayout>
+
+            <Button
+                android:id="@+id/btnStatusChangeNaoName"
+                style="@style/Button"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="@string/status_change_name" />
+
+            <TextView
+                android:id="@+id/lblStatusAutonomousLife"
+                style="@style/ItemTitle"
+                android:layout_marginTop="@dimen/padding"
+                android:text="@string/autonomous_life" />
+
+            <Spinner
+                android:id="@+id/spAutonomousLife"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/lblStatusVolume"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_padding"
-                android:background="@color/lightblue"
-                android:gravity="center"
-                android:padding="@dimen/padding_text_title"
+                style="@style/SectionHeader"
                 android:text="@string/status_volume" />
 
             <LinearLayout
                 android:id="@+id/divStatusVolume"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" >
+                android:orientation="vertical"
+                android:visibility="gone" >
 
                 <TextView
                     android:id="@+id/lblStatusSystemVolume"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/activity_padding"
-                    android:text="@string/status_system_volume"
-                    android:textColor="@color/blue" />
+                    style="@style/ItemTitle"
+                    android:text="@string/status_system_volume" />
 
                 <SeekBar
                     android:id="@+id/skbSystemVolume"
@@ -111,11 +85,8 @@
 
                 <TextView
                     android:id="@+id/lblStatusPlayerVolume"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/activity_padding"
-                    android:text="@string/status_player_volume"
-                    android:textColor="@color/blue" />
+                    style="@style/ItemTitle"
+                    android:text="@string/status_player_volume" />
 
                 <SeekBar
                     android:id="@+id/skbStatusPlayerVolume"
@@ -127,19 +98,15 @@
 
             <TextView
                 android:id="@+id/lblStatusStiffness"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_padding"
-                android:background="@color/lightblue"
-                android:gravity="center"
-                android:padding="@dimen/padding_text_title"
+                style="@style/SectionHeader"
                 android:text="@string/joints_control_header" />
 
             <LinearLayout
                 android:id="@+id/divStatusStiffness"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" >
+                android:orientation="vertical"
+                android:visibility="gone" >
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -150,11 +117,11 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginEnd="@dimen/activity_padding"
-                        android:layout_marginRight="@dimen/activity_padding"
+                        android:layout_marginEnd="@dimen/padding"
+                        android:layout_marginRight="@dimen/padding"
                         android:layout_weight="1"
                         android:gravity="start|center_vertical"
-                        android:minHeight="@dimen/label_button_min_height"
+                        android:minHeight="@dimen/height_min_joint_label"
                         android:text="@joint/Body"
                         android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -171,18 +138,18 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/activity_padding" >
+                    android:layout_marginTop="@dimen/padding" >
 
                     <TextView
                         android:id="@+id/lblJointHead"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginEnd="@dimen/activity_padding"
-                        android:layout_marginRight="@dimen/activity_padding"
+                        android:layout_marginEnd="@dimen/padding"
+                        android:layout_marginRight="@dimen/padding"
                         android:layout_weight="1"
                         android:gravity="start|center_vertical"
-                        android:minHeight="@dimen/label_button_min_height"
+                        android:minHeight="@dimen/height_min_joint_label"
                         android:text="@joint/Head"
                         android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -205,11 +172,11 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginEnd="@dimen/activity_padding"
-                        android:layout_marginRight="@dimen/activity_padding"
+                        android:layout_marginEnd="@dimen/padding"
+                        android:layout_marginRight="@dimen/padding"
                         android:layout_weight="1"
                         android:gravity="start|center_vertical"
-                        android:minHeight="@dimen/label_button_min_height"
+                        android:minHeight="@dimen/height_min_joint_label"
                         android:text="@joint/LArm"
                         android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -232,11 +199,11 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginEnd="@dimen/activity_padding"
-                        android:layout_marginRight="@dimen/activity_padding"
+                        android:layout_marginEnd="@dimen/padding"
+                        android:layout_marginRight="@dimen/padding"
                         android:layout_weight="1"
                         android:gravity="start|center_vertical"
-                        android:minHeight="@dimen/label_button_min_height"
+                        android:minHeight="@dimen/height_min_joint_label"
                         android:text="@joint/RArm"
                         android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -259,11 +226,11 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginEnd="@dimen/activity_padding"
-                        android:layout_marginRight="@dimen/activity_padding"
+                        android:layout_marginEnd="@dimen/padding"
+                        android:layout_marginRight="@dimen/padding"
                         android:layout_weight="1"
                         android:gravity="start|center_vertical"
-                        android:minHeight="@dimen/label_button_min_height"
+                        android:minHeight="@dimen/height_min_joint_label"
                         android:text="@joint/LLeg"
                         android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -286,11 +253,11 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginEnd="@dimen/activity_padding"
-                        android:layout_marginRight="@dimen/activity_padding"
+                        android:layout_marginEnd="@dimen/padding"
+                        android:layout_marginRight="@dimen/padding"
                         android:layout_weight="1"
                         android:gravity="start|center_vertical"
-                        android:minHeight="@dimen/label_button_min_height"
+                        android:minHeight="@dimen/height_min_joint_label"
                         android:text="@joint/RLeg"
                         android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -313,11 +280,11 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginEnd="@dimen/activity_padding"
-                        android:layout_marginRight="@dimen/activity_padding"
+                        android:layout_marginEnd="@dimen/padding"
+                        android:layout_marginRight="@dimen/padding"
                         android:layout_weight="1"
                         android:gravity="start|center_vertical"
-                        android:minHeight="@dimen/label_button_min_height"
+                        android:minHeight="@dimen/height_min_joint_label"
                         android:text="@joint/LHand"
                         android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -340,11 +307,11 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginEnd="@dimen/activity_padding"
-                        android:layout_marginRight="@dimen/activity_padding"
+                        android:layout_marginEnd="@dimen/padding"
+                        android:layout_marginRight="@dimen/padding"
                         android:layout_weight="1"
                         android:gravity="start|center_vertical"
-                        android:minHeight="@dimen/label_button_min_height"
+                        android:minHeight="@dimen/height_min_joint_label"
                         android:text="@joint/RHand"
                         android:textAppearance="?android:attr/textAppearanceMedium" />
 

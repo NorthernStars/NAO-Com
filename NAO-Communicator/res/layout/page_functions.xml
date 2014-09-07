@@ -3,7 +3,7 @@
     android:id="@+id/swipeSpeech"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/activity_padding" >
+    android:padding="@dimen/padding" >
 
     <ScrollView
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -17,18 +17,15 @@
 
             <TextView
                 android:id="@+id/txtFunctionsBasicTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/lightblue"
-                android:gravity="center"
-                android:padding="@dimen/padding_text_title"
+                style="@style/SectionHeader"
                 android:text="@string/functions_basic" />
 
             <LinearLayout
                 android:id="@+id/divFunctionsBasic"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" >
+                android:orientation="vertical"
+                android:visibility="gone" >
 
                 <LinearLayout
                     style="?android:attr/buttonBarStyle"
@@ -77,11 +74,7 @@
 
             <TextView
                 android:id="@+id/txtFunctionsTrackerTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/lightblue"
-                android:gravity="center"
-                android:padding="@dimen/padding_text_title"
+                style="@style/SectionHeader"
                 android:text="@string/functions_tracker" />
 
             <LinearLayout
@@ -89,7 +82,8 @@
                 style="?android:attr/buttonBarStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal" >
+                android:orientation="horizontal"
+                android:visibility="gone" >
 
                 <Button
                     android:id="@+id/btnFunctionsFaceTracker"
@@ -110,18 +104,15 @@
 
             <TextView
                 android:id="@+id/txtFunctionsDanceTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/lightblue"
-                android:gravity="center"
-                android:padding="@dimen/padding_text_title"
+                style="@style/SectionHeader"
                 android:text="@string/functions_dance" />
 
             <LinearLayout
                 android:id="@+id/divFunctionsDance"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" >
+                android:orientation="vertical"
+                android:visibility="gone" >
 
                 <LinearLayout
                     style="?android:attr/buttonBarStyle"
@@ -192,18 +183,15 @@
 
             <TextView
                 android:id="@+id/txtFunctionsCustomNewTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/lightblue"
-                android:gravity="center"
-                android:padding="@dimen/padding_text_title"
+                style="@style/SectionHeader"
                 android:text="@string/functions_custom_new" />
 
             <LinearLayout
                 android:id="@+id/divFunctionsCustomNew"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" >
+                android:orientation="vertical"
+                android:visibility="gone" >
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -259,18 +247,15 @@
 
             <TextView
                 android:id="@+id/txtFunctionsCustomTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/lightblue"
-                android:gravity="center"
-                android:padding="@dimen/padding_text_title"
+                style="@style/SectionHeader"
                 android:text="@string/functions_custom" />
 
             <LinearLayout
                 android:id="@+id/divFunctionsCustom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" >
+                android:orientation="vertical"
+                android:visibility="gone" >
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
