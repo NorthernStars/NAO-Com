@@ -7,7 +7,6 @@
     <dimen name="height_min_joint_label">35dp</dimen>
     <dimen name="padding_section_header">4dp</dimen>
     <dimen name="padding_action_bar">4dp</dimen>
-    <dimen name="padding_button">2dp</dimen>
     <dimen name="margin_button">1dp</dimen>
     <dimen name="margin_section_header">2dp</dimen>
 

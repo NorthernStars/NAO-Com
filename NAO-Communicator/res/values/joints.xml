@@ -9,6 +9,7 @@
     <item name="RLeg" format="string" type="joint">Leg right</item>
     <item name="LHand" format="string" type="joint">Hand left</item>
     <item name="RHand" format="string" type="joint">Hand right</item>
+    <!--
     <item name="LShoulder" format="string" type="joint">Shoulder left</item>
     <item name="RShoulder" format="string" type="joint">Shoulder right</item>
     <item name="LElbow" format="string" type="joint">Elbow left</item>
@@ -21,5 +22,6 @@
     <item name="RKnee" format="string" type="joint">Knee right</item>
     <item name="LAnkle" format="string" type="joint">Ankle left</item>
     <item name="RAnkle" format="string" type="joint">Ankle right</item>
+    -->
 
 </resources>

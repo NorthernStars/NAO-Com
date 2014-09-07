@@ -70,6 +70,20 @@
                         android:layout_weight="1"
                         android:text="@string/functions_basic_shake_hands" />
                 </LinearLayout>
+
+                <LinearLayout
+                    style="?android:attr/buttonBarStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+
+                    <Button
+                        android:id="@+id/btnFunctionWipeForehead"
+                        style="?android:attr/buttonBarButtonStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/functions_basic_wipe_forehead" />
+                </LinearLayout>
             </LinearLayout>
 
             <TextView
@@ -227,7 +241,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="end"
-                        android:text="@string/functions_custom_new" />
+                        android:text="@string/functions_custom_event_name" />
 
                     <EditText
                         android:id="@+id/txtFunctionsCustomNewName"

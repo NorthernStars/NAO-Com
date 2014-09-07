@@ -30,7 +30,6 @@
     <string name="net_connection_failed">Establishing connection failed</string>
     <string name="net_connected">Connected</string>
     <string name="net_disconnected">Disconnected</string>
-    <string name="net_working">Working</string>
     <string name="net_restart_network_service">Restarting service &#8230;</string>
     <string name="net_naoqi">NAOqi</string>
     <string name="net_ssh">SSH</string>
@@ -62,7 +61,6 @@
     <string name="joints_control_rhand_close">Close right hand</string>
     <string name="joints_img_description">stiffness</string>
     <string name="autonomous_life">Autonomous life</string>
-    <string name="autonomous_life_state_"></string>
     <string name="img_description">image</string>
     <string name="led_happy">Happy</string>
     <string name="led_angry">Angry</string>
