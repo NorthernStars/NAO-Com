@@ -325,25 +325,27 @@
                         android:src="@drawable/stiffness_gray" />
                 </LinearLayout>
 
-                <Button
-                    android:id="@+id/btnStatusLeftHand"
+                <LinearLayout
+                    style="?android:attr/buttonBarStyle"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:text="@string/joints_control_lhand" />
+                    android:layout_height="wrap_content" >
 
-                <Button
-                    android:id="@+id/btnStatusRightHand"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:text="@string/joints_control_rhand" />
+                    <Button
+                        android:id="@+id/btnStatusLeftHand"
+                        style="?android:attr/buttonBarButtonStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/joints_control_lhand" />
 
-                <TextView
-                    android:id="@+id/txtSFTP"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    <Button
+                        android:id="@+id/btnStatusRightHand"
+                        style="?android:attr/buttonBarButtonStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/joints_control_rhand" />
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

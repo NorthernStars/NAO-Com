@@ -78,8 +78,6 @@ public class SectionStatus extends Section implements
 //	private ImageView imgJointlAnkle;
 //	private ImageView imgJointRAnkle;
 	
-
-	
 	
 	/**
 	 * Constructor

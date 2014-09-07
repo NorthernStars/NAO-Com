@@ -28,11 +28,13 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class MainActivity extends FragmentActivity implements
 	NetworkDataRecievedListener,
@@ -215,6 +217,48 @@ public class MainActivity extends FragmentActivity implements
 	 */
 	public ViewPager getViewPager() {
 		return mViewPager;
+	}
+	
+	/**
+	 * Function called if a section header is clicked.
+	 * Expands / Collapses the following {@link LinearLayout}, if existing.
+	 * @param vView		Section header {@link View}
+	 */
+	public void containerClicked(View vView){
+		
+		ViewGroup vParent = (ViewGroup) vView.getParent();
+		if( vParent != null ){
+			
+			// get next view
+			int vPosition = vParent.indexOfChild(vView)+1;
+			if( vParent.getChildCount() > vPosition ){				
+				View vViewContainer = vParent.getChildAt(vPosition);
+				if( vViewContainer != null
+						&& vViewContainer instanceof LinearLayout
+						&& vView instanceof TextView){
+					
+					// cast text view
+					TextView vTextView = (TextView) vView;					
+					if( vViewContainer.getVisibility() == View.VISIBLE ){
+						
+						// set visible
+						vViewContainer.setVisibility( View.GONE );
+						vTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0,
+								R.drawable.ic_action_expand, 0);
+						
+					} else {
+						
+						// set invisible
+						vViewContainer.setVisibility( View.VISIBLE );
+						vTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0,
+								R.drawable.ic_action_collapse, 0);
+						
+					}
+					
+				}				
+			}
+		}
+		
 	}
 
 

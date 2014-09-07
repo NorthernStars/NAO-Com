@@ -10,6 +10,8 @@
         <item name="android:layout_marginBottom">@dimen/margin_section_header</item>
         <item name="android:gravity">left|center_vertical</item>
         <item name="android:padding">@dimen/padding_section_header</item>
+        <item name="android:onClick">containerClicked</item>
+        <item name="android:clickable">true</item>
     </style>
 
     <style name="Text" parent="@android:style/TextAppearance.DeviceDefault.Small">
