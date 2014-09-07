@@ -158,7 +158,10 @@ public class RemoteNAO implements NAOInterface, NetworkDataSender, NetworkDataRe
 
 	@Override
 	public List<String> getHostAdresses() {
-		return connector.getHostAdresses();
+		if( connector != null ){
+			return connector.getHostAdresses();
+		}
+		return new ArrayList<String>();
 	}
 	
 	@Override

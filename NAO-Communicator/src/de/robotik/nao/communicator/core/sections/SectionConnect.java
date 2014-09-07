@@ -412,7 +412,9 @@ public class SectionConnect extends Section implements OnRefreshListener {
 						if( device != null ){
 							lstNetworkDevices.addView( device.getView() );
 						}
-						servicesProcessing.remove( device.getNao().getHostAdresses().get(0) );
+						if( device.getNao() != null && device.getNao().getHostAdresses().size() > 0 ){
+							servicesProcessing.remove( device.getNao().getHostAdresses().get(0) );
+						}
 					};
 					
 	        	}.execute(new RemoteDevice[]{device});
