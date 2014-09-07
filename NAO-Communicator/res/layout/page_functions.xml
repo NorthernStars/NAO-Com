@@ -254,6 +254,7 @@
 
                 <Button
                     android:id="@+id/btnFunctionsCustomNewAdd"
+                    style="@style/Button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/functions_custom_add" />
