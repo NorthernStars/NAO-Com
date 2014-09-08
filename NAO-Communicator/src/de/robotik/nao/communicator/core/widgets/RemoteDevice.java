@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class RemoteDevice implements
@@ -32,6 +33,7 @@ public class RemoteDevice implements
 	private TextView txtSSH;
 	private TextView txtSFTP;
 	private ImageView imgLogo;
+	private ProgressBar pgbLoading;
 	
 	/**
 	 * Constructor
@@ -74,6 +76,7 @@ public class RemoteDevice implements
 		txtNAOqi = (TextView) mView.findViewById(R.id.txtNAOqi);
 		txtSSH = (TextView) mView.findViewById(R.id.txtSSH);
 		txtSFTP = (TextView) mView.findViewById(R.id.txtSFTP);
+		pgbLoading = (ProgressBar) mView.findViewById(R.id.pgbLoading);
 		
 		mView.setOnClickListener(this);
 	}
@@ -233,7 +236,8 @@ public class RemoteDevice implements
 		
 		if( !isTheSame && getNao().connect() ){
 			MainActivity.getInstance().setConnectedDevice( this );
-			
+			imgLogo.setVisibility( View.GONE );
+			pgbLoading.setVisibility( View.VISIBLE );			
 		}
 		
 	}
@@ -253,6 +257,10 @@ public class RemoteDevice implements
 						// set transparent background
 						getView().setBackgroundColor( Color.TRANSPARENT );
 					}
+					
+					// disable loading progress bar
+					imgLogo.setVisibility( View.VISIBLE );
+					pgbLoading.setVisibility( View.GONE );
 				}
 			});
 	}
