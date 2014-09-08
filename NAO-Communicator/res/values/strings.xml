@@ -10,8 +10,7 @@
     <string name="btnOK">OK</string>
     <string name="btnCancel">Cancel</string>
     <string name="net_host">Host:</string>
-    <string name="net_port">Port:</string>
-    <string name="net_connect">Connect</string>
+    <string name="net_add_device">Add device</string>
     <string name="net_devices">Available NAOs:</string>
     <string name="net_scan_devices">Scan for devices</string>
     <string name="net_ssid">SSID:</string>

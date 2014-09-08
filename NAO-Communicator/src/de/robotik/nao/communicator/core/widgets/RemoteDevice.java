@@ -47,14 +47,13 @@ public class RemoteDevice implements
 	
 	/**
 	 * Constructor
-	 * @param context	Layout {@link Context}
-	 * @param host		{@link String} of remote host name
-	 * @param port		{@link Integer} of remote host port
+	 * @param aContext	Layout {@link Context}
+	 * @param aHost		{@link String} of remote host name
 	 */
-	public RemoteDevice(Context context, String host, int port){
-		this(context);
-		
-		txtName.setText(host);
+	public RemoteDevice(Context aContext, String aHost){
+		this(aContext);		
+		txtName.setText(aHost);
+		addAdress(aHost);
 	}
 	
 	/**
@@ -191,6 +190,16 @@ public class RemoteDevice implements
 			}
 		}		
 		return false;
+	}
+	
+	/**
+	 * Adds a new host address.
+	 * @param adress	{@link String} host address.
+	 */
+	public void addAdress(String adress){
+		if( !hasAdress(adress) ){
+			nao.addHostAdress(adress);
+		}
 	}
 	
 

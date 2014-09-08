@@ -165,6 +165,15 @@ public class RemoteNAO implements NAOInterface, NetworkDataSender, NetworkDataRe
 	}
 	
 	@Override
+	public void addHostAdress(String aAdress) {
+		if( connector != null ){
+			connector.addHostAdress(aAdress);
+		} else {
+			connector = new NAOConnector(aAdress, NAOConnector.defaultPort);
+		}
+	}
+	
+	@Override
 	public String getName() {
 		return name;
 	}

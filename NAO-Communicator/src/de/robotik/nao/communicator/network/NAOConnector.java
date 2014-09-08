@@ -69,12 +69,12 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 	
 	/**
 	 * Constructor
-	 * @param host
-	 * @param port
+	 * @param aHost
+	 * @param aPort
 	 */
-	public NAOConnector(String host, int port) {
-		this.hostAdresses.add(host);
-		this.port = port;
+	public NAOConnector(String aHost, int aPort) {
+		hostAdresses.add(aHost);
+		port = aPort;
 	}
 	
 	/**
@@ -443,6 +443,12 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 	 */
 	public List<String> getHostAdresses() {
 		return hostAdresses;
+	}
+	
+	public void addHostAdress(String aAdress){
+		if( !hostAdresses.contains(aAdress) ){
+			hostAdresses.add(aAdress);
+		}
 	}
 
 	/**

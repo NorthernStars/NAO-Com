@@ -11,7 +11,6 @@ import javax.jmdns.ServiceEvent;
 import javax.jmdns.ServiceListener;
 
 import de.northernstars.naocom.R;
-import de.robotik.nao.communicator.core.MainActivity;
 import de.robotik.nao.communicator.core.RemoteNAO;
 import de.robotik.nao.communicator.core.widgets.RemoteDevice;
 import de.robotik.nao.communicator.network.NAOConnector;
@@ -20,6 +19,7 @@ import android.net.wifi.WifiManager;
 import android.net.wifi.WifiManager.MulticastLock;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.NetworkOnMainThreadException;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.util.Log;
@@ -70,10 +70,9 @@ public class SectionConnect extends Section implements OnRefreshListener {
 		
 		// get ui widgets
 		swipeConnect = (SwipeRefreshLayout) findViewById(R.id.swipeConnect);
-		Button btnConnect = (Button) findViewById(R.id.btnConnect);
+		Button btnAddDevice = (Button) findViewById(R.id.btnConnect);
 		btnScanDevices = (Button) findViewById(R.id.btnScanDevices);
 		EditText txtHost = (EditText) findViewById(R.id.txtConnectHost);
-		EditText txtPort = (EditText) findViewById(R.id.txtConnectPort);
 		lstNetworkDevices = (LinearLayout) findViewById(R.id.lstConnectDevices);
 		
 		// set devices from list
@@ -96,13 +95,15 @@ public class SectionConnect extends Section implements OnRefreshListener {
 		
 		// add default host and port
 		txtHost.setText( NAOConnector.defaultHost );
-		txtPort.setText( Integer.toString(NAOConnector.defaultPort) );
 		
 		// connect ui widgets
-		btnConnect.setOnClickListener( new View.OnClickListener() {			
+		btnAddDevice.setOnClickListener( new View.OnClickListener() {			
 			@Override
 			public void onClick(View v) {
-				connect(true);
+				String vHost = ((EditText) findViewById(R.id.txtConnectHost)).getText().toString().trim();
+				if( addDevice(vHost) ){
+					swipeConnect.setRefreshing(false);
+				}				
 			}
 		} );
 		
@@ -290,65 +291,8 @@ public class SectionConnect extends Section implements OnRefreshListener {
 //	            	Log.i(TAG, "Service host adress: " + adrr);
 //	            }
 	        	
-	        	swipeConnect.setRefreshing(false);
-	        	
-	        	if( service.getInfo().getHostAddresses().length > 0 ){
-	        		
-	        		// try to resolve correct hostname
-	        		String host = service.getInfo().getHostAddresses()[0];
-					try {
-						host = InetAddress.getByName(host).getHostAddress();
-					} catch (UnknownHostException e) {
-						Log.e(TAG, "Resolving " + host + " was not successfull.");
-						e.printStackTrace();
-						return;
-					}
-	        		
-	        		// check if service already processing
-		        	while( servicesProcessing.contains(host) );
-		        	servicesProcessing.add(host);
-	        		
-	        		// search for devices in list of devices
-		        	boolean found = false;
-		        	for( RemoteDevice device : devices ){
-		        		if( device.hasAdress(host) ){
-		        			device.addNetworkService(service);
-		        			servicesProcessing.remove(host);
-		        			found = true;
-		        			break;
-		        		}
-		        	}
-		        	
-		        	// device not found > adding new device	
-		        	if( !found ){
-			        	new AsyncTask<ServiceEvent, Void, RemoteDevice>(){
-	
-							@Override
-							protected RemoteDevice doInBackground(
-									ServiceEvent... params) {
-								if( params.length > 0 ){
-									ServiceEvent service = params[0];
-									RemoteDevice device = new RemoteDevice(getActivity(), service);
-									devices.add(device);
-									return device;
-								}
-								return null;
-							}
-							
-							protected void onPostExecute(RemoteDevice device) {
-								if( device != null ){
-									lstNetworkDevices.addView( device.getView() );
-								}
-								servicesProcessing.remove( device.getNao().getHostAdresses().get(0) );
-							};
-							
-			        	}.execute(new ServiceEvent[]{service});
-		        	}
-		        	
-	        	}
-	        	else{
-	        		Log.e(TAG, "service contains no host adresse: " + service.getInfo().getHostAddresses().length);
-	        	}
+	        	swipeConnect.setRefreshing(false);	        	
+	        	addDevice(service);
 	        }
 	        
 	        public void serviceRemoved(ServiceEvent service) {
@@ -364,76 +308,139 @@ public class SectionConnect extends Section implements OnRefreshListener {
 	    };
 	}
 	
-	
 	/**
-	 * Connect to nao
-	 * @param manualConnect {@code true} if connect with manual host and port, {@code false} otherwise
+	 * Adds {@link RemoteDevice} to device list
+	 * @param aService	{@link ServiceEvent} of {@link RemoteDevice}
+	 * @return			{@code true} if successful, {@code false} otherwise.
 	 */
-	public void connect(boolean manualConnect){
-		if( manualConnect ){
+	private boolean addDevice(ServiceEvent aService){
+		
+		if( aService.getInfo().getHostAddresses().length > 0 ){
 			
-			// manual connection
-			String host = ((EditText) findViewById(R.id.txtConnectHost)).getText().toString().trim();
-			int port = Integer.parseInt( ((EditText) findViewById(R.id.txtConnectPort)).getText().toString().trim() );
+			// try to resolve correct hostname
+			String vHost = aService.getInfo().getHostAddresses()[0];
+			try {
+				vHost = InetAddress.getByName(vHost).getHostAddress();
+			} catch (UnknownHostException e) {
+				Log.e(TAG, "Resolving " + vHost + " was not successfull.");
+				return false;
+			}
 			
-			Log.i(TAG, "Connecting to " + host + ":" + port);
-			
-			// try to connect to nao
-			
-			// search for devices in list of devices
-        	boolean found = false;
-        	RemoteDevice device = null;
-        	for( RemoteDevice dev : devices ){
-        		if( dev.hasAdress(host) ){
-        			device = dev;
-        			found = true;
-        			break;
-        		}
-        	}
+			// check if service already processing
+        	while( servicesProcessing.contains(vHost) );
+        	servicesProcessing.add(vHost);
         	
-        	if( !found ){
+        	// try to get existing device
+        	RemoteDevice vDevice = getDevice(vHost);
+        	if( vDevice != null ){
         		
-        		device = new RemoteDevice(getActivity(), host, port);
-        		new AsyncTask<RemoteDevice, Void, RemoteDevice>(){
-        			
+        		// add service to existing device
+        		vDevice.addNetworkService(aService);
+    			servicesProcessing.remove(vHost);
+    			
+        	} else {
+        		
+        		// add new device
+        		new AsyncTask<ServiceEvent, Void, RemoteDevice>(){    				
 					@Override
 					protected RemoteDevice doInBackground(
-							RemoteDevice... params) {
+							ServiceEvent... params) {
 						if( params.length > 0 ){
-							RemoteDevice device = params[0];
-							devices.add(device);
-							return device;
+							ServiceEvent vService = params[0];
+							RemoteDevice vDevice = new RemoteDevice(getActivity(), vService);
+							devices.add(vDevice);
+							return vDevice;
 						}
 						return null;
 					}
 					
-					protected void onPostExecute(RemoteDevice device) {
-						if( device != null ){
-							lstNetworkDevices.addView( device.getView() );
+					protected void onPostExecute(RemoteDevice aDevice) {
+						if( aDevice != null ){
+							lstNetworkDevices.addView( aDevice.getView() );
 						}
-						if( device.getNao() != null && device.getNao().getHostAdresses().size() > 0 ){
-							servicesProcessing.remove( device.getNao().getHostAdresses().get(0) );
-						}
-					};
-					
-	        	}.execute(new RemoteDevice[]{device});
-
+						servicesProcessing.remove( aDevice.getNao().getHostAdresses().get(0) );
+					};					
+	        	}.execute(new ServiceEvent[]{aService});
+	        	
         	}
         	
-			MainActivity.getInstance().setConnectedDevice( device );
-			MainActivity.getInstance().getConnectedDevice().getNao().connect();
-			
-			// TODO: Doing install on connection thread
-			//showAksForServerInstallDialog(host, port);
-			
+        	return true;
+        	
 		}
-		else{
+		
+		Log.e(TAG, "service contains no host adresses: " + aService.getInfo().getHostAddresses().length);
+		return false;
+	}
+	
+	/**
+	 * Adds {@link RemoteDevice} to device list.
+	 * @param aHost	{@link String} host address.
+	 * @return		{@code true} if successful, {@code false} otherwise.
+	 */
+	private boolean addDevice(String aHost){
+		
+		try {
 			
-			// connecting to found device
-			System.out.println("nope");
+			// resolve host address
+			aHost = InetAddress.getByName(aHost).getHostAddress();
 			
+			// check if service already processing
+        	while( servicesProcessing.contains(aHost) );
+        	servicesProcessing.add(aHost);
+			
+			// try to get existing device
+			if( getDevice(aHost) == null ){
+				
+				// add new device
+        		new AsyncTask<String, Void, RemoteDevice>(){    				
+					@Override
+					protected RemoteDevice doInBackground(
+							String... params) {
+						if( params.length > 0 ){
+							String vHost = params[0];
+							RemoteDevice vDevice = new RemoteDevice(getActivity(), vHost);
+							devices.add(vDevice);
+							return vDevice;
+						}
+						return null;
+					}
+					
+					protected void onPostExecute(RemoteDevice aDevice) {
+						if( aDevice != null ){
+							lstNetworkDevices.addView( aDevice.getView() );
+						}
+						servicesProcessing.remove( aDevice.getNao().getHostAdresses().get(0) );
+					};					
+	        	}.execute(new String[]{aHost});
+	        	
+	        	return true;				
+			}
+			
+			
+		} catch (UnknownHostException e) {
+			Log.e(TAG, "Resolving " + aHost + " was not successfull.");
+		} catch (NetworkOnMainThreadException e) {
+			Log.e(TAG, "Resolving " + aHost + " was not successfull.");
 		}
-
+		
+		return false;
+	}
+	
+	/**
+	 * Gets {@link RemoteDevice} by host name.
+	 * @param host	{@link String} host name
+	 * @return		{@link RemoteDevice} if found, {@code null} othwerise.
+	 */
+	private RemoteDevice getDevice(String host){
+		
+		// search for devices in list of devices
+    	for( RemoteDevice device : devices ){
+    		if( device.hasAdress(host) ){
+    			return device;
+    		}
+    	}
+    	
+    	return null;
 	}
 	
 	

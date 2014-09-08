@@ -46,8 +46,14 @@ public interface NAOInterface {
 	public boolean hasCommunicationServer();
 	
 	/**
-	 * @return Adress of remote host
+	 * @return Address of remote host
 	 */
 	public List<String> getHostAdresses();
+	
+	/**
+	 * Add new host address
+	 * @param aAdress	{@link String} host address
+	 */
+	public void addHostAdress(String aAdress);
 	
 }
