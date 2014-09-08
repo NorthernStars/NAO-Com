@@ -11,7 +11,6 @@ import javax.jmdns.ServiceEvent;
 import javax.jmdns.ServiceListener;
 
 import de.northernstars.naocom.R;
-import de.robotik.nao.communicator.core.InstallActivity;
 import de.robotik.nao.communicator.core.MainActivity;
 import de.robotik.nao.communicator.core.RemoteNAO;
 import de.robotik.nao.communicator.core.widgets.RemoteDevice;
@@ -444,8 +443,7 @@ public class SectionConnect extends Section implements OnRefreshListener {
 	 * @param port Port of NAO server
 	 */
 	public void showAksForServerInstallDialog(String host, int port){
-		InstallActivity.AskForInstallDialog dialog = new InstallActivity.AskForInstallDialog(host, port);
-		dialog.show(getFragmentManager(), "Install");
+		
 	}
 
 	@Override
