@@ -96,5 +96,6 @@
     <string name="functions_custom_almemory_key">ALMemory Key:</string>
     <string name="functions_custom_event_name">Event name:</string>
     <string name="functions_custom_add">Add new event</string>
+    <string name="functions_abort">Abort</string>
 
 </resources>
