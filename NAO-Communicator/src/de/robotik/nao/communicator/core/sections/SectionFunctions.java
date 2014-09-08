@@ -7,6 +7,8 @@ import de.robotik.nao.communicator.network.data.NAOCommands;
 import de.robotik.nao.communicator.network.data.response.DataResponsePackage;
 import de.robotik.nao.communicator.network.interfaces.NetworkDataRecievedListener;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,7 +19,10 @@ import android.widget.TextView;
 
 public class SectionFunctions extends Section implements
 	OnClickListener,
+	OnRefreshListener,
 	NetworkDataRecievedListener{
+	
+	private SwipeRefreshLayout swipeFunctions;
 
 	private Button btnFunctionStandUp;
 	private Button btnFuntctionSitDown;
@@ -75,9 +80,18 @@ public class SectionFunctions extends Section implements
 		(btnFunctionsCustomNewAdd = (Button) findViewById(R.id.btnFunctionsCustomNewAdd)).setOnClickListener(this);
 		
 		divFunctionsCustom = (LinearLayout) findViewById(R.id.divFunctionsCustom);
+		swipeFunctions = (SwipeRefreshLayout) findViewById(R.id.swipeFunctions);
 		
 		// Register network data listener
 		MainActivity.getInstance().addNetworkDataRecievedListener(this);
+		
+		// set swipe layout
+		swipeFunctions.setOnRefreshListener(this);
+		swipeFunctions.setColorSchemeResources(
+				R.color.darkerblue,
+				R.color.darkblue,
+				R.color.blue,
+				R.color.lighterblue);
 		
 		return rootView;
 	}
@@ -133,6 +147,12 @@ public class SectionFunctions extends Section implements
 			RemoteNAO.sendCommand( NAOCommands.MEMORY_EVENT_RAISE, new String[]{"naocomAbort"} );
 			
 		}
+	}
+	
+	@Override
+	public void onRefresh() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
