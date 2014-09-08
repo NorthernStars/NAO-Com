@@ -11,6 +11,7 @@ import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import javax.jmdns.ServiceEvent;
 
@@ -18,7 +19,11 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-
+import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.ChannelExec;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
 import de.northernstars.naocom.R;
 import de.robotik.nao.communicator.core.MainActivity;
 import de.robotik.nao.communicator.core.sections.SectionConnect;
@@ -85,7 +90,8 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 	 * Try to connect to one of the available remote addresses.
 	 * @return	{@code true} if successful, {@code false} otherwise.
 	 */
-	private boolean connect(){
+	private boolean connect(){		
+		state = ConnectionState.CONNECTION_INIT;
 		
 		for( String h : hostAdresses ){
 			try{
@@ -135,7 +141,6 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 			} catch (IOException e) {
 				state = ConnectionState.CONNECTION_ESTABLISHED_FAILED;
 				Log.w(TAG, "IO Exception on connnection with " + host + ":" + port);
-				e.printStackTrace();
 			}
 		}
 		
@@ -213,54 +218,134 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 		return false;
 	}
 	
+	
+	/**
+	 * Tries to start remote server using ssh.
+	 * @return	{@code true} if command executed, {@code false} otherwise.<br>
+	 * 			<i>Doesn't give information if command was successfully executed!</i>
+	 */
+	private boolean sshServerStart(){
+		
+		JSch ssh = new JSch();
+		
+		// show message
+		MainActivity.getInstance().runOnUiThread( new Runnable() {				
+			@Override
+			public void run() {
+				Toast.makeText(MainActivity.getInstance().getApplicationContext(),
+						R.string.net_try_start_ssh_server, Toast.LENGTH_SHORT).show();
+			}
+		});
+		
+		for( String host : hostAdresses ){			
+			try {
+				
+				// create session
+				Session vSession = ssh.getSession("nao", InetAddress.getByName(host).getHostAddress().toString(), 22 );
+				vSession.setPassword("nao");
+				
+				// avoid asking for key auth
+				Properties vProperties = new Properties();
+				vProperties.put("StrictHostKeyChecking", "no");
+				vSession.setConfig(vProperties);
+				
+				vSession.connect();
+				
+				// send command
+				String vCommand = "/home/nao/naocom/start.sh";
+				Channel vChannel = vSession.openChannel("exec");
+				((ChannelExec) vChannel).setCommand(vCommand);
+				((ChannelExec) vChannel).setOutputStream(System.out);
+				((ChannelExec) vChannel).setErrStream(System.out);
+				
+				vChannel.connect();
+				
+				// wait until command finished
+				try {
+					Thread.sleep(3000);
+				} catch (InterruptedException e) {}
+				
+				vChannel.disconnect();
+				vSession.disconnect();
+				
+				return true;
+				
+			} catch (UnknownHostException e) {
+				e.printStackTrace();
+			} catch (JSchException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return false;		
+	}
+	
+	
 	/**
 	 * Function if thread started
 	 */
 	@Override
 	public void run() {
 		
-		// try to connect
-		if( connect() ){
+		boolean vRetry = true;
+		boolean vTriedSsh = false;
+		
+		while( vRetry ){
 			
-			// connected
-			SectionConnect.updateRemoteDevicesBackgrounds();
-			MainActivity.getInstance().runOnUiThread( new Runnable() {						
-				@Override
-				public void run() {
-					Toast.makeText(MainActivity.getInstance().getApplicationContext(),
-							R.string.net_connected, Toast.LENGTH_SHORT).show();
-				}
-			});
-			
-			// read data
-			readData();
-			
-			// try to disconnect
-			if( disconnect() ){
-				MainActivity.getInstance().updateTitle("[offline] NAO Communicator");
+			// try to connect
+			vRetry = false;
+			if( connect() ){
 				
+				// connected
+				SectionConnect.updateRemoteDevicesBackgrounds();
 				MainActivity.getInstance().runOnUiThread( new Runnable() {						
 					@Override
 					public void run() {
 						Toast.makeText(MainActivity.getInstance().getApplicationContext(),
-								R.string.net_disconnected, Toast.LENGTH_SHORT).show();
+								R.string.net_connected, Toast.LENGTH_SHORT).show();
 					}
 				});
-			}
-			SectionConnect.updateRemoteDevicesBackgrounds();
-			
-		} else {
-			
-			Log.e(TAG, "Establishing connection to " + host + ":" + port + " failed.");
-			
-			SectionConnect.updateRemoteDevicesBackgrounds();
-			MainActivity.getInstance().runOnUiThread( new Runnable() {				
-				@Override
-				public void run() {
-					Toast.makeText(MainActivity.getInstance().getApplicationContext(),
-							R.string.net_connection_failed, Toast.LENGTH_SHORT).show();
+				
+				// read data
+				readData();
+				
+				// try to disconnect
+				if( disconnect() ){
+					MainActivity.getInstance().updateTitle("[offline] NAO Communicator");
+					
+					MainActivity.getInstance().runOnUiThread( new Runnable() {						
+						@Override
+						public void run() {
+							Toast.makeText(MainActivity.getInstance().getApplicationContext(),
+									R.string.net_disconnected, Toast.LENGTH_SHORT).show();
+						}
+					});
 				}
-			});
+				SectionConnect.updateRemoteDevicesBackgrounds();
+				
+			} else {
+				
+				// try to start server using ssh and try to to connect again.
+				if( !vTriedSsh && sshServerStart() ){
+					
+					vRetry = true;
+					vTriedSsh = true;
+					
+				} else {
+					
+					Log.e(TAG, "Establishing connection to " + host + ":" + port + " failed.");
+					SectionConnect.updateRemoteDevicesBackgrounds();
+					MainActivity.getInstance().runOnUiThread( new Runnable() {				
+						@Override
+						public void run() {
+							Toast.makeText(MainActivity.getInstance().getApplicationContext(),
+									R.string.net_connection_failed, Toast.LENGTH_SHORT).show();
+						}
+					});
+					
+				}
+			}
+			
 		}
 		
 		
