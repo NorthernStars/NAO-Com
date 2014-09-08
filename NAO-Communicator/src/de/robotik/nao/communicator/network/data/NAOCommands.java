@@ -38,6 +38,8 @@ public enum NAOCommands {
 	LED_DISCO,
 	LED_BLINK,
 	LED_CIRCLE_EYES,
-	LED_FLASH;
+	LED_FLASH,
+	
+	LED_SET_EYE;
 	
 }

@@ -9,13 +9,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical" >
 
-        <CheckBox
-            android:id="@+id/chkLedRepeat"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:text="@string/led_repeat" />
-
         <LinearLayout
             style="?android:attr/buttonBarStyle"
             android:layout_width="match_parent"
@@ -44,7 +37,7 @@
             android:layout_height="wrap_content" >
 
             <Button
-                android:id="@+id/btnLedlaugh"
+                android:id="@+id/btnLedLaugh"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -127,7 +120,7 @@
         </LinearLayout>
 
         <com.larswerkman.holocolorpicker.ColorPicker
-            android:id="@+id/pckColor"
+            android:id="@+id/pckLedColor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center" />

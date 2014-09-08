@@ -117,24 +117,7 @@ public class MainActivity extends FragmentActivity implements
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-	}
-	
-	
-	
-	/**
-	 * @param aSectionName
-	 * @return {@link Section} with parameter {@code sectionName} as title.
-	 */
-	public Section getSection(String aSectionName){
-		for( Section section : mSections ){
-			if( section.getTitle().equals(aSectionName) ){
-				return section;
-			}
-		}
-		return null;
-	}
-	
-	
+	}	
 	
 	/**
 	 * Adds layouts for fragment pages
@@ -261,7 +244,6 @@ public class MainActivity extends FragmentActivity implements
 		
 	}
 
-
 	@Override
 	protected void onStop() {		
 		RemoteNAO nao = RemoteNAO.getCurrentRemoteNao();
@@ -321,7 +303,6 @@ public class MainActivity extends FragmentActivity implements
 		
 		return super.onOptionsItemSelected(item);
 	}
-
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
