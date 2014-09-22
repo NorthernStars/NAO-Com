@@ -175,6 +175,7 @@ public class SectionStatus extends Section implements
 					"stiffnessData",
 					"masterVolume",
 					"playerVolume",
+					"lifeState",
 			});
 		}
 	}
@@ -397,6 +398,20 @@ public class SectionStatus extends Section implements
 	@Override
 	public void onItemSelected(AdapterView<?> parent, View view, int position,
 			long id) {
+		adapterAction(parent, position);
+	}
+
+	@Override
+	public void onNothingSelected(AdapterView<?> parent) {
+		adapterAction(parent, parent.getSelectedItemPosition());
+	}
+	
+	/**
+	 * Sends lifestate position.
+	 * @param parent	Parent {@link AdapterView}
+	 * @param position	{@link Integer} position of selected item.
+	 */
+	private void adapterAction(AdapterView<?> parent, int position){
 		if( !disableSending && !created ){
 			NAOAutonomousLifeStates state = (NAOAutonomousLifeStates) parent.getItemAtPosition(position);
 			RemoteNAO.sendCommand(
@@ -406,9 +421,6 @@ public class SectionStatus extends Section implements
 		
 		created = false;
 	}
-
-	@Override
-	public void onNothingSelected(AdapterView<?> parent) {}
 
 	@Override
 	public void onRefresh() {
