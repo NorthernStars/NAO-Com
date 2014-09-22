@@ -170,6 +170,21 @@ public class SectionSpeech extends Section implements
 		return rootView;
 	}
 	
+	@Override
+	public void setUserVisibleHint(boolean isVisibleToUser) {
+		super.setUserVisibleHint(isVisibleToUser);
+		
+		if( isVisibleToUser ){
+			RemoteNAO.sendCommand(NAOCommands.SYS_SET_REQUIRED_DATA, new String[]{
+					"speechVolume",
+					"speechVoice",
+					"speechLanguage",
+					"speechLanguagesList",
+					"speechVoicesList",
+			});
+		}
+	}
+	
 	/**
 	 * Load saved texts from file
 	 */
