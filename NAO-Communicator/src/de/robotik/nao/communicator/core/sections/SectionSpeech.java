@@ -470,7 +470,7 @@ public class SectionSpeech extends Section implements
 				if( skbSpeechVolume.getProgress() != vVolume
 						&& !incrementWrongValueCounter(skbSpeechVolume) ){
 					lblSpeechVolume.setText( Integer.toString(vVolume) + "%" );
-					skbSpeechVolume.setProgress( vVolume );
+//					skbSpeechVolume.setProgress( vVolume );
 				}
 				
 				// check for languages

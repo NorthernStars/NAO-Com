@@ -54,6 +54,9 @@ public class SectionStatus extends Section implements
 	private SeekBar skbSystemVolume;
 	private SeekBar skbPlayerVolume;	
 	private Spinner spAutonomousLife;
+	private TextView lblStatusSystemVolume;
+	private TextView lblStatusPlayerVolume;
+	private TextView lblStatusAutonomousLife;
 	
 	private ImageView imgJointBody;
 	private ImageView imgJointHead;
@@ -112,6 +115,9 @@ public class SectionStatus extends Section implements
 		skbSystemVolume = (SeekBar) findViewById(R.id.skbSystemVolume);
 		skbPlayerVolume = (SeekBar) findViewById(R.id.skbStatusPlayerVolume);
 		spAutonomousLife = (Spinner) findViewById(R.id.spAutonomousLife);
+		lblStatusPlayerVolume = (TextView) findViewById(R.id.lblStatusPlayerVolume);
+		lblStatusSystemVolume = (TextView) findViewById(R.id.lblStatusSystemVolume);
+		lblStatusAutonomousLife = (TextView) findViewById(R.id.lblStatusAutonomousLife);
 		
 		(imgJointBody = (ImageView) findViewById(R.id.imgJointBody)).setOnClickListener(this);
 		(imgJointHead = (ImageView) findViewById(R.id.imgJointHead)).setOnClickListener(this);
@@ -440,18 +446,9 @@ public class SectionStatus extends Section implements
 				disableSending = true;
 				
 				txtStatusDeviceName.setText( currentResponseData.naoName );
-				
-				// check if system volume differs for more than 2 times
-				if( skbSystemVolume.getProgress() != currentResponseData.audioData.masterVolume
-						&& !incrementWrongValueCounter(skbSystemVolume) ){
-					skbSystemVolume.setProgress( currentResponseData.audioData.masterVolume );
-				}
-				
-				// check if player volume differs for more than 2 times
-				if( skbPlayerVolume.getProgress() != currentResponseData.audioData.playerVolume
-						&& !incrementWrongValueCounter(skbPlayerVolume) ){
-					skbPlayerVolume.setProgress( (int)(currentResponseData.audioData.playerVolume * 100.0f) );
-				}
+				lblStatusSystemVolume.setText( Integer.toString(currentResponseData.audioData.masterVolume) + "%" );
+				lblStatusPlayerVolume.setText( Integer.toString((int)(currentResponseData.audioData.playerVolume * 100.0f)) + "%" );
+				lblStatusAutonomousLife.setText( currentResponseData.lifeState.name() );
 				
 				// set battery level
 				int battery = currentResponseData.batteryLevel;
@@ -481,12 +478,6 @@ public class SectionStatus extends Section implements
 					btnStatusRightHand.setText(R.string.joints_control_rhand_close);
 				} else {
 					btnStatusRightHand.setText(R.string.joints_control_rhand_open);
-				}
-				
-				int position = adapterAutonomousLifeStates.getPosition( currentResponseData.lifeState );
-				if( spAutonomousLife.getSelectedItemPosition() != position
-						&& !incrementWrongValueCounter(spAutonomousLife)){
-					spAutonomousLife.setSelection(position);
 				}
 				
 				swipeStatus.setRefreshing(false);

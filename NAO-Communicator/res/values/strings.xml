@@ -50,8 +50,8 @@
     <string name="status_change_name">Change NAOs name</string>
     <string name="status_change_name_msg">Enter new name for NAO (needs NAO restart):</string>
     <string name="status_volume">System Volume</string>
-    <string name="status_system_volume">System Volume</string>
-    <string name="status_player_volume">Player Volume</string>
+    <string name="status_system_volume">System Volume: </string>
+    <string name="status_player_volume">Player Volume: </string>
     <string name="joints_control_header">Stiffness control</string>
     <string name="joints_control_lhand">Left hand</string>
     <string name="joints_control_lhand_open">Open left hand</string>
@@ -60,7 +60,7 @@
     <string name="joints_control_rhand_open">Open right hand</string>
     <string name="joints_control_rhand_close">Close right hand</string>
     <string name="joints_img_description">stiffness</string>
-    <string name="autonomous_life">Autonomous life</string>
+    <string name="autonomous_life">Autonomous life state: </string>
     <string name="img_description">image</string>
     <string name="led_happy">Happy</string>
     <string name="led_angry">Angry</string>
