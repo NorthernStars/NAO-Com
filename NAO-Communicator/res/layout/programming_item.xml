@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/ProgrammingItem" >
+
+    <TextView
+        android:id="@+id/txtProgrammingItemNumber"
+        style="@style/ProgrammingItemNumber" />
+
+    <ImageView
+        android:id="@+id/imgProgrammingItemIcon"
+        style="@style/ProgrammingItemIcon"
+        android:contentDescription="@string/img_description" />
+
+    <TextView
+        android:id="@+id/txtProgrammingItemName"
+        style="@style/ProgrammingItemName" />
+
+    <TextView
+        android:id="@+id/txtProgrammingItemText"
+        style="@style/ProgrammingItemText" />
+
+    <ImageButton
+        android:id="@+id/btnProgrammingItemSettings"
+        style="@style/ProgrammingItemImageButton"
+        android:contentDescription="@string/img_description"
+        android:src="@drawable/ic_action_settings" />
+
+    <ImageButton
+        android:id="@+id/btnProgrammingItemRemove"
+        style="@style/ProgrammingItemImageButton"
+        android:contentDescription="@string/img_description"
+        android:src="@drawable/ic_action_remove" />
+
+</LinearLayout>

@@ -6,8 +6,9 @@
         <item>Hotspot</item>
         <item>NAO Status</item>
         <item>Speech</item>
-        <item>LEDs</item>
         <item>Functions</item>
+        <item>LEDs</item>
+        <item>Programming</item>
     </string-array>
 
 </resources>

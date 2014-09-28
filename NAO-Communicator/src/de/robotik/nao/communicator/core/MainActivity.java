@@ -8,6 +8,7 @@ import de.robotik.nao.communicator.core.sections.Section;
 import de.robotik.nao.communicator.core.sections.SectionConnect;
 import de.robotik.nao.communicator.core.sections.SectionFunctions;
 import de.robotik.nao.communicator.core.sections.SectionLed;
+import de.robotik.nao.communicator.core.sections.SectionProgramming;
 import de.robotik.nao.communicator.core.sections.SectionSpeech;
 import de.robotik.nao.communicator.core.sections.SectionStatus;
 import de.robotik.nao.communicator.core.sections.SectionWifi;
@@ -130,8 +131,9 @@ public class MainActivity extends FragmentActivity implements
 			mSections.add( new SectionWifi("Hotspot") );
 			mSections.add( new SectionStatus("NAO Status") );
 			mSections.add( new SectionSpeech("Speech") );
-			mSections.add( new SectionLed("LEDs") );
 			mSections.add( new SectionFunctions("Functions") );
+			mSections.add( new SectionLed("LEDs") );
+			mSections.add( new SectionProgramming("Programming") );
 			
 		}
 	}
