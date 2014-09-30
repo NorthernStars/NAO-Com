@@ -23,7 +23,7 @@ public class SayText implements SettingsContent {
 	
 	@Override
 	public void generateView(ViewGroup root) {
-		final int vResource = R.layout.programming_dialog_say_text;
+		final int vResource = R.layout.setting_say_text;
 		final LayoutInflater vInflater = (LayoutInflater) MainActivity.getInstance()
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		mView = vInflater.inflate(vResource, root);

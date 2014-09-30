@@ -104,7 +104,14 @@ public class ProgrammingItem extends LinearLayout implements OnClickListener{
 	 * Removes item
 	 */
 	public void removeItem(){
-		((ViewGroup) getParent()).removeView(this);
+		// remove from parent
+		ViewGroup vParent = (ViewGroup) getParent();
+		vParent.removeView(this);
+		
+		// update other item numbers
+		for( int i=0; i < vParent.getChildCount(); i++ ){
+			((ProgrammingItem) vParent.getChildAt(i)).setPosition(i);
+		}
 	}
 	
 	/**
