@@ -154,7 +154,7 @@ public class ProgrammingItem extends LinearLayout implements
 		vParent.removeView(aItem);
 		
 		// update positions
-		updatePositions(aItem);
+		updatePositions(vParent);
 	}
 	
 	/**
@@ -165,7 +165,6 @@ public class ProgrammingItem extends LinearLayout implements
 	 */
 	public static synchronized void moveItemTo(ProgrammingItem aItem, int aPosition){
 		// remove from parent
-		System.out.println("move to " + aPosition);
 		ViewGroup vParent = (ViewGroup) aItem.getParent();
 		removeItem(aItem);
 		
@@ -178,17 +177,22 @@ public class ProgrammingItem extends LinearLayout implements
 	}
 	
 	/**
-	 * Updates all {@link ProgrammingItem} views in parent.
-	 * @param aItem		{@link ProgrammingItem} where to get parent from.
+	 * Updates all {@link ProgrammingItem} childs in parent of a {@link ProgrammingItem}.
+	 * @param aItem		{@link ProgrammingItem} to take parent from.
 	 */
-	public static synchronized void updatePositions(ProgrammingItem aItem){		
-		ViewGroup vParent = (ViewGroup) aItem.getParent();
-		
+	public static synchronized void updatePositions(ProgrammingItem aItem){
+		updatePositions( (ViewGroup) aItem.getParent() );
+	}
+	
+	/**
+	 * Updates all {@link ProgrammingItem} childs in {@link ViewGroup} parent.
+	 * @param aParent	{@link ViewGroup} where to update childs.
+	 */
+	public static synchronized void updatePositions(ViewGroup aParent){		
 		// update other item numbers
-		if( vParent != null ){
-			for( int i=0; i < vParent.getChildCount(); i++ ){
-				View vView = vParent.getChildAt(i);
-				vView.setVisibility( View.VISIBLE );
+		if( aParent != null ){
+			for( int i=0; i < aParent.getChildCount(); i++ ){
+				View vView = aParent.getChildAt(i);
 				if( vView.getClass() == ProgrammingItem.class ){
 					((ProgrammingItem) vView).setPosition(i+1);
 				}
@@ -240,7 +244,6 @@ public class ProgrammingItem extends LinearLayout implements
 			
 			DragShadowBuilder vBuilder = new DragShadowBuilder(v);
 			v.startDrag(vData, vBuilder, v, 0);
-			//v.setVisibility( View.INVISIBLE );
 			return true;
 		}
 		return false;

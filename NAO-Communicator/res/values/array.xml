@@ -35,24 +35,24 @@
         <item>Sonar</item>
     </string-array>
     <string-array name="nao_sensor_tactile_values">
-        <item>Head front</item>
-        <item>Head middle</item>
-        <item>Head rear</item>
-        <item>Left hand right side</item>
-        <item>Left hand left side</item>
-        <item>Left hand back</item>
-        <item>Right hand right side</item>
-        <item>Right hand left side</item>
-        <item>Right hand back</item>
+        <item>Head Front</item>
+        <item>Head Middle</item>
+        <item>Head Rear</item>
+        <item>Left Hand Right Side</item>
+        <item>Left Hand Left Side</item>
+        <item>Left Hand Back</item>
+        <item>Right Hand Right Side</item>
+        <item>Right Hand Left Side</item>
+        <item>Right Hand Back</item>
     </string-array>
     <string-array name="nao_sensor_bumper_values">
-        <item>Left bumper</item>
-        <item>Right bumper</item>
+        <item>Left Bumper</item>
+        <item>Right Bumper</item>
     </string-array>
     <string-array name="nao_sensor_chest_button_values">
-        <item>Simple click</item>
-        <item>Double click</item>
-        <item>Triple click</item>
+        <item>Simple Click</item>
+        <item>Double Click</item>
+        <item>Triple Click</item>
     </string-array>
     <string-array name="nao_sensor_sonar_values">
         <item>Right detected</item>

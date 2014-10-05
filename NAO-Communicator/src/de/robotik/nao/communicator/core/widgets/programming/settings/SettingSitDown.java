@@ -36,9 +36,7 @@ private static final String KEY_POSTURE = "posture";
 	
 	@Override
 	public void updateSettings() {
-		int vPosition = spSettingsPosture.getSelectedItemPosition();
-		mSettings.put(KEY_POSTURE,
-				(String) spSettingsPosture.getAdapter().getItem(vPosition));
+		mSettings.put(KEY_POSTURE, (String) spSettingsPosture.getSelectedItem());
 	}
 
 	@Override

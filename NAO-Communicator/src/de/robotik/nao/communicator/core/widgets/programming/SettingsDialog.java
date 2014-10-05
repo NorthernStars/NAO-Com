@@ -46,8 +46,7 @@ public class SettingsDialog extends DialogFragment implements
 		vBuilder
 			.setTitle(mTitle)
 			.setView( mContent.getView() )
-			.setPositiveButton(R.string.btnOK, this)
-			.setNegativeButton(R.string.btnCancel, null);
+			.setPositiveButton(R.string.btnOK, this);
 		
 		return vBuilder.create();
 	}
