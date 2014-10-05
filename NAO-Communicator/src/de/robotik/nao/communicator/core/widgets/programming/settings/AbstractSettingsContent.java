@@ -16,6 +16,18 @@ public abstract class AbstractSettingsContent implements SettingsContent {
 	protected View mView;	
 	protected Map<String, String> mSettings = new HashMap<String, String>();
 	
+	/**
+	 * Gets {@link View} by its ID.
+	 * @param id	{@link Integer} ID.
+	 * @return		{@link View} or  {@code null} if not found.
+	 */
+	protected View findViewById(int id){
+		if( getView() != null ){
+			return getView().findViewById(id);
+		}
+		
+		return null;
+	}
 	
 	@Override
 	public void generateView(ViewGroup root) {

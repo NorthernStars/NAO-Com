@@ -122,7 +122,7 @@ public class ProgrammingItem extends LinearLayout implements OnClickListener{
 		
 		// update other item numbers
 		for( int i=0; i < vParent.getChildCount(); i++ ){
-			((ProgrammingItem) vParent.getChildAt(i)).setPosition(i);
+			((ProgrammingItem) vParent.getChildAt(i)).setPosition(i+1);
 		}
 	}
 	

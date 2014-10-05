@@ -15,7 +15,7 @@ public class SettingSayText extends AbstractSettingsContent {
 		super.generateView(root);
 					
 		mSettings.put(KEY_TEXT, "\"Hallo I'am NAO\"");
-		txtSayText = (TextView) getView().findViewById(R.id.txtSayText);	
+		txtSayText = (TextView) findViewById(R.id.txtSayText);	
 		txtSayText.setText( mSettings.get(KEY_TEXT).replace("\"", "") );
 	}
 
