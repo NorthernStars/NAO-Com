@@ -12,5 +12,6 @@
     <item name="black_text" type="color">#FF000000</item>
     <item name="white_text" type="color">#FFFFFFFF</item>
     <item name="active_orange" type="color">#FFFFC57A</item>
+    <item name="drag_item_background" type="color">#FFDDDDDD</item>
 
 </resources>

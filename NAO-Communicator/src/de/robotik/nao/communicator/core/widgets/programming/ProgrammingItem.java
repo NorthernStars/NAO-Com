@@ -4,8 +4,12 @@ import de.northernstars.naocom.R;
 import de.northernstars.naocom.R.drawable;
 import de.robotik.nao.communicator.core.MainActivity;
 import de.robotik.nao.communicator.core.interfaces.SettingsContent;
+import android.annotation.SuppressLint;
+import android.content.ClipData;
 import android.content.Context;
+import android.view.DragEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -13,13 +17,18 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
+import android.view.View.OnDragListener;
 
 /**
  * Abstract class for generating programming item
  * @author hannes
  *
  */
-public class ProgrammingItem extends LinearLayout implements OnClickListener{
+public class ProgrammingItem extends LinearLayout implements
+	OnClickListener,
+	OnTouchListener,
+	OnDragListener{
 	
 	private TextView txtNumber;
 	private TextView txtName;
@@ -51,6 +60,7 @@ public class ProgrammingItem extends LinearLayout implements OnClickListener{
 	 * @param aName	{@link Integer} resource id of items name.
 	 * @param aIcon	{@link Integer} resource id of items icon {@link drawable}.
 	 */
+	@SuppressLint("ClickableViewAccessibility")
 	private void createItem(int aName, int aIcon){
 		// get view
 		txtNumber = (TextView) findViewById(R.id.txtProgrammingItemNumber);
@@ -67,8 +77,10 @@ public class ProgrammingItem extends LinearLayout implements OnClickListener{
 		btnSettings.setImageDrawable( getResources().getDrawable(R.drawable.ic_action_settings) );
 		btnRemove.setImageDrawable( getResources().getDrawable(R.drawable.ic_action_remove) );
 		
-		// set onclick listener
-		btnRemove.setOnClickListener(this);		
+		// set listener
+		btnRemove.setOnClickListener(this);	
+		setOnTouchListener(this);
+		setOnDragListener(this);
 		
 		if( mSettingsContent != null ){
 			
@@ -106,6 +118,7 @@ public class ProgrammingItem extends LinearLayout implements OnClickListener{
 	
 	/**
 	 * Sets position number of item.
+	 * That's position in parent {@link LinearLayout} {@code +1}.
 	 * @param aPosition	{@link Integer} position.
 	 */
 	public void setPosition(int aPosition){
@@ -113,29 +126,82 @@ public class ProgrammingItem extends LinearLayout implements OnClickListener{
 	}
 	
 	/**
-	 * Removes item
+	 * @return	{@link Integer} position of element in parent {@link LinearLayout}.
+	 * 			Returns {@code -1} if position not found.
 	 */
-	public static synchronized void removeItem(ProgrammingItem vItem){
-		// remove from parent
-		ViewGroup vParent = (ViewGroup) vItem.getParent();
-		vParent.removeView(vItem);
-		
-		// update other item numbers
-		for( int i=0; i < vParent.getChildCount(); i++ ){
-			((ProgrammingItem) vParent.getChildAt(i)).setPosition(i+1);
+	public int getPosition(){
+		ViewGroup vParent = (ViewGroup) getParent();
+		if( vParent != null ){
+			
+			for( int i=0; i < vParent.getChildCount(); i++ ){
+				if( vParent.getChildAt(i) == this ){
+					return i;
+				}
+			}
+			
 		}
+		
+		return -1;
 	}
 	
-	public String getTitle(){
-		return txtNumber.getText().toString() + " " + txtName.getText().toString();
+	/**
+	 * Removes item from list.
+	 * @param aItem	{@link ProgrammingItem} to remove.
+	 */
+	public static synchronized void removeItem(ProgrammingItem aItem){
+		// remove from parent
+		ViewGroup vParent = (ViewGroup) aItem.getParent();
+		vParent.removeView(aItem);
+		
+		// update positions
+		updatePositions(aItem);
+	}
+	
+	/**
+	 * Removes a {@link ProgrammingItem} item from parent
+	 * and adds it again at a new position.
+	 * @param aItem			{@link ProgrammingItem} to move.
+	 * @param aPosition		{@link Integer} position where to move the item.
+	 */
+	public static synchronized void moveItemTo(ProgrammingItem aItem, int aPosition){
+		// remove from parent
+		System.out.println("move to " + aPosition);
+		ViewGroup vParent = (ViewGroup) aItem.getParent();
+		removeItem(aItem);
+		
+		// add at new position
+		vParent.addView(aItem, aPosition);
+		aItem.setVisibility( View.VISIBLE );
+		
+		// update positions
+		updatePositions(aItem);
+	}
+	
+	/**
+	 * Updates all {@link ProgrammingItem} views in parent.
+	 * @param aItem		{@link ProgrammingItem} where to get parent from.
+	 */
+	public static synchronized void updatePositions(ProgrammingItem aItem){		
+		ViewGroup vParent = (ViewGroup) aItem.getParent();
+		
+		// update other item numbers
+		if( vParent != null ){
+			for( int i=0; i < vParent.getChildCount(); i++ ){
+				View vView = vParent.getChildAt(i);
+				vView.setVisibility( View.VISIBLE );
+				if( vView.getClass() == ProgrammingItem.class ){
+					((ProgrammingItem) vView).setPosition(i+1);
+				}
+			}
+		}
 	}
 	
 	/**
 	 * Set {@link ProgrammingItem} active or inactive.
-	 * @param vSelected	{@link Boolean} {@code true} if item currently active, {@code false} othwerise.
+	 * @param aSelected	{@link Boolean} {@code true} if item currently active, {@code false} othwerise.
 	 */
-	public void setActive(boolean vSelected){
-		if( vSelected ){
+	public void setActive(boolean aSelected){
+		if( aSelected ){
 			setBackgroundColor( getResources().getColor(R.color.active_orange) );
 		} else {
 			setBackgroundColor( getResources().getColor(R.color.lightgray) );
@@ -163,5 +229,48 @@ public class ProgrammingItem extends LinearLayout implements OnClickListener{
 			removeItem(this);
 		}
 	}
+	
+	@SuppressLint("ClickableViewAccessibility")
+	@Override
+	public boolean onTouch(View v, MotionEvent event) {
+		if( event.getAction() == MotionEvent.ACTION_DOWN ){
+			ClipData vData = ClipData.newPlainText(
+					"position",
+					Integer.toString(getPosition()) );
+			
+			DragShadowBuilder vBuilder = new DragShadowBuilder(v);
+			v.startDrag(vData, vBuilder, v, 0);
+			//v.setVisibility( View.INVISIBLE );
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public boolean onDrag(View v, DragEvent event) {	
+		ProgrammingItem vView = (ProgrammingItem) event.getLocalState();
+		int vPosition;
+		
+		switch(event.getAction()){
+		case DragEvent.ACTION_DRAG_ENTERED:
+			setBackgroundResource( R.drawable.shape_drop_target );
+			break;
+			
+		case DragEvent.ACTION_DRAG_EXITED:
+			setBackgroundResource( R.drawable.shape_default );
+			break;
+			
+		case DragEvent.ACTION_DROP:
+			vPosition = getPosition();
+			
+			if( vPosition >= 0 ){
+				moveItemTo(vView, vPosition);
+			}
+			
+		case DragEvent.ACTION_DRAG_ENDED:			
+			setBackgroundResource( R.drawable.shape_default );
+		}
+		return true;
+	}	
 
 }
