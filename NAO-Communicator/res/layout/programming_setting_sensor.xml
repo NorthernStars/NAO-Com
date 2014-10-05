@@ -28,6 +28,7 @@
     <Spinner
         android:id="@+id/spSettingsSensorValue"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:entries="@array/nao_sensor_tactile_values" />
 
 </LinearLayout>

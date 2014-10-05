@@ -201,7 +201,7 @@ public class SectionProgramming extends Section implements
 		} else if( v == btnProgrammingWalkTo ) {
 			
 			vItem = new ProgrammingItem(getActivity(),
-					R.string.programming_Hello,
+					R.string.programming_WalkTo,
 					R.drawable.walk_to_target,
 					new SettingWalkTo());
 			
