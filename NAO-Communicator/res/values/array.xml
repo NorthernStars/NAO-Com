@@ -10,5 +10,15 @@
         <item>LEDs</item>
         <item>Programming</item>
     </string-array>
+    <string-array name="nao_postures">
+        <item>Crouch</item>
+        <item>LyingBack</item>
+        <item>LyingBelly</item>
+        <item>Sit</item>
+        <item>SitRelax</item>
+        <item>StandInit</item>
+        <item>Stand</item>
+        <item>StandZero</item>
+    </string-array>
 
 </resources>

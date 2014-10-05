@@ -4,7 +4,17 @@ import de.northernstars.naocom.R;
 import de.robotik.nao.communicator.core.MainActivity;
 import de.robotik.nao.communicator.core.RemoteNAO;
 import de.robotik.nao.communicator.core.widgets.programming.ProgrammingItem;
-import de.robotik.nao.communicator.core.widgets.programming.settings.SayText;
+import de.robotik.nao.communicator.core.widgets.programming.settings.SettingChangeLanguage;
+import de.robotik.nao.communicator.core.widgets.programming.settings.SettingIf;
+import de.robotik.nao.communicator.core.widgets.programming.settings.SettingLedEyes;
+import de.robotik.nao.communicator.core.widgets.programming.settings.SettingPlaySound;
+import de.robotik.nao.communicator.core.widgets.programming.settings.SettingSayText;
+import de.robotik.nao.communicator.core.widgets.programming.settings.SettingSitDown;
+import de.robotik.nao.communicator.core.widgets.programming.settings.SettingStandUp;
+import de.robotik.nao.communicator.core.widgets.programming.settings.SettingStiffness;
+import de.robotik.nao.communicator.core.widgets.programming.settings.SettingWait;
+import de.robotik.nao.communicator.core.widgets.programming.settings.SettingWalkTo;
+import de.robotik.nao.communicator.core.widgets.programming.settings.SettingWhile;
 import de.robotik.nao.communicator.network.data.NAOCommands;
 import de.robotik.nao.communicator.network.data.response.DataResponsePackage;
 import de.robotik.nao.communicator.network.interfaces.NetworkDataRecievedListener;
@@ -141,29 +151,84 @@ public class SectionProgramming extends Section implements
 			vItem = new ProgrammingItem(getActivity(),
 					R.string.programming_SayText,
 					R.drawable.say,
-					new SayText());
+					new SettingSayText());
 			
 		} else if( v == btnProgrammingChangeLanguage ) {
 			
+			vItem = new ProgrammingItem(getActivity(),
+					R.string.programming_ChangeLanguage,
+					R.drawable.flag,
+					new SettingChangeLanguage());
+			
 		} else if( v == btnProgrammingPlaySound ) {
+			
+			vItem = new ProgrammingItem(getActivity(),
+					R.string.programming_PlaySound,
+					R.drawable.play_music,
+					new SettingPlaySound());
 			
 		} else if( v == btnProgrammingWait ) {
 			
+			vItem = new ProgrammingItem(getActivity(),
+					R.string.programming_Wait,
+					R.drawable.wait,
+					new SettingWait());
+			
 		} else if( v == btnProgrammingStandUp ) {
+			
+			vItem = new ProgrammingItem(getActivity(),
+					R.string.programming_StandUp,
+					R.drawable.stand,
+					new SettingStandUp());
 			
 		} else if( v == btnProgrammingSitDown ) {
 			
+			vItem = new ProgrammingItem(getActivity(),
+					R.string.programming_SitDown,
+					R.drawable.sit_ground,
+					new SettingSitDown());
+			
 		} else if( v == btnProgrammingLedEyes ) {
+			
+			vItem = new ProgrammingItem(getActivity(),
+					R.string.programming_LedEyes,
+					R.drawable.led,
+					new SettingLedEyes());
 			
 		} else if( v == btnProgrammingHello ) {
 			
+			vItem = new ProgrammingItem(getActivity(),
+					R.string.programming_Hello,
+					R.drawable.move,
+					null);
+			
 		} else if( v == btnProgrammingWalkTo ) {
+			
+			vItem = new ProgrammingItem(getActivity(),
+					R.string.programming_Hello,
+					R.drawable.walk_to_target,
+					new SettingWalkTo());
 			
 		} else if( v == btnProgrammingStiffness ) {
 			
+			vItem = new ProgrammingItem(getActivity(),
+					R.string.programming_Stiffness,
+					R.drawable.stiffness,
+					new SettingStiffness());
+			
 		} else if( v == btnProgrammingIf ) {
 			
+			vItem = new ProgrammingItem(getActivity(),
+					R.string.programming_If,
+					R.drawable.box_diagram,
+					new SettingIf());
+			
 		} else if( v == btnProgrammingWhile ) {
+			
+			vItem = new ProgrammingItem(getActivity(),
+					R.string.programming_While,
+					R.drawable.loop,
+					new SettingWhile());
 			
 		} 
 		

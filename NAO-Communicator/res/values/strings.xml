@@ -112,5 +112,9 @@
     <string name="programming_Stiffness">Stiffness</string>
     <string name="programming_If">If</string>
     <string name="programming_While">While</string>
+    <string name="settings_select_sound_file">Select sound file</string>
+    <string name="settings_wait_time">Time to wait [s]:</string>
+    <string name="settings_posture_select">Select posture</string>
+    <string name="settings_led_eye_color_select">Select eye led color</string>
 
 </resources>

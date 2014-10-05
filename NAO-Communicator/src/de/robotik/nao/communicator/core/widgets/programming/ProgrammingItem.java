@@ -68,28 +68,40 @@ public class ProgrammingItem extends LinearLayout implements OnClickListener{
 		btnRemove.setImageDrawable( getResources().getDrawable(R.drawable.ic_action_remove) );
 		
 		// set onclick listener
-		btnSettings.setOnClickListener(this);
-		btnRemove.setOnClickListener(this);
+		btnRemove.setOnClickListener(this);		
 		
-		// update text
-		mSettingsContent.generateView(null);
-		mSettingsContent.updateText(txtText);
+		if( mSettingsContent != null ){
+			
+			btnSettings.setOnClickListener(this);
+			
+			// update text
+			mSettingsContent.generateView(null);
+			mSettingsContent.updateText(txtText);
+			
+		} else {
+			btnSettings.setVisibility( View.GONE );
+		}
+		
 	}
 	
 	/**
 	 * Shows settings dialog
 	 */
 	private void openSettings(){
-		// generate dialog
-		SettingsDialog vDialog = new SettingsDialog(
-				mSettingsContent,
-				txtNumber.getText().toString() + " " + txtName.getText().toString(),
-				txtText);
 		
-		// show dialog
-		vDialog.show(
-				MainActivity.getInstance().getSupportFragmentManager(),
-				txtName.getText().toString() );		
+		if( mSettingsContent != null ){			
+			// generate dialog
+			SettingsDialog vDialog = new SettingsDialog(
+					mSettingsContent,
+					txtNumber.getText().toString() + " " + txtName.getText().toString(),
+					txtText);
+			
+			// show dialog
+			vDialog.show(
+					MainActivity.getInstance().getSupportFragmentManager(),
+					txtName.getText().toString() );				
+		}
+		
 	}
 	
 	/**
@@ -103,15 +115,21 @@ public class ProgrammingItem extends LinearLayout implements OnClickListener{
 	/**
 	 * Removes item
 	 */
-	public void removeItem(){
+	public static synchronized void removeItem(ProgrammingItem vItem){
 		// remove from parent
-		ViewGroup vParent = (ViewGroup) getParent();
-		vParent.removeView(this);
+		ViewGroup vParent = (ViewGroup) vItem.getParent();
+		vParent.removeView(vItem);
+		
+		System.out.println("remove " + vItem.getTitle());
 		
 		// update other item numbers
 		for( int i=0; i < vParent.getChildCount(); i++ ){
 			((ProgrammingItem) vParent.getChildAt(i)).setPosition(i);
 		}
+	}
+	
+	public String getTitle(){
+		return txtNumber.getText().toString() + " " + txtName.getText().toString();
 	}
 	
 	/**
@@ -129,9 +147,13 @@ public class ProgrammingItem extends LinearLayout implements OnClickListener{
 	/**
 	 * @return JSON {@link String} of item.
 	 */
-	public String toJson(){
-		return "{'name': '" + txtName.getText().toString() + "', 'data': "
-				+ mSettingsContent.toJson() + "}";
+	public String toJson(){		
+		String data = "[]";		
+		if( mSettingsContent != null ){
+			data = mSettingsContent.toJson();
+		}
+		
+		return "{'name': '" + txtName.getText().toString() + "', 'data': " + data + "}";
 	}
 	
 
@@ -140,7 +162,7 @@ public class ProgrammingItem extends LinearLayout implements OnClickListener{
 		if( v == btnSettings ){
 			openSettings();
 		} else if( v == btnRemove ){
-			removeItem();
+			removeItem(this);
 		}
 	}
 
