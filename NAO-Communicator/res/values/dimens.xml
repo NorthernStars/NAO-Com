@@ -3,6 +3,7 @@
 
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="padding">10dp</dimen>
+    <dimen name="padding_buttons">4dp</dimen>
     <dimen name="width_menu">240dp</dimen>
     <dimen name="height_min_joint_label">35dp</dimen>
     <dimen name="padding_section_header">4dp</dimen>

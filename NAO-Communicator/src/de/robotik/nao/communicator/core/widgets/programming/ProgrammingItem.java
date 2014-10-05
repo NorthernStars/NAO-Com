@@ -120,8 +120,6 @@ public class ProgrammingItem extends LinearLayout implements OnClickListener{
 		ViewGroup vParent = (ViewGroup) vItem.getParent();
 		vParent.removeView(vItem);
 		
-		System.out.println("remove " + vItem.getTitle());
-		
 		// update other item numbers
 		for( int i=0; i < vParent.getChildCount(); i++ ){
 			((ProgrammingItem) vParent.getChildAt(i)).setPosition(i);

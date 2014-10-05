@@ -5,4 +5,25 @@
     android:gravity="center_horizontal"
     android:orientation="vertical" >
 
+    <TextView
+        style="@style/ItemTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/settings_stiffness"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <Spinner
+        android:id="@+id/spSettingsStiffnessJoint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/nao_stiffness_joints" />
+
+    <CheckBox
+        android:id="@+id/chkSettingsStiffnessOn"
+        style="@style/Text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:checked="true"
+        android:text="@string/settings_stiffness_on" />
+
 </LinearLayout>

@@ -39,6 +39,7 @@
         <item name="android:background">@color/lightblue</item>
         <item name="android:textColor">@color/white_text</item>
         <item name="android:layout_margin">@dimen/margin_button</item>
+        <item name="android:padding">@dimen/padding_buttons</item>
     </style>
 
     <style name="ProgrammingItem">

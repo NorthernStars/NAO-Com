@@ -5,7 +5,7 @@ import de.robotik.nao.communicator.core.MainActivity;
 import de.robotik.nao.communicator.core.RemoteNAO;
 import de.robotik.nao.communicator.core.widgets.programming.ProgrammingItem;
 import de.robotik.nao.communicator.core.widgets.programming.settings.SettingChangeLanguage;
-import de.robotik.nao.communicator.core.widgets.programming.settings.SettingIf;
+import de.robotik.nao.communicator.core.widgets.programming.settings.SettingSensor;
 import de.robotik.nao.communicator.core.widgets.programming.settings.SettingLedEyes;
 import de.robotik.nao.communicator.core.widgets.programming.settings.SettingPlaySound;
 import de.robotik.nao.communicator.core.widgets.programming.settings.SettingSayText;
@@ -14,7 +14,6 @@ import de.robotik.nao.communicator.core.widgets.programming.settings.SettingStan
 import de.robotik.nao.communicator.core.widgets.programming.settings.SettingStiffness;
 import de.robotik.nao.communicator.core.widgets.programming.settings.SettingWait;
 import de.robotik.nao.communicator.core.widgets.programming.settings.SettingWalkTo;
-import de.robotik.nao.communicator.core.widgets.programming.settings.SettingWhile;
 import de.robotik.nao.communicator.network.data.NAOCommands;
 import de.robotik.nao.communicator.network.data.response.DataResponsePackage;
 import de.robotik.nao.communicator.network.interfaces.NetworkDataRecievedListener;
@@ -219,18 +218,11 @@ public class SectionProgramming extends Section implements
 		} else if( v == btnProgrammingIf ) {
 			
 			vItem = new ProgrammingItem(getActivity(),
-					R.string.programming_If,
+					R.string.programming_sensor,
 					R.drawable.box_diagram,
-					new SettingIf());
+					new SettingSensor());
 			
-		} else if( v == btnProgrammingWhile ) {
-			
-			vItem = new ProgrammingItem(getActivity(),
-					R.string.programming_While,
-					R.drawable.loop,
-					new SettingWhile());
-			
-		} 
+		}
 		
 		// control buttons
 		else if( v == btnProgrammingPlay ){			

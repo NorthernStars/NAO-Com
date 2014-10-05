@@ -4,11 +4,11 @@ import de.northernstars.naocom.R;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class SettingWhile extends AbstractSettingsContent {
+public class SettingSensor extends AbstractSettingsContent {
 
 	@Override
 	public void generateView(ViewGroup root) {
-		mResource = R.layout.programming_setting_play_sound;
+		mResource = R.layout.programming_setting_sensor;
 		super.generateView(root);
 	}
 	

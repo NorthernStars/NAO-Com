@@ -20,5 +20,45 @@
         <item>Stand</item>
         <item>StandZero</item>
     </string-array>
+    <string-array name="nao_stiffness_joints">
+        <item>Body</item>
+        <item>Head</item>
+        <item>LArm</item>
+        <item>LLeg</item>
+        <item>RArm</item>
+        <item>RLeg</item>
+    </string-array>
+    <string-array name="nao_sensors">
+        <item>Tactile</item>
+        <item>Bumper</item>
+        <item>Chest button</item>
+        <item>Sonar</item>
+    </string-array>
+    <string-array name="nao_sensor_tactile_values">
+        <item>Head front</item>
+        <item>Head middle</item>
+        <item>Head rear</item>
+        <item>Left hand right side</item>
+        <item>Left hand left side</item>
+        <item>Left hand back</item>
+        <item>Right hand right side</item>
+        <item>Right hand left side</item>
+        <item>Right hand back</item>
+    </string-array>
+    <string-array name="nao_sensor_bumper_values">
+        <item>Left bumper</item>
+        <item>Right bumper</item>
+    </string-array>
+    <string-array name="nao_sensor_chest_button_values">
+        <item>Simple click</item>
+        <item>Double click</item>
+        <item>Triple click</item>
+    </string-array>
+    <string-array name="nao_sensor_sonar_values">
+        <item>Right detected</item>
+        <item>Left detected</item>
+        <item>Right NOT detected</item>
+        <item>Left NOT detected</item>
+    </string-array>
 
 </resources>

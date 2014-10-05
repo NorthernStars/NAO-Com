@@ -9,13 +9,25 @@
         style="@style/ItemTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/settings_led_eye_color_select"
+        android:text="@string/settings_sensor_type"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
-    <com.larswerkman.holocolorpicker.ColorPicker
-        android:id="@+id/pckSettingsLedEyes"
+    <Spinner
+        android:id="@+id/spSettingsSensorType"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+        android:entries="@array/nao_sensors" />
+
+    <TextView
+        style="@style/ItemTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/settings_sensor_value"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <Spinner
+        android:id="@+id/spSettingsSensorValue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>
