@@ -40,8 +40,7 @@ public class SectionProgramming extends Section implements
 	private ImageButton btnProgrammingHello;
 	private ImageButton btnProgrammingWalkTo;
 	private ImageButton btnProgrammingStiffness;
-	private ImageButton btnProgrammingIf;
-	private ImageButton btnProgrammingWhile;
+	private ImageButton btnProgrammingSensor;
 	
 	private ImageButton btnProgrammingPlay;
 	private ImageButton btnProgrammingStop;
@@ -78,8 +77,7 @@ public class SectionProgramming extends Section implements
 		btnProgrammingHello = (ImageButton) findViewById(R.id.btnProgrammingHello);
 		btnProgrammingWalkTo = (ImageButton) findViewById(R.id.btnProgrammingWalkTo);
 		btnProgrammingStiffness = (ImageButton) findViewById(R.id.btnProgrammingStiffness);
-		btnProgrammingIf = (ImageButton) findViewById(R.id.btnProgrammingIf);
-		btnProgrammingWhile = (ImageButton) findViewById(R.id.btnProgrammingWhile);
+		btnProgrammingSensor = (ImageButton) findViewById(R.id.btnProgrammingSensor);
 		
 		btnProgrammingPlay = (ImageButton) findViewById(R.id.btnProgrammingPlay);
 		btnProgrammingStop = (ImageButton) findViewById(R.id.btnProgrammingStop);
@@ -98,8 +96,7 @@ public class SectionProgramming extends Section implements
 		btnProgrammingHello.setOnClickListener(this);
 		btnProgrammingWalkTo.setOnClickListener(this);
 		btnProgrammingStiffness.setOnClickListener(this);
-		btnProgrammingIf.setOnClickListener(this);
-		btnProgrammingWhile.setOnClickListener(this);
+		btnProgrammingSensor.setOnClickListener(this);
 		
 		btnProgrammingPlay.setOnClickListener(this);
 		btnProgrammingStop.setOnClickListener(this);
@@ -215,7 +212,7 @@ public class SectionProgramming extends Section implements
 					R.drawable.stiffness,
 					new SettingStiffness());
 			
-		} else if( v == btnProgrammingIf ) {
+		} else if( v == btnProgrammingSensor ) {
 			
 			vItem = new ProgrammingItem(getActivity(),
 					R.string.programming_sensor,

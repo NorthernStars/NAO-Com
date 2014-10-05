@@ -98,18 +98,11 @@
                 android:src="@drawable/stiffness" />
 
             <ImageButton
-                android:id="@+id/btnProgrammingIf"
+                android:id="@+id/btnProgrammingSensor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/img_description"
                 android:src="@drawable/box_diagram" />
-
-            <ImageButton
-                android:id="@+id/btnProgrammingWhile"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/img_description"
-                android:src="@drawable/loop" />
         </LinearLayout>
     </HorizontalScrollView>
 
