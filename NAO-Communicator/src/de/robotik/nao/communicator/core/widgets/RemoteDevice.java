@@ -76,7 +76,7 @@ public class RemoteDevice implements
 		txtNAOqi = (TextView) mView.findViewById(R.id.txtNAOqi);
 		txtSSH = (TextView) mView.findViewById(R.id.txtSSH);
 		txtSFTP = (TextView) mView.findViewById(R.id.txtSFTP);
-		pgbLoading = (ProgressBar) mView.findViewById(R.id.pgbLoading);
+		pgbLoading = (ProgressBar) mView.findViewById(R.id.pgbSettingsPlaySoundLoading);
 		
 		mView.setOnClickListener(this);
 	}

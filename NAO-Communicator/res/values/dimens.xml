@@ -10,6 +10,7 @@
     <dimen name="padding_action_bar">4dp</dimen>
     <dimen name="margin_button">1dp</dimen>
     <dimen name="margin_section_header">2dp</dimen>
+    <dimen name="margin_programming_item_text">2dp</dimen>
     <dimen name="width_drag_item_line">3dp</dimen>
 
 </resources>

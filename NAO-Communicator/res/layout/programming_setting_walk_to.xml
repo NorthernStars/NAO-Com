@@ -7,8 +7,6 @@
 
     <TextView
         style="@style/ItemTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="@string/settings_walk_to"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -18,8 +16,6 @@
 
         <TextView
             style="@style/Text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="end"
             android:text="@string/settings_walk_to_x"
@@ -31,7 +27,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
-            android:inputType="numberDecimal|numberSigned" >
+            android:inputType="numberDecimal|numberSigned"
+            android:text="@string/settings_walk_to_default_meter" >
 
             <requestFocus />
         </EditText>
@@ -43,8 +40,6 @@
 
         <TextView
             style="@style/Text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="end"
             android:text="@string/settings_walk_to_y"
@@ -56,7 +51,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
-            android:inputType="numberDecimal|numberSigned" />
+            android:inputType="numberDecimal|numberSigned"
+            android:text="@string/settings_walk_to_default_meter" />
     </LinearLayout>
 
     <LinearLayout
@@ -65,8 +61,6 @@
 
         <TextView
             style="@style/Text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="end"
             android:text="@string/settings_walk_to_theta"
@@ -78,7 +72,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
-            android:inputType="numberDecimal|numberSigned" />
+            android:inputType="numberDecimal|numberSigned"
+            android:text="@string/settings_walk_to_default_degree" />
     </LinearLayout>
 
     <CheckBox

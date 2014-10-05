@@ -12,4 +12,15 @@
         android:layout_height="wrap_content"
         android:text="@string/settings_select_sound_file" />
 
+    <TextView
+        android:id="@+id/txtSettingsPlaySoundFile"
+        style="@style/Text" />
+
+    <ProgressBar
+        android:id="@+id/pgbSettingsPlaySoundLoading"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
 </LinearLayout>

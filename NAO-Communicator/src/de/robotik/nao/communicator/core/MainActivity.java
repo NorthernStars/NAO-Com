@@ -18,10 +18,12 @@ import de.robotik.nao.communicator.network.data.NAOCommands;
 import de.robotik.nao.communicator.network.data.response.DataResponsePackage;
 import de.robotik.nao.communicator.network.interfaces.NetworkDataRecievedListener;
 import de.robotik.nao.communicator.network.interfaces.NetworkDataSender;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.preference.PreferenceManager.OnActivityResultListener;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
@@ -47,6 +49,7 @@ public class MainActivity extends FragmentActivity implements
 	private List<Section> mSections = new ArrayList<Section>();	
 	private RemoteDevice mConnectedDevice = null;
 	private List<NetworkDataRecievedListener> dataRecievedListener = new ArrayList<NetworkDataRecievedListener>();
+	private List<OnActivityResultListener> activityResultListener = new ArrayList<OnActivityResultListener>();
 	
 	private String mTitle = "[offline] NAO Communicator";
 	private SectionsPagerAdapter mSectionsPagerAdapter;
@@ -120,6 +123,15 @@ public class MainActivity extends FragmentActivity implements
 
 	}	
 	
+	@Override
+	protected void onActivityResult(int requestCode,int resultCode,Intent data) {
+		for( OnActivityResultListener listener : activityResultListener ){
+			listener.onActivityResult(requestCode, resultCode, data);
+		}
+		
+		super.onActivityResult(requestCode, resultCode, data);
+	}
+	
 	/**
 	 * Adds layouts for fragment pages
 	 */
@@ -180,23 +192,6 @@ public class MainActivity extends FragmentActivity implements
 		});
 	}
 	
-	@Override
-	public void onNetworkDataRecieved(DataResponsePackage data) {
-		if( data.request.command == NAOCommands.SYS_DISCONNECT && data.requestSuccessfull ){
-			updateTitle( "[offline] NAO Communicator" );
-		} else {
-			updateTitle( "[" + data.batteryLevel + "%] " + data.naoName );
-		}
-		notifyDataRecievedListeners(data);
-	}
-
-	/**
-	 * @return Current {@link MainActivity} instance.
-	 */
-	public static MainActivity getInstance() {
-		return INSTANCE;
-	}
-	
 	/**
 	 * @return Current {@link ViewPager}
 	 */
@@ -244,6 +239,41 @@ public class MainActivity extends FragmentActivity implements
 			}
 		}
 		
+	}
+	
+	/**
+	 * Addes an external {@link OnActivityResultListener}.
+	 * @param listener	{@link OnActivityResultListener} to add.
+	 */
+	public void addOnActivityResultListener(OnActivityResultListener listener){
+		if( !activityResultListener.contains(listener) ){
+			activityResultListener.add(listener);
+		}
+	}
+	
+	/**
+	 * Removes an external {@link OnActivityResultListener}.
+	 * @param listener	{@link OnActivityResultListener} to remove.
+	 */
+	public void removeOnActivityResultListener(OnActivityResultListener listener){
+		activityResultListener.remove(listener);
+	}
+	
+	/**
+	 * @return Current {@link MainActivity} instance.
+	 */
+	public static MainActivity getInstance() {
+		return INSTANCE;
+	}
+	
+	@Override
+	public void onNetworkDataRecieved(DataResponsePackage data) {
+		if( data.request.command == NAOCommands.SYS_DISCONNECT && data.requestSuccessfull ){
+			updateTitle( "[offline] NAO Communicator" );
+		} else {
+			updateTitle( "[" + data.batteryLevel + "%] " + data.naoName );
+		}
+		notifyDataRecievedListeners(data);
 	}
 
 	@Override

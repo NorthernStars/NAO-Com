@@ -14,7 +14,7 @@
         android:src="@drawable/unknown_device" />
 
     <ProgressBar
-        android:id="@+id/pgbLoading"
+        android:id="@+id/pgbSettingsPlaySoundLoading"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:indeterminate="true"
