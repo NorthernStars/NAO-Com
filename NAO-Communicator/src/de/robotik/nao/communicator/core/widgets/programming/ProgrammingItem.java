@@ -79,7 +79,7 @@ public class ProgrammingItem extends LinearLayout implements
 		
 		// set listener
 		btnRemove.setOnClickListener(this);	
-		setOnTouchListener(this);
+		imgIcon.setOnTouchListener(this);
 		setOnDragListener(this);
 		
 		if( mSettingsContent != null ){
@@ -237,13 +237,14 @@ public class ProgrammingItem extends LinearLayout implements
 	@SuppressLint("ClickableViewAccessibility")
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
+		View vParent = (View) v.getParent().getParent();
 		if( event.getAction() == MotionEvent.ACTION_DOWN ){
 			ClipData vData = ClipData.newPlainText(
 					"position",
 					Integer.toString(getPosition()) );
 			
 			DragShadowBuilder vBuilder = new DragShadowBuilder(v);
-			v.startDrag(vData, vBuilder, v, 0);
+			v.startDrag(vData, vBuilder, vParent, 0);
 			return true;
 		}
 		return false;

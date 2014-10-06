@@ -30,6 +30,7 @@ public class SettingPlaySound extends AbstractSettingsContent implements
 	 * @return		{@link String} of uploaded filename or {@code null} if not successfull.
 	 */
 	private String uploadFile( Uri aUri ){
+		// TODO: Uploading to NAO
 		return aUri.getPath();
 	}
 	

@@ -114,11 +114,13 @@
     <ScrollView
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="0dp"
+        android:layout_weight="1" >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="end"
             android:orientation="vertical" >
 
             <LinearLayout
@@ -127,42 +129,42 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical" >
             </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="@color/lighterblue" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/lighterlightblue"
-                android:padding="@dimen/padding" >
-
-                <ImageButton
-                    android:id="@+id/btnProgrammingPlay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/img_description"
-                    android:src="@drawable/play" />
-
-                <ImageButton
-                    android:id="@+id/btnProgrammingStop"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/img_description"
-                    android:src="@drawable/stop" />
-
-                <TextView
-                    android:id="@+id/lblProgrammingStatus"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical|end"
-                    android:text="@string/programming_stopped"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="@color/inactive_text" />
-            </LinearLayout>
         </LinearLayout>
     </ScrollView>
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="2dp"
+        android:background="@color/lighterblue" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/lighterlightblue"
+        android:padding="@dimen/padding" >
+
+        <ImageButton
+            android:id="@+id/btnProgrammingPlay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/img_description"
+            android:src="@drawable/play" />
+
+        <ImageButton
+            android:id="@+id/btnProgrammingStop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/img_description"
+            android:src="@drawable/stop" />
+
+        <TextView
+            android:id="@+id/lblProgrammingStatus"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|end"
+            android:text="@string/programming_stopped"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/inactive_text" />
+    </LinearLayout>
 
 </LinearLayout>
