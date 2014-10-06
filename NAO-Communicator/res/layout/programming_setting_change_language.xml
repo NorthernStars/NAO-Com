@@ -7,8 +7,6 @@
 
     <TextView
         style="@style/ItemTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="@string/speech_language"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
