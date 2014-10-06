@@ -27,7 +27,8 @@
     <string name="net_unknown_device">Unknown device</string>
     <string name="net_unknown_host">Unknown host</string>
     <string name="net_connection_failed">Establishing connection failed.</string>
-    <string name="net_try_start_ssh_server">Trying to start remote server.</string>
+    <string name="net_ssh_failed">Failed to execute SSH command.</string>
+    <string name="net_try_server_start">Trying to start remote server.</string>
     <string name="net_connected">Connected</string>
     <string name="net_disconnected">Disconnected</string>
     <string name="net_restart_network_service">Restarting service &#8230;</string>

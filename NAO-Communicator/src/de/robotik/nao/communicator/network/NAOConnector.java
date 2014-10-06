@@ -15,6 +15,7 @@ import java.util.Properties;
 
 import javax.jmdns.ServiceEvent;
 
+import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -24,6 +25,7 @@ import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+
 import de.northernstars.naocom.R;
 import de.robotik.nao.communicator.core.MainActivity;
 import de.robotik.nao.communicator.core.sections.SectionConnect;
@@ -49,6 +51,13 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 	private Gson gson = new Gson();
 	private BufferedReader in = null;
 	private OutputStream out = null;
+	
+	private JSch mSSH = new JSch();;
+	private Session mSession = null;
+	private String mSSHUser = "nao";
+	private String mSSHPassword = "nao";
+	private List<String> mSSHCommands = new ArrayList<String>();
+	private List<Integer> mSSHCommandsExitStatus = new ArrayList<Integer>();
 	
 	private List<NetworkDataRecievedListener> dataRecievedListener = new ArrayList<NetworkDataRecievedListener>();
 	
@@ -220,64 +229,166 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 	
 	
 	/**
+	 * Connecting to ssh server
+	 * @return	{@code true} if successful connected, {@code false} otherwise.
+	 */
+	private Session connectSSH(){
+		if( mSession == null ){
+			
+			for( String host : hostAdresses ){			
+				try {
+					
+					// create session
+					mSession = mSSH.getSession(mSSHUser,
+							InetAddress.getByName(host).getHostAddress().toString(),
+							22 );
+					mSession.setPassword( mSSHPassword );
+					
+					// avoid asking for key auth
+					Properties vProperties = new Properties();
+					vProperties.put("StrictHostKeyChecking", "no");
+					mSession.setConfig(vProperties);
+					
+					// connect to ssh server
+					mSession.connect();
+					
+					return mSession;
+					
+				} catch (UnknownHostException e) {
+					e.printStackTrace();
+				} catch (JSchException e) {
+					e.printStackTrace();
+				}
+				
+				mSession = null;
+			}
+		
+		}
+		
+		return mSession;
+	}
+	
+	/**
+	 * Closes SSH connection.
+	 * @return	{@code true} if successful, {@code false} otherwise.
+	 */
+	private boolean closeSSH(){		
+		if( mSession != null ){
+			mSession.disconnect();
+			mSession = null;
+			return true;
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Send commands to execute via ssh
+	 * @param aCommands	{@link List} of {@link String} commands to execute;
+	 */
+	public void sendSSHCommands(List<String> aCommands){
+		
+		synchronized (mSSHCommands) {
+			mSSHCommands = aCommands;
+			mSSHCommandsExitStatus.clear();
+		}
+		
+		new AsyncTask<Void, Void, Boolean>() {
+			
+			@Override
+			protected Boolean doInBackground(Void... params) {	
+				synchronized (mSSHCommands) {
+				
+					// connect to ssh server
+					Session vSession = connectSSH();
+					
+					if( vSession != null ){
+						
+						// execute commands
+						for( String cmd : mSSHCommands ){				
+							try{
+								Channel vChannel = mSession.openChannel("exec");
+								((ChannelExec) vChannel).setCommand(cmd);
+								((ChannelExec) vChannel).setOutputStream(System.out);
+								((ChannelExec) vChannel).setErrStream(System.err);
+								
+								System.out.println("sending " + cmd);
+								vChannel.connect();
+								
+								// wait for command to complete
+								while( !vChannel.isClosed() ){
+									try {
+										Thread.sleep(100);
+									} catch (InterruptedException e) {}
+								};
+								
+								
+								System.out.println("exit code " + vChannel.getExitStatus());
+								mSSHCommandsExitStatus.add( vChannel.getExitStatus() );
+								vChannel.disconnect();
+								
+							} catch(JSchException e){
+								Log.e(TAG, e.getMessage());
+							}				
+						}
+						
+						// close ssh connection
+						closeSSH();
+						return true;						
+					}
+								
+					return false;					
+				}
+			}
+			
+			@Override
+			protected void onPostExecute(Boolean result) {
+				// check result
+				if( !result ){
+					
+					// show message
+					MainActivity.getInstance().runOnUiThread( new Runnable() {				
+						@Override
+						public void run() {
+							Toast.makeText(MainActivity.getInstance().getApplicationContext(),
+									R.string.net_ssh_failed, Toast.LENGTH_SHORT).show();
+						}
+					});	
+					
+				}
+			}
+		}.execute();
+	}
+	
+	
+	/**
 	 * Tries to start remote server using ssh.
-	 * @return	{@code true} if command executed, {@code false} otherwise.<br>
-	 * 			<i>Doesn't give information if command was successfully executed!</i>
+	 * @return {@code true} if server started, {@code false} otherwise.
 	 */
 	private boolean sshServerStart(){
-		
-		JSch ssh = new JSch();
 		
 		// show message
 		MainActivity.getInstance().runOnUiThread( new Runnable() {				
 			@Override
 			public void run() {
 				Toast.makeText(MainActivity.getInstance().getApplicationContext(),
-						R.string.net_try_start_ssh_server, Toast.LENGTH_SHORT).show();
+						R.string.net_try_server_start, Toast.LENGTH_SHORT).show();
 			}
-		});
+		});	
 		
-		for( String host : hostAdresses ){			
+		// send command
+		List<String> vCommands = new ArrayList<String>();
+		vCommands.add( "/home/nao/naocom/start.sh" );
+		sendSSHCommands( vCommands );
+		
+		while( mSSHCommandsExitStatus.size() == 0 ){
 			try {
-				
-				// create session
-				Session vSession = ssh.getSession("nao", InetAddress.getByName(host).getHostAddress().toString(), 22 );
-				vSession.setPassword("nao");
-				
-				// avoid asking for key auth
-				Properties vProperties = new Properties();
-				vProperties.put("StrictHostKeyChecking", "no");
-				vSession.setConfig(vProperties);
-				
-				vSession.connect();
-				
-				// send command
-				String vCommand = "/home/nao/naocom/start.sh";
-				Channel vChannel = vSession.openChannel("exec");
-				((ChannelExec) vChannel).setCommand(vCommand);
-				((ChannelExec) vChannel).setOutputStream(System.out);
-				((ChannelExec) vChannel).setErrStream(System.out);
-				
-				vChannel.connect();
-				
-				// wait until command finished
-				try {
-					Thread.sleep(3000);
-				} catch (InterruptedException e) {}
-				
-				vChannel.disconnect();
-				vSession.disconnect();
-				
-				return true;
-				
-			} catch (UnknownHostException e) {
-				e.printStackTrace();
-			} catch (JSchException e) {
-				e.printStackTrace();
-			}
+				Thread.sleep(100);
+			} catch (InterruptedException e) {}
 		}
 		
-		return false;		
+		return (mSSHCommandsExitStatus.get(0) == 0);
+		
 	}
 	
 	
@@ -326,7 +437,7 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 			} else {
 				
 				// try to start server using ssh and try to to connect again.
-				if( !vTriedSsh && sshServerStart() ){
+				if( !vTriedSsh && sshServerStart()){				
 					
 					vRetry = true;
 					vTriedSsh = true;
