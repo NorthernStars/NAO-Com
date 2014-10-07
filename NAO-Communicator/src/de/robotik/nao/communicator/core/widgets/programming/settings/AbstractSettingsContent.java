@@ -55,7 +55,7 @@ public abstract class AbstractSettingsContent implements SettingsContent {
 			if( vJson.length() > 1 ){
 				vJson += ",";
 			}
-			vJson += String.format( "'%s':%s", key, mSettings.get(key) );
+			vJson += String.format( "\"%s\":%s", key, mSettings.get(key) );
 		}
 			
 		return vJson + "}";

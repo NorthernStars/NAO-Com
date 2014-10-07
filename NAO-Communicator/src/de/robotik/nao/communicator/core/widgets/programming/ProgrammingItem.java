@@ -221,7 +221,7 @@ public class ProgrammingItem extends LinearLayout implements
 			data = mSettingsContent.toJson();
 		}
 		
-		return "{'name': '" + txtName.getText().toString() + "', 'data': " + data + "}";
+		return "{\"name\": \"" + txtName.getText().toString() + "\", \"data\": " + data + "}";
 	}
 	
 
