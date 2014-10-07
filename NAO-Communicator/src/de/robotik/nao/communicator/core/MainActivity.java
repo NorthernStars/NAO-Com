@@ -18,7 +18,9 @@ import de.robotik.nao.communicator.network.data.NAOCommands;
 import de.robotik.nao.communicator.network.data.response.DataResponsePackage;
 import de.robotik.nao.communicator.network.interfaces.NetworkDataRecievedListener;
 import de.robotik.nao.communicator.network.interfaces.NetworkDataSender;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
@@ -45,6 +47,7 @@ public class MainActivity extends FragmentActivity implements
 	OnItemClickListener{
 	
 	private static MainActivity INSTANCE;
+	private static final String SHARED_PREFERENCES = "naocom_preferences";
 	
 	private List<Section> mSections = new ArrayList<Section>();	
 	private RemoteDevice mConnectedDevice = null;
@@ -272,6 +275,13 @@ public class MainActivity extends FragmentActivity implements
 	 */
 	public static MainActivity getInstance() {
 		return INSTANCE;
+	}
+	
+	/**
+	 * @return	Applications {@link SharedPreferences}.
+	 */
+	public static SharedPreferences getPreferences(){
+		return getInstance().getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE);
 	}
 	
 	@Override

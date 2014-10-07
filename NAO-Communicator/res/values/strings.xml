@@ -35,6 +35,10 @@
     <string name="net_naoqi">NAOqi</string>
     <string name="net_ssh">SSH</string>
     <string name="net_sftp">SFTP</string>
+    <string name="net_login_data_title">NAO Login data.</string>
+    <string name="net_login_data_header">Enter NAOs login data.</string>
+    <string name="net_user">User:</string>
+    <string name="net_password">Password:</string>
     <string name="net_sftp_failed">File upload failed.</string>
     <string name="net_sftp_success">File uploaded.</string>
     <string name="speech_input">Text to say:</string>

@@ -72,7 +72,7 @@ public class SettingPlaySound extends AbstractSettingsContent implements
 				return null;
 			}
 			
-			protected void onPostExecute(File result) {
+			protected void onPostExecute(File result) {				
 				if( result != null ){
 					txtSettingsPlaySoundFile.setText( result.getName() );
 					Toast.makeText(
@@ -109,7 +109,8 @@ public class SettingPlaySound extends AbstractSettingsContent implements
 
 	@Override
 	public void updateSettings() {
-		mSettings.put( KEY_FILE, txtSettingsPlaySoundFile.getText().toString() );
+		mSettings.put( KEY_FILE,
+				NAO_SOUND_DIRECTORY + "/" + txtSettingsPlaySoundFile.getText().toString() );
 	}
 
 	@Override

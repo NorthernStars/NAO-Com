@@ -20,6 +20,7 @@ import java.util.Properties;
 
 import javax.jmdns.ServiceEvent;
 
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -35,6 +36,7 @@ import com.jcraft.jsch.SftpException;
 import de.northernstars.naocom.R;
 import de.robotik.nao.communicator.core.MainActivity;
 import de.robotik.nao.communicator.core.sections.SectionConnect;
+import de.robotik.nao.communicator.core.widgets.LoginDialog;
 import de.robotik.nao.communicator.network.data.NAOCommands;
 import de.robotik.nao.communicator.network.data.request.DataRequestPackage;
 import de.robotik.nao.communicator.network.data.response.DataResponsePackage;
@@ -54,6 +56,8 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 	
 	private static final String SSH_CHANNEL_EXEC = "exec";
 	private static final String SSH_CHANNEL_SFTP = "sftp";
+	private static final String PREFERENCES_SSH_USER = "ssh_default_usr";
+	private static final String PREFERENCES_SSH_PASSWORD = "ssh_default_pw";
 	
 	private List<String> hostAdresses = new ArrayList<String>();
 	private String host;
@@ -65,6 +69,7 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 	private JSch mSSH = new JSch();;
 	private String mSSHUser = "nao";
 	private String mSSHPassword = "nao";
+	private boolean mUseCustomLoginData = false;
 	
 	private List<NetworkDataRecievedListener> dataRecievedListener = new ArrayList<NetworkDataRecievedListener>();
 	
@@ -100,6 +105,10 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 	public NAOConnector(NAOConnector connector) {
 		hostAdresses = connector.hostAdresses;
 		port = connector.port;
+		mUseCustomLoginData = connector.mUseCustomLoginData;
+		mSSHUser = connector.mSSHUser;
+		mSSHPassword = connector.mSSHPassword;
+		dataRecievedListener = connector.dataRecievedListener;
 	}
 	
 	/**
@@ -243,19 +252,45 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 		for( String host : hostAdresses ){			
 			try {
 				
+				// get user information
+				SharedPreferences vPreferences = MainActivity.getPreferences();
+				String vUser = vPreferences.getString(PREFERENCES_SSH_USER, "nao");
+				String vPassword = vPreferences.getString(PREFERENCES_SSH_PASSWORD, "nao");
+				if( mUseCustomLoginData ){
+					vUser = mSSHUser;
+					vPassword = mSSHPassword;
+				}
+				
+				Log.i(TAG, "ssh login " + vUser + ":" + vPassword);
+				
 				// create session
-				Session vSession = mSSH.getSession(mSSHUser,
+				Session vSession = mSSH.getSession(vUser,
 						InetAddress.getByName(host).getHostAddress().toString(),
 						22 );
-				vSession.setPassword( mSSHPassword );
+				vSession.setPassword( vPassword );
 				
 				// avoid asking for key auth
 				Properties vProperties = new Properties();
 				vProperties.put("StrictHostKeyChecking", "no");
 				vSession.setConfig(vProperties);
 				
-				// connect to ssh server
-				vSession.connect();
+				try{
+					// connect to ssh server
+					vSession.connect();
+				} catch( JSchException err ){
+					if( err.getMessage().contains("Auth fail") ){
+						
+						// ask for new login data
+						if( askForCustomLoginData() ){
+							vSession = connectSSH();
+						} else {
+							return null;
+						}
+						
+					} else {
+						err.printStackTrace();
+					}
+				}
 				
 				return vSession;
 				
@@ -285,6 +320,37 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 	}
 	
 	/**
+	 * Function to aks user for custom login data.
+	 * @return	{@code true} if new custom login data available, {@code false} otherwise.
+	 */
+	private synchronized boolean askForCustomLoginData(){
+		
+		// show dialog
+		LoginDialog vDialog = new LoginDialog();
+		vDialog.show(
+				MainActivity.getInstance().getSupportFragmentManager(),
+				getClass().getName());
+		
+		// wait for dialog to close
+		while( vDialog.isShowing() ){
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {}
+		}
+		
+		if( vDialog.getUser() != null && vDialog.getPassword() != null ){
+			mUseCustomLoginData = true;
+			mSSHUser = vDialog.getUser();
+			mSSHPassword = vDialog.getPassword();			
+			return true;
+		}
+		
+		mUseCustomLoginData = false;
+		return false;
+		
+	}
+	
+	/**
 	 * Send commands to execute via ssh
 	 * @param aCommands	{@link ArrayList} of {@link String} commands to execute;
 	 * @return			{@link Map} of exit status for commands.
@@ -307,7 +373,7 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 					vChannelExec.setOutputStream(System.out);
 					vChannelExec.setErrStream(System.err);
 					
-					System.out.println("sending " + cmd);
+					Log.i(TAG, "sending " + cmd);
 					vChannel.connect();
 					
 					// wait for command to complete
@@ -361,7 +427,9 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 				}
 				
 				// upload file
+				Log.i(TAG, "Starting file upload");	
 				vSftpChannel.put( new FileInputStream(aFile), aFile.getName() );
+				Log.i(TAG, "Uploaded file " + aFile.getAbsolutePath());			
 				
 				// close connection
 				vChannel.disconnect();
