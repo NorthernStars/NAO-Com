@@ -216,7 +216,7 @@ public class ProgrammingItem extends LinearLayout implements
 	 * @return JSON {@link String} of item.
 	 */
 	public String toJson(){		
-		String data = "[]";		
+		String data = "{}";		
 		if( mSettingsContent != null ){
 			data = mSettingsContent.toJson();
 		}

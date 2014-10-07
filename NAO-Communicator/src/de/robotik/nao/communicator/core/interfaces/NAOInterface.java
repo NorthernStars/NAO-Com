@@ -11,6 +11,12 @@ public interface NAOInterface {
 	public boolean connect();
 	
 	/**
+	 * Reconnects to NAO and replaces existing connection.
+	 * @return {@code true} if connecting process started, {@code false} otherwise
+	 */
+	public boolean reconnect();
+	
+	/**
 	 * Disconnect from NAO
 	 */
 	public void disconnect();

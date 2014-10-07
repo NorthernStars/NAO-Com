@@ -50,7 +50,11 @@ public abstract class AbstractSettingsContent implements SettingsContent {
 	public String toJson() {
 		String vJson = "{";
 		
+		updateSettings();
 		for( String key : mSettings.keySet() ){
+			if( vJson.length() > 1 ){
+				vJson += ",";
+			}
 			vJson += String.format( "'%s':%s", key, mSettings.get(key) );
 		}
 			

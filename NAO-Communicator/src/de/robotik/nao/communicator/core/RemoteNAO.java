@@ -104,18 +104,33 @@ public class RemoteNAO implements NAOInterface, NetworkDataSender, NetworkDataRe
 			} 
 			
 			connector.addNetworkDataRecievedListener(this);
-			connector.start();
+			connector.start();			
 			return true;
-
 		}
 		
 		return false;
 	}
 	
 	@Override
+	public boolean reconnect() {		
+		if( connector != null ){
+			// disconnect existing connection
+			disconnect();
+			
+			// reset connector
+			connector = new NAOConnector(connector);
+		}	
+		
+		// connect and return result
+		return connect();
+	}
+	
+	@Override
 	public void disconnect(){
-		connector.removeNetworkDataRecievedListener(this);
-		connector.stopConnector();
+		if( connector != null ){
+			connector.removeNetworkDataRecievedListener(this);
+			connector.stopConnector();
+		}
 	}
 
 	@Override
@@ -222,12 +237,11 @@ public class RemoteNAO implements NAOInterface, NetworkDataSender, NetworkDataRe
 	/**
 	 * @return	Currently connected {@link RemoteNAO} or {@code null} if none connected.
 	 */
-	public static RemoteNAO getCurrentRemoteNao(){
-		RemoteDevice remoteDevice = MainActivity.getInstance().getConnectedDevice();
-		if( remoteDevice != null
-				&& remoteDevice.getNao() != null
-				&& remoteDevice.getNao().isConnected() ){
-			return remoteDevice.getNao();
+	public static synchronized RemoteNAO getCurrentRemoteNao(){
+		RemoteDevice vRemoteDevice = MainActivity.getInstance().getConnectedDevice();
+		if( vRemoteDevice != null
+				&& vRemoteDevice.getNao() != null ){
+			return vRemoteDevice.getNao();
 		}
 		
 		return null;
@@ -255,6 +269,13 @@ public class RemoteNAO implements NAOInterface, NetworkDataSender, NetworkDataRe
 	 */
 	public static boolean sendCommand(NAOCommands aCommand){
 		return sendCommand(aCommand, new String[]{});
+	}
+
+	/**
+	 * @return {@link NAOConnector} of this {@link RemoteNAO}.
+	 */
+	public NAOConnector getConnector() {
+		return connector;
 	}
 	
 }

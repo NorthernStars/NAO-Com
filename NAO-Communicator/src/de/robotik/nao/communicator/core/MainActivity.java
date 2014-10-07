@@ -125,6 +125,13 @@ public class MainActivity extends FragmentActivity implements
 	
 	@Override
 	protected void onActivityResult(int requestCode,int resultCode,Intent data) {
+		// reconnect remote nao
+		RemoteNAO vRemoteNao = RemoteNAO.getCurrentRemoteNao();
+		if( vRemoteNao != null && !vRemoteNao.isConnected() ){
+			vRemoteNao.reconnect();
+		}
+		
+		// call listener
 		for( OnActivityResultListener listener : activityResultListener ){
 			listener.onActivityResult(requestCode, resultCode, data);
 		}
@@ -245,7 +252,8 @@ public class MainActivity extends FragmentActivity implements
 	 * Addes an external {@link OnActivityResultListener}.
 	 * @param listener	{@link OnActivityResultListener} to add.
 	 */
-	public void addOnActivityResultListener(OnActivityResultListener listener){
+	public void addOnActivityResultListener(OnActivityResultListener listener){		
+		// add listener
 		if( !activityResultListener.contains(listener) ){
 			activityResultListener.add(listener);
 		}

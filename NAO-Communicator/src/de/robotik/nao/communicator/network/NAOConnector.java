@@ -2,6 +2,9 @@ package de.robotik.nao.communicator.network;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -10,21 +13,24 @@ import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.jmdns.ServiceEvent;
 
-import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
+import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+import com.jcraft.jsch.SftpException;
 
 import de.northernstars.naocom.R;
 import de.robotik.nao.communicator.core.MainActivity;
@@ -44,6 +50,10 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 	public static final int connectionMaxTries = 3;
 	public static final String serverNetworkServiceToken = "_naocom._tcp.local.";
 	
+	public static final String serverStartCommand = "start.sh";
+	
+	private static final String SSH_CHANNEL_EXEC = "exec";
+	private static final String SSH_CHANNEL_SFTP = "sftp";
 	
 	private List<String> hostAdresses = new ArrayList<String>();
 	private String host;
@@ -53,11 +63,8 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 	private OutputStream out = null;
 	
 	private JSch mSSH = new JSch();;
-	private Session mSession = null;
 	private String mSSHUser = "nao";
 	private String mSSHPassword = "nao";
-	private List<String> mSSHCommands = new ArrayList<String>();
-	private List<Integer> mSSHCommandsExitStatus = new ArrayList<Integer>();
 	
 	private List<NetworkDataRecievedListener> dataRecievedListener = new ArrayList<NetworkDataRecievedListener>();
 	
@@ -233,49 +240,44 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 	 * @return	{@code true} if successful connected, {@code false} otherwise.
 	 */
 	private Session connectSSH(){
-		if( mSession == null ){
-			
-			for( String host : hostAdresses ){			
-				try {
-					
-					// create session
-					mSession = mSSH.getSession(mSSHUser,
-							InetAddress.getByName(host).getHostAddress().toString(),
-							22 );
-					mSession.setPassword( mSSHPassword );
-					
-					// avoid asking for key auth
-					Properties vProperties = new Properties();
-					vProperties.put("StrictHostKeyChecking", "no");
-					mSession.setConfig(vProperties);
-					
-					// connect to ssh server
-					mSession.connect();
-					
-					return mSession;
-					
-				} catch (UnknownHostException e) {
-					e.printStackTrace();
-				} catch (JSchException e) {
-					e.printStackTrace();
-				}
+		for( String host : hostAdresses ){			
+			try {
 				
-				mSession = null;
+				// create session
+				Session vSession = mSSH.getSession(mSSHUser,
+						InetAddress.getByName(host).getHostAddress().toString(),
+						22 );
+				vSession.setPassword( mSSHPassword );
+				
+				// avoid asking for key auth
+				Properties vProperties = new Properties();
+				vProperties.put("StrictHostKeyChecking", "no");
+				vSession.setConfig(vProperties);
+				
+				// connect to ssh server
+				vSession.connect();
+				
+				return vSession;
+				
+			} catch (UnknownHostException e) {
+				e.printStackTrace();
+			} catch (JSchException e) {
+				e.printStackTrace();
 			}
-		
+			
 		}
 		
-		return mSession;
+		return null;
 	}
 	
 	/**
 	 * Closes SSH connection.
-	 * @return	{@code true} if successful, {@code false} otherwise.
+	 * @param aSession	{@link Session} to close.
+	 * @return			{@code true} if successful, {@code false} otherwise.
 	 */
-	private boolean closeSSH(){		
-		if( mSession != null ){
-			mSession.disconnect();
-			mSession = null;
+	private boolean closeSSH(Session aSession){		
+		if( aSession != null ){
+			aSession.disconnect();
 			return true;
 		}
 		
@@ -284,80 +286,103 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 	
 	/**
 	 * Send commands to execute via ssh
-	 * @param aCommands	{@link List} of {@link String} commands to execute;
+	 * @param aCommands	{@link ArrayList} of {@link String} commands to execute;
+	 * @return			{@link Map} of exit status for commands.
 	 */
-	public void sendSSHCommands(List<String> aCommands){
+	public Map<String, Integer> sendSSHCommands(ArrayList<String> aCommands){
 		
-		synchronized (mSSHCommands) {
-			mSSHCommands = aCommands;
-			mSSHCommandsExitStatus.clear();
+		// onnect to ssh server
+		Session vSession = connectSSH();
+		Map<String, Integer> vExitStatus = new HashMap<String, Integer>();
+						
+		if( vSession != null){
+			
+			// execute commands
+			for( String cmd : aCommands ){				
+				try{
+					// open channel and connect
+					Channel vChannel = vSession.openChannel(SSH_CHANNEL_EXEC);
+					ChannelExec vChannelExec = (ChannelExec) vChannel;
+					vChannelExec.setCommand(cmd);
+					vChannelExec.setOutputStream(System.out);
+					vChannelExec.setErrStream(System.err);
+					
+					System.out.println("sending " + cmd);
+					vChannel.connect();
+					
+					// wait for command to complete
+					while( !vChannel.isClosed() ){
+						try {
+							Thread.sleep(100);
+						} catch (InterruptedException e) {}
+					};
+					
+					// add exit status
+					vExitStatus.put( cmd, vChannel.getExitStatus() );
+					vChannel.disconnect();
+					
+				} catch(JSchException e){
+					Log.e(TAG, e.getMessage());
+				}				
+			}
+			
+			// close ssh connection
+			closeSSH(vSession);						
+		}
+				
+		return vExitStatus;
+	}
+	
+	/**
+	 * Uploads a {@link File} to remote NAO.
+	 * @param aFile			{@link File} to upload.
+	 * @param aRemoteDir	{@link String} of remote directory.
+	 * @return				{@code true} if file uploaded successful, {@code false} otherwise.
+	 */
+	public boolean uploadSFTP(File aFile, String aRemoteDir){
+		
+		// connect to ssh
+		Session vSession = connectSSH();
+
+		if( vSession != null){						
+			try{
+				
+				// open channel
+				Channel vChannel = vSession.openChannel(SSH_CHANNEL_SFTP);
+				vChannel.connect();
+				ChannelSftp vSftpChannel = (ChannelSftp) vChannel;
+				
+				// Change to remote path or create dir
+				try{
+					vSftpChannel.cd(aRemoteDir);
+				} catch (SftpException e){
+					vSftpChannel.mkdir(aRemoteDir);
+					vSftpChannel.cd(aRemoteDir);
+				}
+				
+				// upload file
+				vSftpChannel.put( new FileInputStream(aFile), aFile.getName() );
+				
+				// close connection
+				vChannel.disconnect();
+				closeSSH(vSession);
+				
+				return true;
+				
+			} catch(JSchException e){
+				Log.e(TAG, e.getMessage());
+				e.printStackTrace();
+			} catch (SftpException e) {
+				Log.e(TAG, e.getMessage());
+				e.printStackTrace();
+			} catch (FileNotFoundException e) {
+				Log.e(TAG, e.getMessage());
+				e.printStackTrace();
+			}
+			
 		}
 		
-		new AsyncTask<Void, Void, Boolean>() {
-			
-			@Override
-			protected Boolean doInBackground(Void... params) {	
-				synchronized (mSSHCommands) {
-				
-					// connect to ssh server
-					Session vSession = connectSSH();
-					
-					if( vSession != null ){
-						
-						// execute commands
-						for( String cmd : mSSHCommands ){				
-							try{
-								Channel vChannel = mSession.openChannel("exec");
-								((ChannelExec) vChannel).setCommand(cmd);
-								((ChannelExec) vChannel).setOutputStream(System.out);
-								((ChannelExec) vChannel).setErrStream(System.err);
-								
-								System.out.println("sending " + cmd);
-								vChannel.connect();
-								
-								// wait for command to complete
-								while( !vChannel.isClosed() ){
-									try {
-										Thread.sleep(100);
-									} catch (InterruptedException e) {}
-								};
-								
-								
-								System.out.println("exit code " + vChannel.getExitStatus());
-								mSSHCommandsExitStatus.add( vChannel.getExitStatus() );
-								vChannel.disconnect();
-								
-							} catch(JSchException e){
-								Log.e(TAG, e.getMessage());
-							}				
-						}
-						
-						// close ssh connection
-						closeSSH();
-						return true;						
-					}
-								
-					return false;					
-				}
-			}
-			
-			@Override
-			protected void onPostExecute(Boolean result) {
-				// check result
-				if( !result ){
-					
-					// show message
-					MainActivity.getInstance().runOnUiThread( new Runnable() {				
-						@Override
-						public void run() {
-							Toast.makeText(MainActivity.getInstance().getApplicationContext(),
-									R.string.net_ssh_failed, Toast.LENGTH_SHORT).show();
-						}
-					});	
-					
-				}
-			}
-		}.execute();
+		return false;
 	}
 	
 	
@@ -377,18 +402,19 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 		});	
 		
 		// send command
-		List<String> vCommands = new ArrayList<String>();
-		vCommands.add( "/home/nao/naocom/start.sh" );
-		sendSSHCommands( vCommands );
+		ArrayList<String> vCommands = new ArrayList<String>();
+		vCommands.add( serverStartCommand );
+		if( sendSSHCommands( vCommands ).size() > 0 ){
 		
-		while( mSSHCommandsExitStatus.size() == 0 ){
+			// wait a few seconds for server to start
 			try {
-				Thread.sleep(100);
+				Thread.sleep(3000);
 			} catch (InterruptedException e) {}
+		
+			return true;
 		}
 		
-		return (mSSHCommandsExitStatus.get(0) == 0);
-		
+		return false;		
 	}
 	
 	
@@ -567,6 +593,6 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 	 */
 	public int getPort() {
 		return port;
-	}	
+	}
 	
 }
