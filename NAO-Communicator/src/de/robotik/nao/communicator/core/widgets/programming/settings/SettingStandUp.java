@@ -36,7 +36,7 @@ public class SettingStandUp extends AbstractSettingsContent {
 	
 	@Override
 	public void updateSettings() {
-		mSettings.put(KEY_POSTURE, (String) spSettingsPosture.getSelectedItem());
+		mSettings.put( KEY_POSTURE, "\"" + (String) spSettingsPosture.getSelectedItem() + "\"" );
 	}
 
 	@Override
