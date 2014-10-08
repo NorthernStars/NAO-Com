@@ -1,6 +1,7 @@
 package de.robotik.nao.communicator.core.widgets.programming.settings;
 
 import java.io.File;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
@@ -14,8 +15,12 @@ import android.support.v4.content.CursorLoader;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 import de.northernstars.naocom.R;
@@ -33,8 +38,10 @@ public class SettingPlaySound extends AbstractSettingsContent implements
 	private static final String NAO_SOUND_DIRECTORY = "sounds";
 	
 	private Button btnSettingsSelectSoundFile;
-	private TextView txtSettingsPlaySoundFile;
 	private ProgressBar pgbSettingsPlaySoundLoading;
+	private Spinner spSettingsPlaySoundAvailableFile;
+	private ImageButton btnSettingsPlaySoundRefresh;
+	private ProgressBar pgbSettingsPlaySoundRemoteFilesLoading;
 	
 	/**
 	 * Uploads a {@link File} to remote NAO.
@@ -74,13 +81,10 @@ public class SettingPlaySound extends AbstractSettingsContent implements
 			
 			protected void onPostExecute(File result) {				
 				if( result != null ){
-					txtSettingsPlaySoundFile.setText( result.getName() );
 					Toast.makeText(
 							MainActivity.getInstance().getApplicationContext(),
 							R.string.net_sftp_success, Toast.LENGTH_SHORT).show();
 				} else {
-					txtSettingsPlaySoundFile.setText(
-							MainActivity.getInstance().getResources().getString(R.string.net_sftp_failed) );
 					Toast.makeText(
 							MainActivity.getInstance().getApplicationContext(),
 							R.string.net_sftp_failed, Toast.LENGTH_SHORT).show();
@@ -93,44 +97,98 @@ public class SettingPlaySound extends AbstractSettingsContent implements
 		return aFile.getName();
 	}
 	
+	/**
+	 * Loads remote files and adds them to spinner
+	 */
+	private void loadRemoteFiles(){
+		
+		// start async task to get remote files
+		new AsyncTask<Void, Void, SpinnerAdapter>() {
+			
+			protected void onPreExecute() {
+				btnSettingsPlaySoundRefresh.setVisibility( View.GONE );
+				pgbSettingsPlaySoundRemoteFilesLoading.setVisibility( View.VISIBLE );
+			};
+
+			@Override
+			protected SpinnerAdapter doInBackground(Void... params) {
+				
+				// get connector
+				RemoteNAO vRemoteNao = RemoteNAO.getCurrentRemoteNao();
+				NAOConnector vConnector = vRemoteNao.getConnector();
+				
+				List<String> vRemoteFiles = vConnector.getSftpDirContent( NAO_SOUND_DIRECTORY );
+				
+				SpinnerAdapter vAdapter = new ArrayAdapter<String>(
+						MainActivity.getInstance().getApplicationContext(),
+						R.layout.spinner_item,
+						vRemoteFiles );
+			
+				return vAdapter;
+			}
+			
+			protected void onPostExecute(SpinnerAdapter result) {				
+				spSettingsPlaySoundAvailableFile.setAdapter(result);
+				btnSettingsPlaySoundRefresh.setVisibility( View.VISIBLE );
+				pgbSettingsPlaySoundRemoteFilesLoading.setVisibility( View.GONE );
+			};
+			
+		}.execute();
+		
+	}
+	
 	@Override
 	public void generateView(ViewGroup root) {
 		mResource = R.layout.programming_setting_play_sound;
 		super.generateView(root);
 		
 		// get widgets
-		txtSettingsPlaySoundFile = (TextView) findViewById(R.id.txtSettingsPlaySoundFile);
 		btnSettingsSelectSoundFile = (Button) findViewById(R.id.btnSettingsSelectSoundFile);
 		pgbSettingsPlaySoundLoading = (ProgressBar) findViewById(R.id.pgbSettingsPlaySoundLoading);
+		spSettingsPlaySoundAvailableFile = (Spinner) findViewById(R.id.spSettingsPlaySoundAvailableFile);
+		btnSettingsPlaySoundRefresh = (ImageButton) findViewById(R.id.btnSettingsPlaySoundRefresh);
+		pgbSettingsPlaySoundRemoteFilesLoading = (ProgressBar) findViewById(R.id.pgbSettingsPlaySoundRemoteFilesLoading);
 		
 		// set listener
 		btnSettingsSelectSoundFile.setOnClickListener(this);
+		btnSettingsPlaySoundRefresh.setOnClickListener(this);
 	}
 
 	@Override
 	public void updateSettings() {
 		mSettings.put( KEY_FILE,
-				NAO_SOUND_DIRECTORY + "/" + txtSettingsPlaySoundFile.getText().toString() );
+				"\"" + NAO_SOUND_DIRECTORY
+				+ "/" + (String) spSettingsPlaySoundAvailableFile.getSelectedItem() + "\"" );
 	}
 
 	@Override
 	public void updateText(TextView txtText) {
-		txtText.setText( txtSettingsPlaySoundFile.getText() );
+		txtText.setText( (String) spSettingsPlaySoundAvailableFile.getSelectedItem() );
 	}
 
 	@Override
 	public void onClick(View v) {
-		// create intend
-		Intent vIntent = new Intent();
-		vIntent.setType( "audio/*" );
-		vIntent.setAction( Intent.ACTION_GET_CONTENT );
 		
-		// register listener and start intent
-		MainActivity.getInstance().addOnActivityResultListener(this);		
-		MainActivity.getInstance().startActivityForResult(vIntent, INTENT_REQUEST_CODE);
-		
-		// start loading bar
-		pgbSettingsPlaySoundLoading.setVisibility( View.VISIBLE );
+		if( v == btnSettingsSelectSoundFile ){
+			
+			// create intend
+			Intent vIntent = new Intent();
+			vIntent.setType( "audio/*" );
+			vIntent.setAction( Intent.ACTION_GET_CONTENT );
+			
+			// register listener and start intent
+			MainActivity.getInstance().addOnActivityResultListener(this);		
+			MainActivity.getInstance().startActivityForResult(vIntent, INTENT_REQUEST_CODE);
+			
+			// start loading bar
+			pgbSettingsPlaySoundLoading.setVisibility( View.VISIBLE );
+			
+		} else if( v == btnSettingsPlaySoundRefresh ){
+			
+			// load remote sound files
+			loadRemoteFiles();
+			
+		}
 	}
 
 	@Override
@@ -142,13 +200,15 @@ public class SettingPlaySound extends AbstractSettingsContent implements
 				String vFilePath = getRealPathFromURI(
 						MainActivity.getInstance().getApplicationContext(),
 						data.getData() );
-				File vFile = new File( vFilePath );				
-				txtSettingsPlaySoundFile.setText( "uploading " + uploadFile(vFile) );
-				
+				File vFile = new File( vFilePath );
+				uploadFile(vFile);				
 			}
 			
 			// hide loading bar and remove listener
-			MainActivity.getInstance().removeOnActivityResultListener(this);			
+			MainActivity.getInstance().removeOnActivityResultListener(this);
+			
+			// load remote sound files
+			loadRemoteFiles();
 		}
 			
 		return true;

@@ -26,8 +26,8 @@ public class SettingStiffness extends AbstractSettingsContent {
 	
 	@Override
 	public void updateSettings() {
-		mSettings.put(KEY_JOINT, (String) spSettingsStiffnessJoint.getSelectedItem() );
-		mSettings.put(KEY_MOTOR, (chkSettingsStiffnessOn.isChecked() ? "true" : "false") ); 
+		mSettings.put(KEY_JOINT, "\"" + (String) spSettingsStiffnessJoint.getSelectedItem() + "\"" );
+		mSettings.put(KEY_MOTOR, (chkSettingsStiffnessOn.isChecked() ? "True" : "False") ); 
 	}
 
 	@Override

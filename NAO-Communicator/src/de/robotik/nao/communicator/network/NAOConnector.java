@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Vector;
 
 import javax.jmdns.ServiceEvent;
 
@@ -28,6 +29,7 @@ import com.google.gson.Gson;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.ChannelSftp.LsEntry;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
@@ -261,8 +263,6 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 					vPassword = mSSHPassword;
 				}
 				
-				Log.i(TAG, "ssh login " + vUser + ":" + vPassword);
-				
 				// create session
 				Session vSession = mSSH.getSession(vUser,
 						InetAddress.getByName(host).getHostAddress().toString(),
@@ -451,6 +451,50 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 		}
 		
 		return false;
+	}
+	
+	/**
+	 * Gets content of remote directory.
+	 * @param aRemoteDir	{@link String} of remote directory.
+	 * @return				{@link List} of {@link String} file names in remote directory.
+	 */
+	public List<String> getSftpDirContent(String aRemoteDir){		
+		// connect to ssh
+		Session vSession = connectSSH();
+		List<String> vDirContent = new ArrayList<String>();
+
+		if( vSession != null){						
+			try{
+				
+				// open channel
+				Channel vChannel = vSession.openChannel(SSH_CHANNEL_SFTP);
+				vChannel.connect();
+				ChannelSftp vSftpChannel = (ChannelSftp) vChannel;
+				
+				// Change to remote path
+				vSftpChannel.cd(aRemoteDir);
+				
+				// get directory content
+				@SuppressWarnings("unchecked")
+				Vector<ChannelSftp.LsEntry> vEntryList = vSftpChannel.ls("*");
+				for( LsEntry entry : vEntryList ){
+					vDirContent.add( entry.getFilename() );
+				}
+				
+				// close connection
+				vChannel.disconnect();
+				closeSSH(vSession);
+				
+			} catch(JSchException e){
+				Log.e(TAG, e.getMessage());
+				e.printStackTrace();
+			} catch (SftpException e) {
+				Log.e(TAG, e.getMessage());
+				e.printStackTrace();
+			}			
+		}
+		
+		return vDirContent;		
 	}
 	
 	

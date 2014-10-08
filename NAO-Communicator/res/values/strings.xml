@@ -9,6 +9,7 @@
     <string name="settings">Settings</string>
     <string name="btnOK">OK</string>
     <string name="btnCancel">Cancel</string>
+    <string name="btnRefresh">Refresh</string>
     <string name="net_host">Host:</string>
     <string name="net_add_device">Add device</string>
     <string name="net_devices">Available NAOs:</string>
@@ -118,7 +119,8 @@
     <string name="programming_WalkTo">Walk to</string>
     <string name="programming_Stiffness">Stiffness</string>
     <string name="programming_sensor">Sensor</string>
-    <string name="settings_select_sound_file">Select sound file</string>
+    <string name="settings_play_upload">Upload sound file</string>
+    <string name="settings_play_available_files">Available sound files:</string>
     <string name="settings_wait_time">Time to wait [s]:</string>
     <string name="settings_wait_time_default">0.1</string>
     <string name="settings_posture_select">Select posture:</string>
