@@ -35,7 +35,10 @@ public class SettingChangeLanguage extends AbstractSettingsContent implements
 
 	@Override
 	public void updateSettings() {
-		mSettings.put( KEY_LANGUAGE, (String) spSettingsChangeLanguage.getSelectedItem() );
+		if( spSettingsChangeLanguage.getSelectedItem() != null ){
+			mSettings.put( KEY_LANGUAGE, "\""
+					+ (String) spSettingsChangeLanguage.getSelectedItem() + "\"" );
+		}
 	}
 
 	@Override

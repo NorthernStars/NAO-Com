@@ -79,7 +79,8 @@ public class SettingSensor extends AbstractSettingsContent implements
 	@Override
 	public void updateSettings() {
 		int vPosition = spSettingsSensorValue.getSelectedItemPosition();
-		mSettings.put(KEY_VALUE, (String) spSettingsSensorValue.getAdapter().getItem(vPosition));
+		mSettings.put( KEY_VALUE, "\""
+				+ (String) spSettingsSensorValue.getAdapter().getItem(vPosition) + "\"" );
 	}
 
 	@Override
@@ -91,7 +92,8 @@ public class SettingSensor extends AbstractSettingsContent implements
 	@Override
 	public void onItemSelected(AdapterView<?> parent, View view, int position,
 			long id) {
-		mSettings.put(KEY_TYPE, (String) parent.getAdapter().getItem(position));
+		mSettings.put( KEY_TYPE, "\""
+				+ (String) parent.getAdapter().getItem(position) + "\"" );
 		selectValueEntries();
 	}
 

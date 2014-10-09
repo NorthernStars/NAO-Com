@@ -35,7 +35,7 @@ public class SettingWalkTo extends AbstractSettingsContent {
 		mSettings.put( KEY__X, txtSettingsWalkToX.getText().toString() );
 		mSettings.put( KEY__Y, txtSettingsWalkToY.getText().toString() );
 		mSettings.put( KEY_THETA, txtSettingsWalkToTheta.getText().toString() );
-		mSettings.put( KEY_USE_ARMS, (chkSettingsWalkToArmsEnabled.isChecked() ? "true" : "false") );
+		mSettings.put( KEY_USE_ARMS, (chkSettingsWalkToArmsEnabled.isChecked() ? "True" : "False") );
 	}
 
 	@Override
