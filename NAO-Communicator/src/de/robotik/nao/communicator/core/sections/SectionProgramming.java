@@ -1,5 +1,8 @@
 package de.robotik.nao.communicator.core.sections;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.northernstars.naocom.R;
 import de.robotik.nao.communicator.core.MainActivity;
 import de.robotik.nao.communicator.core.RemoteNAO;
@@ -29,6 +32,8 @@ import android.widget.TextView;
 public class SectionProgramming extends Section implements
 	OnClickListener,
 	NetworkDataRecievedListener{
+	
+	private static List<ProgrammingItem> mActiveProgram = new ArrayList<ProgrammingItem>();
 	
 	private ImageButton btnProgrammingSayText;
 	private ImageButton btnProgrammingChangeLanguage;
@@ -104,7 +109,28 @@ public class SectionProgramming extends Section implements
 		// connect network listener
 		MainActivity.getInstance().addNetworkDataRecievedListener(this);
 		
+		// restore programming items
+		if( mActiveProgram != null ){
+			for( ProgrammingItem vItem : mActiveProgram ){
+				ViewGroup parent = (ViewGroup) vItem.getParent();
+				parent.removeView(vItem);
+				addItem(vItem);
+			}
+		}
+		
 		return rootView;
+	}
+	
+	@Override
+	public void onDestroyView() {
+		// save program
+		mActiveProgram.clear();
+		for( int i=0; i < divProgramming.getChildCount(); i++ ){
+			ProgrammingItem vItem = (ProgrammingItem) divProgramming.getChildAt(i);
+			mActiveProgram.add(vItem);
+		}
+		
+		super.onDestroyView();
 	}
 	
 	/**
