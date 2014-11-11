@@ -217,7 +217,7 @@ public class RemoteDevice implements
 			MainActivity.getInstance().setConnectedDevice( null );
 		}
 		
-		if( getNao().connect() ){
+		if( remoteDevice != this && getNao().connect() ){
 			MainActivity.getInstance().setConnectedDevice( this );
 			imgLogo.setVisibility( View.GONE );
 			pgbLoading.setVisibility( View.VISIBLE );	

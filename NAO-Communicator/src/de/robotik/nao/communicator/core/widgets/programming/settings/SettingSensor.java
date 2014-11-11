@@ -25,7 +25,7 @@ public class SettingSensor extends AbstractSettingsContent implements
 		super.generateView(root);
 		
 		mSettings.put(KEY_TYPE,
-				MainActivity.getInstance().getResources().getStringArray(R.array.nao_sensors)[0] );
+				"\"" + MainActivity.getInstance().getResources().getStringArray(R.array.nao_sensors)[0] + "\"" );
 		
 		// get widgets
 		spSettingsSensorType = (Spinner) findViewById(R.id.spSettingsSensorType);
