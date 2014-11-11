@@ -266,9 +266,23 @@ public class SectionProgramming extends Section implements
 			
 			// check for playing
 			if( data.requestSuccessfull ){
-				lblProgrammingStatus.setText(R.string.programming_playing);
+				
+				MainActivity.getInstance().runOnUiThread(new Runnable() {					
+					@Override
+					public void run() {
+						lblProgrammingStatus.setText(R.string.programming_playing);
+					}
+				});
+				
 			} else {
-				lblProgrammingStatus.setText(R.string.programming_stopped);
+				
+				MainActivity.getInstance().runOnUiThread(new Runnable() {					
+					@Override
+					public void run() {
+						lblProgrammingStatus.setText(R.string.programming_stopped);
+					}
+				});
+				
 			}
 			
 			// select active item

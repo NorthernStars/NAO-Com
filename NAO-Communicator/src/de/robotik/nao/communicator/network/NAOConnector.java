@@ -189,7 +189,7 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 					notifyDataRecievedListeners( p );
 				}
 				
-			} catch( SocketTimeoutException e ){				
+			} catch( SocketTimeoutException e ){
 			} catch (IOException e) {
 				Log.e(TAG, "IOException on connnection with " + host + ":" + port);
 				state = ConnectionState.CONNECTION_ERROR;

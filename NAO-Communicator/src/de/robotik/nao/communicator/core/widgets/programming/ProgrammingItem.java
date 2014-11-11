@@ -206,9 +206,23 @@ public class ProgrammingItem extends LinearLayout implements
 	 */
 	public void setActive(boolean aSelected){
 		if( aSelected ){
-			setBackgroundColor( getResources().getColor(R.color.active_orange) );
+			
+			MainActivity.getInstance().runOnUiThread(new Runnable() {				
+				@Override
+				public void run() {
+					setBackgroundColor( getResources().getColor(R.color.active_orange) );
+				}
+			});
+			
 		} else {
-			setBackgroundColor( getResources().getColor(R.color.lightgray) );
+			
+			MainActivity.getInstance().runOnUiThread(new Runnable() {				
+				@Override
+				public void run() {
+					setBackgroundColor( getResources().getColor(R.color.lightgray) );
+				}
+			});
+			
 		}
 	}
 	
