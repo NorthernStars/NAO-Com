@@ -205,6 +205,28 @@ public class RemoteDevice implements
 		}
 	}
 	
+	/**
+	 * Connects the device to remote server
+	 * @return	{@code true} if successful, {@code false} otherwise.
+	 */
+	public boolean connect(){
+		// check if to disconnect from other NAO
+		RemoteDevice remoteDevice = MainActivity.getInstance().getConnectedDevice();
+		if( remoteDevice != null ){
+			remoteDevice.getNao().disconnect();
+			MainActivity.getInstance().setConnectedDevice( null );
+		}
+		
+		if( getNao().connect() ){
+			MainActivity.getInstance().setConnectedDevice( this );
+			imgLogo.setVisibility( View.GONE );
+			pgbLoading.setVisibility( View.VISIBLE );	
+			return true;
+		}
+		
+		return false;
+	}
+	
 
 	@Override
 	public void addNetworkService(ServiceEvent service) {
@@ -224,22 +246,7 @@ public class RemoteDevice implements
 
 	@Override
 	public void onClick(View v) {
-		// check if to disconnect from other NAO
-		RemoteDevice remoteDevice = MainActivity.getInstance().getConnectedDevice();
-		boolean isTheSame = false;
-
-		if(  remoteDevice != null ){
-			isTheSame = remoteDevice.hasAdress( getNao().getHostAdresses().get(0) );
-			remoteDevice.getNao().disconnect();
-			MainActivity.getInstance().setConnectedDevice( null );
-		}
-		
-		if( !isTheSame && getNao().connect() ){
-			MainActivity.getInstance().setConnectedDevice( this );
-			imgLogo.setVisibility( View.GONE );
-			pgbLoading.setVisibility( View.VISIBLE );			
-		}
-		
+		connect();
 	}
 
 	/**

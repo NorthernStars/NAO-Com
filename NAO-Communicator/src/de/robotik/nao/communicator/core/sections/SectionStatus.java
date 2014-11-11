@@ -13,7 +13,6 @@ import de.robotik.nao.communicator.network.interfaces.NetworkDataRecievedListene
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.view.LayoutInflater;
@@ -33,7 +32,6 @@ import android.widget.TextView;
 
 public class SectionStatus extends Section implements
 	NetworkDataRecievedListener,
-	OnPageChangeListener,
 	OnSeekBarChangeListener,
 	OnClickListener,
 	OnItemSelectedListener,
@@ -158,7 +156,6 @@ public class SectionStatus extends Section implements
 		spAutonomousLife.setAdapter( adapterAutonomousLifeStates );
 		
 		// add listener
-		MainActivity.getInstance().getViewPager().setOnPageChangeListener(this);
 		MainActivity.getInstance().addNetworkDataRecievedListener(this);
 		
 		btnStatusChangeNaoName.setOnClickListener(this);
@@ -267,20 +264,6 @@ public class SectionStatus extends Section implements
 				public void onClick(DialogInterface dialog, int which) {}
 			});
 		dialog.show();
-	}
-
-	@Override
-	public void onPageScrollStateChanged(int arg0) {}
-
-	@Override
-	public void onPageScrolled(int arg0, float arg1, int arg2) {}
-
-	@Override
-	public void onPageSelected(int aPosition) {
-		Section selectedSection = MainActivity.getInstance().getSections().get(aPosition);
-		if( selectedSection == this && !disableSending ){			
-			RemoteNAO.sendCommand( NAOCommands.SYS_GET_INFO );
-		}
 	}
 
 	@Override

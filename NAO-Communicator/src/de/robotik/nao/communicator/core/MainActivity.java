@@ -48,6 +48,7 @@ public class MainActivity extends FragmentActivity implements
 	
 	private static MainActivity INSTANCE;
 	private static final String SHARED_PREFERENCES = "naocom_preferences";
+	private static final String INSTANCE_STATE_KESY_HOST_ADRESSES = "HOSTS";
 	
 	private List<Section> mSections = new ArrayList<Section>();	
 	private RemoteDevice mConnectedDevice = null;
@@ -146,8 +147,7 @@ public class MainActivity extends FragmentActivity implements
 	 * Adds layouts for fragment pages
 	 */
 	private void createPageFragmentLayouts(){
-		if( mSections.size() == 0 ){
-			
+		if( mSections.size() == 0 ){			
 			// Add all new sections here
 			mSections.add( new SectionConnect("Connect") );
 			mSections.add( new SectionWifi("Hotspot") );
@@ -155,8 +155,7 @@ public class MainActivity extends FragmentActivity implements
 			mSections.add( new SectionSpeech("Speech") );
 			mSections.add( new SectionFunctions("Functions") );
 			mSections.add( new SectionLed("LEDs") );
-			mSections.add( new SectionProgramming("Programming") );
-			
+			mSections.add( new SectionProgramming("Programming") );			
 		}
 	}
 
@@ -271,6 +270,20 @@ public class MainActivity extends FragmentActivity implements
 	}
 	
 	/**
+	 * Selects item in menu drawer
+	 * @param view
+	 */
+	public void selectMenueItem(Section section){
+		for( int i=0; i < mSections.size(); i++ ){
+			Section s = mSections.get(i);
+			if( s == section ){
+				mMenueListView.setItemChecked(i, true);
+			}
+		}
+		
+	}
+	
+	/**
 	 * @return Current {@link MainActivity} instance.
 	 */
 	public static MainActivity getInstance() {
@@ -360,6 +373,46 @@ public class MainActivity extends FragmentActivity implements
 		mViewPager.setCurrentItem(position);
 		mMenueListView.setItemChecked(position, true);
 		mDrawerLayout.closeDrawer(mMenu);
+	}
+	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {	
+		// check if device connected
+		RemoteDevice vDevice = getConnectedDevice();
+		if( vDevice != null && vDevice.getNao().isConnected() ){
+			
+			// add connected hosts
+			ArrayList<String> vHostAdresses = new ArrayList<String>( vDevice.getNao().getHostAdresses() );
+			outState.putStringArrayList( INSTANCE_STATE_KESY_HOST_ADRESSES, vHostAdresses );
+			
+		}
+		super.onSaveInstanceState(outState);
+	}
+	
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {		
+		// check if device was connected
+		if( savedInstanceState.containsKey(INSTANCE_STATE_KESY_HOST_ADRESSES) ){
+			
+			ArrayList<String> vHostAdresses = savedInstanceState.getStringArrayList(INSTANCE_STATE_KESY_HOST_ADRESSES);
+			if( vHostAdresses.size() > 0 ){
+				
+				// create new remote device and add host adresses
+				RemoteDevice vDevice = new RemoteDevice(this, vHostAdresses.get(0));
+				for( String vHost : vHostAdresses ){
+					vDevice.addAdress(vHost);
+				}
+				
+				// add remote device
+				SectionConnect.getInstance().clearDevicesList();
+				SectionConnect.getInstance().addRemoteDevice(vDevice);
+				
+				// connect device
+				vDevice.connect();
+				
+			}
+		}
+		super.onRestoreInstanceState(savedInstanceState);
 	}
 
 }

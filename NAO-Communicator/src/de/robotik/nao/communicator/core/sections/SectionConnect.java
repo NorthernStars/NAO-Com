@@ -11,6 +11,7 @@ import javax.jmdns.ServiceEvent;
 import javax.jmdns.ServiceListener;
 
 import de.northernstars.naocom.R;
+import de.robotik.nao.communicator.core.MainActivity;
 import de.robotik.nao.communicator.core.RemoteNAO;
 import de.robotik.nao.communicator.core.widgets.RemoteDevice;
 import de.robotik.nao.communicator.network.NAOConnector;
@@ -31,6 +32,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 public class SectionConnect extends Section implements OnRefreshListener {
+	
+	private static SectionConnect INSTANCE;
 	
 	private MulticastLock lock;
 	private JmDNS jmDNS = null;
@@ -114,19 +117,33 @@ public class SectionConnect extends Section implements OnRefreshListener {
 			}
 		} );
 		
+		// Set instance
+		INSTANCE = this;
+		
 		return rootView;
+	}
+	
+	/**
+	 * @return	{@link SectionConnect} instance.
+	 */
+	public static SectionConnect getInstance(){
+		if( INSTANCE == null ){
+			INSTANCE = new SectionConnect();
+		}
+		
+		return INSTANCE;
 	}
 	
 	/**
 	 * Clears list of devices, except connected devices.
 	 */
-	private void clearDevicesList(){
+	public void clearDevicesList(){
 		List<RemoteDevice> vDevicesBackup = new ArrayList<RemoteDevice>(devices);
 		for( RemoteDevice device : vDevicesBackup ){
 			if( !device.getNao().isConnected() ){
 				devices.remove(device);
-				lstNetworkDevices.removeView( device.getView() );
 			}
+			lstNetworkDevices.removeAllViews();			
 		}
 	}
 	
@@ -341,25 +358,17 @@ public class SectionConnect extends Section implements OnRefreshListener {
         	} else {
         		
         		// add new device
-        		new AsyncTask<ServiceEvent, Void, RemoteDevice>(){    				
+        		new AsyncTask<ServiceEvent, Void, Void>(){    				
 					@Override
-					protected RemoteDevice doInBackground(
+					protected Void doInBackground(
 							ServiceEvent... params) {
 						if( params.length > 0 ){
 							ServiceEvent vService = params[0];
 							RemoteDevice vDevice = new RemoteDevice(getActivity(), vService);
-							devices.add(vDevice);
-							return vDevice;
+							addRemoteDevice(vDevice);
 						}
 						return null;
-					}
-					
-					protected void onPostExecute(RemoteDevice aDevice) {
-						if( aDevice != null ){
-							lstNetworkDevices.addView( aDevice.getView() );
-						}
-						servicesProcessing.remove( aDevice.getNao().getHostAdresses().get(0) );
-					};					
+					}				
 	        	}.execute(new ServiceEvent[]{aService});
 	        	
         	}
@@ -370,6 +379,26 @@ public class SectionConnect extends Section implements OnRefreshListener {
 		
 		Log.e(TAG, "service contains no host adresses: " + aService.getInfo().getHostAddresses().length);
 		return false;
+	}
+	
+	/**
+	 * Adds a {@link RemoteDevice} to device list.
+	 * @param aDevice	{@link RemoteDevice} to add.
+	 */
+	public void addRemoteDevice(RemoteDevice aDevice){
+		
+		if( !devices.contains(aDevice) ){
+			devices.add(aDevice);
+			MainActivity.getInstance().runOnUiThread( new Runnable() {			
+				@Override
+				public void run() {
+					RemoteDevice vDevice = devices.get( devices.size()-1 );
+					lstNetworkDevices.addView( vDevice.getView() );
+					servicesProcessing.remove( vDevice.getNao().getHostAdresses().get(0) );
+				}
+			} );
+		}
+		
 	}
 	
 	/**
@@ -392,25 +421,17 @@ public class SectionConnect extends Section implements OnRefreshListener {
 			if( getDevice(aHost) == null ){
 				
 				// add new device
-        		new AsyncTask<String, Void, RemoteDevice>(){    				
+        		new AsyncTask<String, Void, Void>(){    				
 					@Override
-					protected RemoteDevice doInBackground(
+					protected Void doInBackground(
 							String... params) {
 						if( params.length > 0 ){
 							String vHost = params[0];
 							RemoteDevice vDevice = new RemoteDevice(getActivity(), vHost);
-							devices.add(vDevice);
-							return vDevice;
+							addRemoteDevice(vDevice);
 						}
 						return null;
-					}
-					
-					protected void onPostExecute(RemoteDevice aDevice) {
-						if( aDevice != null ){
-							lstNetworkDevices.addView( aDevice.getView() );
-						}
-						servicesProcessing.remove( aDevice.getNao().getHostAdresses().get(0) );
-					};					
+					}				
 	        	}.execute(new String[]{aHost});
 	        	
 	        	return true;				
