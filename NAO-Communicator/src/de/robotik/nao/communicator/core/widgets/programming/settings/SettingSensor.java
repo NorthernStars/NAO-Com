@@ -44,25 +44,25 @@ public class SettingSensor extends AbstractSettingsContent implements
 		ArrayAdapter<CharSequence> vAdapter = null;
 		
 		// select entries
-		if( vType.equals("Tactile")  ){
+		if( vType.contains("Tactile")  ){
 			
 			vAdapter = ArrayAdapter.createFromResource(getView().getContext(),
 					R.array.nao_sensor_tactile_values,
 					android.R.layout.simple_spinner_item);
 			
-		} else if( vType.equals("Bumper")  ){
+		} else if( vType.contains("Bumper")  ){
 			
 			vAdapter = ArrayAdapter.createFromResource(getView().getContext(),
 					R.array.nao_sensor_bumper_values,
 					android.R.layout.simple_spinner_item);
 			
-		} else if( vType.equals("Chest button")  ){
-			
-			vAdapter = ArrayAdapter.createFromResource(getView().getContext(),
-					R.array.nao_sensor_chest_button_values,
-					android.R.layout.simple_spinner_item);
-			
-		} else if( vType.equals("Sonar")  ){
+//		} else if( vType.contains("Chest button")  ){
+//			
+//			vAdapter = ArrayAdapter.createFromResource(getView().getContext(),
+//					R.array.nao_sensor_chest_button_values,
+//					android.R.layout.simple_spinner_item);
+//			
+		} else if( vType.contains("Sonar")  ){
 			
 			vAdapter = ArrayAdapter.createFromResource(getView().getContext(),
 					R.array.nao_sensor_sonar_values,
@@ -94,6 +94,7 @@ public class SettingSensor extends AbstractSettingsContent implements
 			long id) {
 		mSettings.put( KEY_TYPE, "\""
 				+ (String) parent.getAdapter().getItem(position) + "\"" );
+		System.out.println("Selected new item");
 		selectValueEntries();
 	}
 

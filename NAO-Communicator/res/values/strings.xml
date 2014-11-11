@@ -137,5 +137,6 @@
     <string name="settings_stiffness_off">Motor off</string>
     <string name="settings_sensor_type">Select sensor type:</string>
     <string name="settings_sensor_value">Select sensor value to wait for:</string>
+    <string name="settings_say_default_text">Hello I am NAO.</string>
 
 </resources>

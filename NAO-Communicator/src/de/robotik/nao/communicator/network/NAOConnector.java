@@ -48,7 +48,7 @@ import de.robotik.nao.communicator.network.interfaces.NetworkDataSender;
 public class NAOConnector extends Thread implements NetworkDataSender {
 
 	public static final String TAG = NAOConnector.class.getName();
-	public static final String defaultHost = "nao.local";
+	public static final String defaultHost = "192.168.0.100";
 	public static final int defaultPort = 5050;
 	public static final int defaultReadTimeout = 3000;
 	public static final int connectionMaxTries = 3;

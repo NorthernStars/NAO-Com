@@ -3,6 +3,7 @@ package de.robotik.nao.communicator.core.widgets.programming.settings;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import de.northernstars.naocom.R;
+import de.robotik.nao.communicator.core.MainActivity;
 
 public class SettingSayText extends AbstractSettingsContent {
 	
@@ -14,7 +15,8 @@ public class SettingSayText extends AbstractSettingsContent {
 		mResource = R.layout.programming_setting_say_text;
 		super.generateView(root);
 					
-		mSettings.put(KEY_TEXT, "\"Hallo I'am NAO\"");
+		String vDefaultText = MainActivity.getInstance().getResources().getString(R.string.settings_say_default_text);
+		mSettings.put(KEY_TEXT, "\"" + vDefaultText + "\"");
 		txtSayText = (TextView) findViewById(R.id.txtSayText);	
 		txtSayText.setText( mSettings.get(KEY_TEXT).replace("\"", "") );
 	}
