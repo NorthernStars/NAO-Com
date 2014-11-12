@@ -37,6 +37,7 @@ public class RemoteDevice implements
 	private TextView txtSSH;
 	private TextView txtSFTP;
 	private ImageView imgLogo;
+	private ImageView imgUpdate;
 	private ProgressBar pgbLoading;
 	
 	/**
@@ -77,12 +78,14 @@ public class RemoteDevice implements
 		// get components
 		txtName = (TextView) mView.findViewById(R.id.txtDevicename);
 		imgLogo = (ImageView) mView.findViewById(R.id.imgDevice);
+		imgUpdate = (ImageView) mView.findViewById(R.id.imgDeviceUpdate);
 		txtNAOqi = (TextView) mView.findViewById(R.id.txtNAOqi);
 		txtSSH = (TextView) mView.findViewById(R.id.txtSSH);
 		txtSFTP = (TextView) mView.findViewById(R.id.txtSFTP);
 		pgbLoading = (ProgressBar) mView.findViewById(R.id.pgbSettingsPlaySoundLoading);
 		
 		mView.setOnClickListener(this);
+		imgUpdate.setOnClickListener(this);
 		MainActivity.getInstance().addNetworkDataRecievedListener(this);
 	}
 	
@@ -251,7 +254,12 @@ public class RemoteDevice implements
 
 	@Override
 	public void onClick(View v) {
-		connect();
+		if( v == mView ){
+			connect();
+		} else {
+			// TODO: Device update
+			System.out.println("update");
+		}
 	}
 
 	/**
@@ -280,9 +288,19 @@ public class RemoteDevice implements
 	@Override
 	public void onNetworkDataRecieved(DataResponsePackage data) {
 		ServerRevision vOnlineRevision = MainActivity.getInstance().getOnlineRevision();
+		RemoteDevice vConnectedRemoteDevice = MainActivity.getInstance().getConnectedDevice();
 		
-		if( vOnlineRevision.getRevision() >= 0 && data.revision < vOnlineRevision.getRevision() ){
-			// TODO: Mark as online
+		if( vConnectedRemoteDevice == this
+				&& vOnlineRevision.getRevision() >= 0
+				&& data.revision < vOnlineRevision.getRevision() ){
+			
+			MainActivity.getInstance().runOnUiThread(new Runnable() {				
+				@Override
+				public void run() {
+					imgUpdate.setVisibility( View.VISIBLE );
+				}
+			});
+			
 		}
 	}
 

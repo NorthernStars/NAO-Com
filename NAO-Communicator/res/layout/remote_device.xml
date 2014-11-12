@@ -21,10 +21,11 @@
         android:visibility="gone" />
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_marginLeft="@dimen/padding"
         android:layout_marginStart="@dimen/padding"
+        android:layout_weight="1"
         android:orientation="vertical" >
 
         <TextView
@@ -67,5 +68,16 @@
                 android:textColor="@color/inactive_text" />
         </LinearLayout>
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imgDeviceUpdate"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@drawable/background_button_click"
+        android:contentDescription="@string/img_description"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_action_download"
+        android:visibility="gone" />
 
 </LinearLayout>
