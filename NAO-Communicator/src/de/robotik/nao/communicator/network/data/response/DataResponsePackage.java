@@ -17,6 +17,13 @@ public class DataResponsePackage {
 	public DataRequestPackage request;
 	public boolean requestSuccessfull;
 	
+	public DataResponsePackage() {}
+	
+	public DataResponsePackage(DataRequestPackage aRequest, boolean aSuccessfull){
+		request = aRequest;
+		requestSuccessfull = aSuccessfull;
+	}
+	
 	/**
 	 * Requested data
 	 */

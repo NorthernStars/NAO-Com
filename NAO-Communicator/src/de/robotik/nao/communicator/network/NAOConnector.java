@@ -52,6 +52,7 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 	public static final int defaultPort = 5050;
 	public static final int defaultReadTimeout = 3000;
 	public static final int connectionMaxTries = 3;
+	public static final int connectionMaxTimeouts = 3;
 	public static final String serverNetworkServiceToken = "_naocom._tcp.local.";
 	
 	public static final String SSH_COMMAND_SERVER_START = "naocom/start.sh";
@@ -67,6 +68,7 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 	private Gson gson = new Gson();
 	private BufferedReader in = null;
 	private OutputStream out = null;
+	private int timeoutCounter = 0;
 	
 	private JSch mSSH = new JSch();;
 	private String mSSHUser = "nao";
@@ -178,23 +180,25 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 	 * Read data until thread gets stopped or connection gets an error
 	 */
 	private void readData(){
-		while( !stop && socket != null && state == ConnectionState.CONNECTION_ESTABLISHED ){
+		// handle socket_CLOSED
+		try{
 			
-			// handle socket_CLOSED
-			try{
-				
-				String data = in.readLine();
-				if( data != null ){
-					DataResponsePackage p = gson.fromJson(data, DataResponsePackage.class);
-					notifyDataRecievedListeners( p );
+			String data = in.readLine();
+			if( data != null ){
+				timeoutCounter = 0;
+				DataResponsePackage p = gson.fromJson(data, DataResponsePackage.class);
+				notifyDataRecievedListeners( p );
+			} else {
+				timeoutCounter++;
+				if( timeoutCounter >= connectionMaxTimeouts ){
+					stopConnector();
 				}
-				
-			} catch( SocketTimeoutException e ){
-			} catch (IOException e) {
-				Log.e(TAG, "IOException on connnection with " + host + ":" + port);
-				state = ConnectionState.CONNECTION_ERROR;
 			}
 			
+		} catch( SocketTimeoutException e ){
+		} catch (IOException e) {
+			Log.e(TAG, "IOException on connnection with " + host + ":" + port);
+			state = ConnectionState.CONNECTION_ERROR;
 		}
 	}
 	
@@ -231,6 +235,8 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 				socket = null;
 				state = ConnectionState.CONNECTION_CLOSED;
 				
+				MainActivity.getInstance().setConnectedDevice(null);
+				
 				return true;	
 			}
 			
@@ -238,8 +244,13 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 			Log.w(TAG, "IOException on connnection with " + host + ":" + port);
 			state = ConnectionState.CONNECTION_ERROR;
 		} catch( NullPointerException e ){
+			// no response on socket
 			Log.w(TAG, "NullPointerException on disconnect from " + host + ":" + port);
-			state = ConnectionState.CONNECTION_ERROR;
+			notifyDataRecievedListeners( new DataResponsePackage(
+					new DataRequestPackage(NAOCommands.SYS_DISCONNECT, new String[]{}), true) );
+			state = ConnectionState.CONNECTION_CLOSED;
+			MainActivity.getInstance().setConnectedDevice(null);
+			return true;
 		}
 		
 		return false;
@@ -556,7 +567,9 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 				});
 				
 				// read data
-				readData();
+				while( !stop && socket != null && state == ConnectionState.CONNECTION_ESTABLISHED ){
+					readData();
+				}
 				
 				// try to disconnect
 				if( disconnect() ){
@@ -597,6 +610,9 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 			
 		}
 		
+		
+		// try to disconnect
+		disconnect();
 		
 	}
 	

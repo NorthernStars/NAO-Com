@@ -154,7 +154,6 @@ public class SectionProgramming extends Section implements
 		for( int i=0; i < divProgramming.getChildCount(); i++ ){
 			ProgrammingItem vItem = (ProgrammingItem) divProgramming.getChildAt(i);
 			vArguments[i] = vItem.toJson();
-			System.out.println( "ITEM " + i + ": " + vItem.toJson() );
 		}
 		
 		// send command
