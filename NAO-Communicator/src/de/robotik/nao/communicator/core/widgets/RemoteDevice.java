@@ -5,6 +5,7 @@ import javax.jmdns.ServiceEvent;
 import de.northernstars.naocom.R;
 import de.robotik.nao.communicator.core.MainActivity;
 import de.robotik.nao.communicator.core.RemoteNAO;
+import de.robotik.nao.communicator.core.revisions.ServerRevision;
 import de.robotik.nao.communicator.network.data.response.DataResponsePackage;
 import de.robotik.nao.communicator.network.interfaces.NetworkDataRecievedListener;
 import de.robotik.nao.communicator.network.interfaces.NetworkServiceHandler;
@@ -82,6 +83,7 @@ public class RemoteDevice implements
 		pgbLoading = (ProgressBar) mView.findViewById(R.id.pgbSettingsPlaySoundLoading);
 		
 		mView.setOnClickListener(this);
+		MainActivity.getInstance().addNetworkDataRecievedListener(this);
 	}
 	
 	/**
@@ -277,9 +279,10 @@ public class RemoteDevice implements
 
 	@Override
 	public void onNetworkDataRecieved(DataResponsePackage data) {
-		int vOnlineRevision = MainActivity.getInstance().getOnlineRevision();
-		if( vOnlineRevision >= 0 && data.revision < vOnlineRevision ){
-			System.out.println("update");
+		ServerRevision vOnlineRevision = MainActivity.getInstance().getOnlineRevision();
+		
+		if( vOnlineRevision.getRevision() >= 0 && data.revision < vOnlineRevision.getRevision() ){
+			// TODO: Mark as online
 		}
 	}
 

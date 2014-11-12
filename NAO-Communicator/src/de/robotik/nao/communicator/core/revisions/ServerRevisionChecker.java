@@ -1,0 +1,119 @@
+package de.robotik.nao.communicator.core.revisions;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import de.robotik.nao.communicator.core.MainActivity;
+
+public class ServerRevisionChecker implements Runnable {
+
+	private static final String releasesURL = "https://api.github.com/repos/NorthernStars/NAO-Communication-server/releases";
+	
+	@Override
+	public void run() {
+		
+		HttpClient vHttpClient = new DefaultHttpClient();
+		HttpResponse vHttpResponse;
+		String vResponseString = null;
+		
+		// get data from url
+		try {
+			
+			vHttpResponse = vHttpClient.execute( new HttpGet(releasesURL) );
+			if( vHttpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK ){
+				
+				// get content of response
+				ByteArrayOutputStream vOutStream = new ByteArrayOutputStream();
+				vHttpResponse.getEntity().writeTo(vOutStream);
+				vOutStream.close();
+				vResponseString = vOutStream.toString();
+				
+			}
+			
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		// convert response to JSON and get latest revision
+		if( vResponseString != null ){
+			ServerRevision vLatestRevision = null;
+			for( ServerRevision vRevision : parseJsonData(vResponseString) ){
+				if( vLatestRevision == null || vRevision.getRevision() > vLatestRevision.getRevision() ){
+					vLatestRevision = vRevision;
+				}
+			}
+			
+			// set latest online revision
+			MainActivity.getInstance().setOnlineRevision(vLatestRevision);
+		}
+		
+	}
+	
+	private List<ServerRevision> parseJsonData(String data){
+		
+		List<ServerRevision> vRevisions = new ArrayList<ServerRevision>();
+		JsonArray vJson = (new JsonParser()).parse(data).getAsJsonArray();
+		
+		// get all available revisions
+		for( int nRevision=0; nRevision < vJson.size(); nRevision++ ){
+			JsonObject vRelease = vJson.get(nRevision).getAsJsonObject();
+			
+			// get name
+			String vName = vRelease.get("name").getAsString();
+			
+			// get assets
+			String vUrl = null;
+			JsonArray vAssets = vRelease.get("assets").getAsJsonArray();
+			for( int nAsset=0; nAsset < vAssets.size(); nAsset++ ){
+				
+				// get url
+				JsonObject vAsset = vAssets.get(nAsset).getAsJsonObject();
+				String vAssetUrl = vAsset.get("browser_download_url").getAsString();
+				
+				if( vAssetUrl.matches(".*rev.*\\.tar\\.gz$") ){
+					vUrl = vAssetUrl;
+					break;
+				}
+				
+			}
+			
+			// get revision
+			int vRevision = -1;
+			if( vUrl != null ){
+				String[] vDataArray = vUrl.split("\\.tar\\.gz")[0].split("rev");
+				if( vDataArray.length > 0 ){
+					
+					String vData = vDataArray[ vDataArray.length-1 ];
+					try{
+						vRevision = Integer.parseInt(vData);
+					} catch( NumberFormatException e ){}
+					
+				}
+			}
+			
+			// add new revision
+			if( vName != null && vUrl != null && vRevision >= 0 ){
+				vRevisions.add( new ServerRevision(vName, vRevision, vUrl) );
+			}
+		}
+		
+		
+		return vRevisions;
+	}
+
+}

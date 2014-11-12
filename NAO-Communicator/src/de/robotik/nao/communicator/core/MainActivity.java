@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.northernstars.naocom.R;
+import de.robotik.nao.communicator.core.revisions.ServerRevision;
+import de.robotik.nao.communicator.core.revisions.ServerRevisionChecker;
 import de.robotik.nao.communicator.core.sections.Section;
 import de.robotik.nao.communicator.core.sections.SectionConnect;
 import de.robotik.nao.communicator.core.sections.SectionFunctions;
@@ -49,7 +51,7 @@ public class MainActivity extends FragmentActivity implements
 	private static MainActivity INSTANCE;
 	private static final String SHARED_PREFERENCES = "naocom_preferences";
 	private static final String INSTANCE_STATE_KESY_HOST_ADRESSES = "HOSTS";
-	private static int onlineRevision = -1;
+	private static ServerRevision onlineRevision;
 	
 	private List<Section> mSections = new ArrayList<Section>();	
 	private RemoteDevice mConnectedDevice = null;
@@ -125,6 +127,9 @@ public class MainActivity extends FragmentActivity implements
             }
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+        
+        // start fetching data for server update
+        (new Thread(new ServerRevisionChecker())).start();
 
 	}	
 	
@@ -287,15 +292,18 @@ public class MainActivity extends FragmentActivity implements
 	/**
 	 * @return	{@link Integer} of online available server revision.
 	 */
-	public int getOnlineRevision(){
+	public ServerRevision getOnlineRevision(){
 		return onlineRevision;
 	}
 	
 	/**
 	 * Sets revision of online available server.
-	 * @param aRevision	{@link Integer} revision.
+	 * @param aRevision	{@link ServerRevision} revision.
 	 */
-	public void setOnlineRevision(int aRevision){
+	public void setOnlineRevision(ServerRevision aRevision){
+		if( aRevision == null ){
+			aRevision = new ServerRevision();
+		}
 		onlineRevision = aRevision;
 	}
 	
