@@ -431,7 +431,9 @@ public class SectionStatus extends Section implements
 				txtStatusDeviceName.setText( currentResponseData.naoName );
 				lblStatusSystemVolume.setText( Integer.toString(currentResponseData.audioData.masterVolume) + "%" );
 				lblStatusPlayerVolume.setText( Integer.toString((int)(currentResponseData.audioData.playerVolume * 100.0f)) + "%" );
-				lblStatusAutonomousLife.setText( currentResponseData.lifeState.name() );
+				if( currentResponseData.lifeState != null ){
+					lblStatusAutonomousLife.setText( currentResponseData.lifeState.name() );
+				}
 				
 				// set battery level
 				int battery = currentResponseData.batteryLevel;
