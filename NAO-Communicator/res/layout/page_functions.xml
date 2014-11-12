@@ -1,285 +1,278 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/swipeFunctions"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/padding" >
 
-    <ScrollView
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/lblFunctionsBasicTitle"
+            style="@style/SectionHeader"
+            android:text="@string/functions_basic" />
 
         <LinearLayout
+            android:id="@+id/divFunctionsBasic"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
-
-            <TextView
-                android:id="@+id/lblFunctionsBasicTitle"
-                style="@style/SectionHeader"
-                android:text="@string/functions_basic" />
+            android:orientation="vertical"
+            android:visibility="gone" >
 
             <LinearLayout
-                android:id="@+id/divFunctionsBasic"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone" >
-
-                <LinearLayout
-                    style="?android:attr/buttonBarStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
-
-                    <Button
-                        android:id="@+id/btnFunctionStandUp"
-                        style="?android:attr/buttonBarButtonStyle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/functions_basic_stand_up" />
-
-                    <Button
-                        android:id="@+id/btnFuntctionSitDown"
-                        style="?android:attr/buttonBarButtonStyle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/functions_basic_sit_down" />
-                </LinearLayout>
-
-                <LinearLayout
-                    style="?android:attr/buttonBarStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
-
-                    <Button
-                        android:id="@+id/btnFunctionHello"
-                        style="?android:attr/buttonBarButtonStyle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/functions_basic_hello" />
-
-                    <Button
-                        android:id="@+id/btnFunctionShakeHands"
-                        style="?android:attr/buttonBarButtonStyle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/functions_basic_shake_hands" />
-                </LinearLayout>
-
-                <LinearLayout
-                    style="?android:attr/buttonBarStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
-
-                    <Button
-                        android:id="@+id/btnFunctionWipeForehead"
-                        style="?android:attr/buttonBarButtonStyle"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/functions_basic_wipe_forehead" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/lblFunctionsTrackerTitle"
-                style="@style/SectionHeader"
-                android:text="@string/functions_tracker" />
-
-            <LinearLayout
-                android:id="@+id/divFunctionsTracker"
                 style="?android:attr/buttonBarStyle"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:visibility="gone" >
+                android:layout_height="wrap_content" >
 
                 <Button
-                    android:id="@+id/btnFunctionsFaceTracker"
+                    android:id="@+id/btnFunctionStandUp"
                     style="?android:attr/buttonBarButtonStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/functions_tracker_face" />
+                    android:text="@string/functions_basic_stand_up" />
 
                 <Button
-                    android:id="@+id/btnFunctionsRedBallTracker"
+                    android:id="@+id/btnFuntctionSitDown"
                     style="?android:attr/buttonBarButtonStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/functions_tracker_red_ball" />
+                    android:text="@string/functions_basic_sit_down" />
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/lblFunctionsDanceTitle"
-                style="@style/SectionHeader"
-                android:text="@string/functions_dance" />
-
             <LinearLayout
-                android:id="@+id/divFunctionsDance"
+                style="?android:attr/buttonBarStyle"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone" >
-
-                <LinearLayout
-                    style="?android:attr/buttonBarStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
-
-                    <Button
-                        android:id="@+id/btnDanceThaiChi"
-                        style="?android:attr/buttonBarButtonStyle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/functions_dance_thai_chi" />
-
-                    <Button
-                        android:id="@+id/btnDanceEvolutionOfDance"
-                        style="?android:attr/buttonBarButtonStyle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/functions_dance_evolution_of_dance" />
-                </LinearLayout>
-
-                <LinearLayout
-                    style="?android:attr/buttonBarStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
-
-                    <Button
-                        android:id="@+id/btnDanceCaravanPalace"
-                        style="?android:attr/buttonBarButtonStyle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/functions_dance_caravan_palace" />
-
-                    <Button
-                        android:id="@+id/btnDanceVangelisDance"
-                        style="?android:attr/buttonBarButtonStyle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/functions_dance_vangelis_dance" />
-                </LinearLayout>
-
-                <LinearLayout
-                    style="?android:attr/buttonBarStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
-
-                    <Button
-                        android:id="@+id/btnDanceGangnameStyle"
-                        style="?android:attr/buttonBarButtonStyle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/functions_dance_gangnam_style" />
-
-                    <Button
-                        android:id="@+id/btnDanceEyeOfTheTiger"
-                        style="?android:attr/buttonBarButtonStyle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/functions_dance_eye_of_the_tiger" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/lblFunctionsCustomNewTitle"
-                style="@style/SectionHeader"
-                android:text="@string/functions_custom_new" />
-
-            <LinearLayout
-                android:id="@+id/divFunctionsCustomNew"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone" >
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
-
-                    <TextView
-                        android:id="@+id/lblFunctionsCustomNew"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="end"
-                        android:text="@string/functions_custom_almemory_key" />
-
-                    <EditText
-                        android:id="@+id/txtFunctionsCustomNewALMemoryKey"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:ems="10"
-                        android:inputType="text" >
-
-                        <requestFocus />
-                    </EditText>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
-
-                    <TextView
-                        android:id="@+id/lblFunctionsCustomNewName"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="end"
-                        android:text="@string/functions_custom_event_name" />
-
-                    <EditText
-                        android:id="@+id/txtFunctionsCustomNewName"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:ems="10"
-                        android:inputType="text" />
-                </LinearLayout>
+                android:layout_height="wrap_content" >
 
                 <Button
-                    android:id="@+id/btnFunctionsCustomNewAdd"
-                    style="@style/Button"
+                    android:id="@+id/btnFunctionHello"
+                    style="?android:attr/buttonBarButtonStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/functions_custom_add" />
+                    android:layout_weight="1"
+                    android:text="@string/functions_basic_hello" />
+
+                <Button
+                    android:id="@+id/btnFunctionShakeHands"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/functions_basic_shake_hands" />
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/lblFunctionsCustomTitle"
-                style="@style/SectionHeader"
-                android:text="@string/functions_custom" />
-
             <LinearLayout
-                android:id="@+id/divFunctionsCustom"
+                style="?android:attr/buttonBarStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <Button
+                    android:id="@+id/btnFunctionWipeForehead"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/functions_basic_wipe_forehead" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/lblFunctionsTrackerTitle"
+            style="@style/SectionHeader"
+            android:text="@string/functions_tracker" />
+
+        <LinearLayout
+            android:id="@+id/divFunctionsTracker"
+            style="?android:attr/buttonBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone" >
+
+            <Button
+                android:id="@+id/btnFunctionsFaceTracker"
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone" >
+                android:layout_weight="1"
+                android:text="@string/functions_tracker_face" />
+
+            <Button
+                android:id="@+id/btnFunctionsRedBallTracker"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/functions_tracker_red_ball" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/lblFunctionsDanceTitle"
+            style="@style/SectionHeader"
+            android:text="@string/functions_dance" />
+
+        <LinearLayout
+            android:id="@+id/divFunctionsDance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone" >
+
+            <LinearLayout
+                style="?android:attr/buttonBarStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <Button
+                    android:id="@+id/btnDanceThaiChi"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/functions_dance_thai_chi" />
+
+                <Button
+                    android:id="@+id/btnDanceEvolutionOfDance"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/functions_dance_evolution_of_dance" />
+            </LinearLayout>
+
+            <LinearLayout
+                style="?android:attr/buttonBarStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <Button
+                    android:id="@+id/btnDanceCaravanPalace"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/functions_dance_caravan_palace" />
+
+                <Button
+                    android:id="@+id/btnDanceVangelisDance"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/functions_dance_vangelis_dance" />
+            </LinearLayout>
+
+            <LinearLayout
+                style="?android:attr/buttonBarStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <Button
+                    android:id="@+id/btnDanceGangnameStyle"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/functions_dance_gangnam_style" />
+
+                <Button
+                    android:id="@+id/btnDanceEyeOfTheTiger"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/functions_dance_eye_of_the_tiger" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/lblFunctionsCustomNewTitle"
+            style="@style/SectionHeader"
+            android:text="@string/functions_custom_new" />
+
+        <LinearLayout
+            android:id="@+id/divFunctionsCustomNew"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/lblFunctionsCustomNew"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:text="@string/functions_custom_almemory_key" />
+
+                <EditText
+                    android:id="@+id/txtFunctionsCustomNewALMemoryKey"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:inputType="text" >
+
+                    <requestFocus />
+                </EditText>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/lblFunctionsCustomNewName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:text="@string/functions_custom_event_name" />
+
+                <EditText
+                    android:id="@+id/txtFunctionsCustomNewName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:inputType="text" />
             </LinearLayout>
 
             <Button
-                android:id="@+id/btnFunctionsAbort"
+                android:id="@+id/btnFunctionsCustomNewAdd"
                 style="@style/Button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/functions_abort" />
+                android:text="@string/functions_custom_add" />
         </LinearLayout>
-    </ScrollView>
 
-</android.support.v4.widget.SwipeRefreshLayout>
+        <TextView
+            android:id="@+id/lblFunctionsCustomTitle"
+            style="@style/SectionHeader"
+            android:text="@string/functions_custom" />
+
+        <LinearLayout
+            android:id="@+id/divFunctionsCustom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone" >
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnFunctionsAbort"
+            style="@style/Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/functions_abort" />
+    </LinearLayout>
+
+</ScrollView>

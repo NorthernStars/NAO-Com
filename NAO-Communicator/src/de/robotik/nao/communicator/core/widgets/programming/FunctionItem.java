@@ -22,6 +22,7 @@ public class FunctionItem extends LinearLayout implements
 	
 	private String mKey;
 	private String mName;
+	private boolean removed = false;
 	
 	/**
 	 * Constructor
@@ -71,6 +72,10 @@ public class FunctionItem extends LinearLayout implements
 		return mName;
 	}
 	
+	public boolean isRemoved(){
+		return removed;
+	}
+	
 	/**
 	 * Creates items context
 	 * @param aKey	{@link String} of items ALMemory key.
@@ -97,6 +102,7 @@ public class FunctionItem extends LinearLayout implements
 		if( v == btnRemove ){
 			RemoteNAO.sendCommand( NAOCommands.MEMORY_EVENT_REMOVE,
 					new String[]{ txtKey.getText().toString() } );
+			removed = true;
 		} else {
 			RemoteNAO.sendCommand( NAOCommands.MEMORY_EVENT_RAISE,
 					new String[]{ txtKey.getText().toString() } );

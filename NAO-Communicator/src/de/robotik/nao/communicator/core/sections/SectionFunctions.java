@@ -1,7 +1,8 @@
 package de.robotik.nao.communicator.core.sections;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+
 import de.northernstars.naocom.R;
 import de.robotik.nao.communicator.core.MainActivity;
 import de.robotik.nao.communicator.core.RemoteNAO;
@@ -10,8 +11,6 @@ import de.robotik.nao.communicator.network.data.NAOCommands;
 import de.robotik.nao.communicator.network.data.response.DataResponsePackage;
 import de.robotik.nao.communicator.network.interfaces.NetworkDataRecievedListener;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -22,10 +21,7 @@ import android.widget.TextView;
 
 public class SectionFunctions extends Section implements
 	OnClickListener,
-	OnRefreshListener,
 	NetworkDataRecievedListener{
-	
-	private SwipeRefreshLayout swipeFunctions;
 
 	private Button btnFunctionStandUp;
 	private Button btnFuntctionSitDown;
@@ -49,7 +45,7 @@ public class SectionFunctions extends Section implements
 	private Button btnFunctionsCustomNewAdd;
 	
 	private LinearLayout divFunctionsCustom;
-	private List<FunctionItem> mFunctionItemsToAdd = new ArrayList<FunctionItem>();
+	private Map<String, String> mFunctionItemsToUpdate = new HashMap<String, String>();
 	private boolean mFunctionsAdding = false;
 	
 	
@@ -86,18 +82,9 @@ public class SectionFunctions extends Section implements
 		(btnFunctionsCustomNewAdd = (Button) findViewById(R.id.btnFunctionsCustomNewAdd)).setOnClickListener(this);
 		
 		divFunctionsCustom = (LinearLayout) findViewById(R.id.divFunctionsCustom);
-		swipeFunctions = (SwipeRefreshLayout) findViewById(R.id.swipeFunctions);
 		
 		// Register network data listener
 		MainActivity.getInstance().addNetworkDataRecievedListener(this);
-		
-		// set swipe layout
-		swipeFunctions.setOnRefreshListener(this);
-		swipeFunctions.setColorSchemeResources(
-				R.color.darkerblue,
-				R.color.darkblue,
-				R.color.blue,
-				R.color.lighterblue);
 		
 		return rootView;
 	}
@@ -171,42 +158,45 @@ public class SectionFunctions extends Section implements
 		
 		return null;
 	}
-	
-	@Override
-	public void onRefresh() {
-		// TODO Auto-generated method stub
-	}
 
 	@Override
 	public void onNetworkDataRecieved(DataResponsePackage data) {
 		
 		// check for new custom events
-		synchronized (mFunctionItemsToAdd) {
+		synchronized (mFunctionItemsToUpdate) {
 			if( !mFunctionsAdding ){
 				mFunctionsAdding = true;
-				mFunctionItemsToAdd.clear();
+				mFunctionItemsToUpdate = data.customMemoryEvents;
 				
-				for( String key : data.customMemoryEvents.keySet() ){
-					FunctionItem vItem = getItem(key);				
-					// check if to update or to add item
-					if( vItem != null ){				
-						vItem.update(key, data.customMemoryEvents.get(key));
-					} else {				
-						vItem = new FunctionItem(getActivity(), key,
-								data.customMemoryEvents.get(key));
-						mFunctionItemsToAdd.add(vItem);
-					}
-				}
-				
-				MainActivity.getInstance().runOnUiThread(new Runnable() {				
+				MainActivity.getInstance().runOnUiThread(new Runnable() {					
 					@Override
 					public void run() {
-						for( FunctionItem vItem : mFunctionItemsToAdd ){
-							divFunctionsCustom.addView(vItem);
+						
+						// check if to add, to update item
+						for( String key : mFunctionItemsToUpdate.keySet() ){
+							FunctionItem vItem = getItem(key);
+							if( vItem != null ){
+								vItem.update(key, mFunctionItemsToUpdate.get(key));		// update
+							} else {
+								vItem = new FunctionItem(getActivity(), key,
+										mFunctionItemsToUpdate.get(key));
+								divFunctionsCustom.addView(vItem);						// add
+							}
 						}
-						mFunctionItemsToAdd.clear();
+						
+						// remove items not in list
+						for( int i=0; i < divFunctionsCustom.getChildCount(); i++ ){
+							FunctionItem vItem = (FunctionItem) divFunctionsCustom.getChildAt(i);
+							if( !mFunctionItemsToUpdate.containsKey(vItem.getKey()) && vItem.isRemoved() ){
+								((ViewGroup) vItem.getParent()).removeView(vItem);
+							}
+						}
+						
+						// clear list and reset flag
+						mFunctionItemsToUpdate.clear();
 						mFunctionsAdding = false;
-					}
+						
+					}					
 				});
 				
 			}				
