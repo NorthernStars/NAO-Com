@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/ProgrammingItem" >
+
+    <TextView
+        android:id="@+id/txtFunctionItemName"
+        style="@style/ItemName" />
+
+    <TextView
+        android:id="@+id/txtFunctionItemKey"
+        style="@style/ItemText" />
+
+    <ImageButton
+        android:id="@+id/btnFunctionItemRemove"
+        style="@style/ItemImageButton"
+        android:contentDescription="@string/img_description"
+        android:src="@drawable/ic_action_remove" />
+
+</LinearLayout>

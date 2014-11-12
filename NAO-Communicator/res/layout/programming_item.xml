@@ -4,30 +4,30 @@
 
     <TextView
         android:id="@+id/txtProgrammingItemNumber"
-        style="@style/ProgrammingItemNumber" />
+        style="@style/ItemNumber" />
 
     <ImageView
         android:id="@+id/imgProgrammingItemIcon"
-        style="@style/ProgrammingItemIcon"
+        style="@style/ItemIcon"
         android:contentDescription="@string/img_description" />
 
     <TextView
         android:id="@+id/txtProgrammingItemName"
-        style="@style/ProgrammingItemName" />
+        style="@style/ItemName" />
 
     <TextView
         android:id="@+id/txtProgrammingItemText"
-        style="@style/ProgrammingItemText" />
+        style="@style/ItemText" />
 
     <ImageButton
         android:id="@+id/btnProgrammingItemSettings"
-        style="@style/ProgrammingItemImageButton"
+        style="@style/ItemImageButton"
         android:contentDescription="@string/img_description"
         android:src="@drawable/ic_action_settings" />
 
     <ImageButton
         android:id="@+id/btnProgrammingItemRemove"
-        style="@style/ProgrammingItemImageButton"
+        style="@style/ItemImageButton"
         android:contentDescription="@string/img_description"
         android:src="@drawable/ic_action_remove" />
 

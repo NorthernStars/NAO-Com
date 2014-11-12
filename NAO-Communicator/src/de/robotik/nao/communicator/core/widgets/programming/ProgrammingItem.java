@@ -41,9 +41,10 @@ public class ProgrammingItem extends LinearLayout implements
 	
 	/**
 	 * Constructor
-	 * @param context	{@link Context}
-	 * @param name		{@link Integer} resource id of items name.
-	 * @param icon		{@link Integer} resource id of items icon {@link drawable}.
+	 * @param context			{@link Context}
+	 * @param name				{@link Integer} resource id of items name.
+	 * @param icon				{@link Integer} resource id of items icon {@link drawable}.
+	 * @param settingsContent	{@link SettingsContent}
 	 */
 	public ProgrammingItem(Context context, int name, int icon, SettingsContent settingsContent) {
 		super(context);

@@ -52,18 +52,18 @@
         <item name="android:layout_marginBottom">@dimen/margin_section_header</item>
     </style>
 
-    <style name="ProgrammingItemIcon">
+    <style name="ItemIcon">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
 
-    <style name="ProgrammingItemNumber" parent="@android:style/TextAppearance.Small">
+    <style name="ItemNumber" parent="@android:style/TextAppearance.Small">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_gravity">center_vertical</item>
     </style>
 
-    <style name="ProgrammingItemName" parent="@android:style/TextAppearance.Medium">
+    <style name="ItemName" parent="@android:style/TextAppearance.Medium">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_gravity">center_vertical</item>
@@ -72,7 +72,7 @@
         <item name="android:gravity">center_vertical</item>
     </style>
 
-    <style name="ProgrammingItemText" parent="@android:style/TextAppearance.Small">
+    <style name="ItemText" parent="@android:style/TextAppearance.Small">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_gravity">center_vertical</item>
@@ -84,7 +84,7 @@
         <item name="android:gravity">center_vertical</item>
     </style>
 
-    <style name="ProgrammingItemImageButton" parent="@style/ProgrammingItemIcon">
+    <style name="ItemImageButton" parent="@style/ItemIcon">
         <item name="android:layout_gravity">center_vertical</item>
     </style>
 

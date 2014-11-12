@@ -1,5 +1,7 @@
 package de.robotik.nao.communicator.network.data.response;
 
+import java.util.Map;
+
 import de.robotik.nao.communicator.network.data.AudioData;
 import de.robotik.nao.communicator.network.data.NAOAutonomousLifeStates;
 import de.robotik.nao.communicator.network.data.StiffnessData;
@@ -23,6 +25,7 @@ public class DataResponsePackage {
 	public NAOAutonomousLifeStates lifeState;
 	public StiffnessData stiffnessData;
 	public AudioData audioData;
+	public Map<String, String> customMemoryEvents;
 	
 	public String toString(){
 		String ret = "";
@@ -31,6 +34,11 @@ public class DataResponsePackage {
 		ret += "\nnaoName: " + naoName + "\tbatterylevel: " + batteryLevel;
 		ret += "\nstiffnessData:\n" + stiffnessData;
 		ret += "\naudioData:\n" + audioData;
+		
+		ret += "\ncustom memory events:";
+		for( String key : customMemoryEvents.keySet() ){
+			ret += "\n\t" + key + ": " + customMemoryEvents.get(key);
+		}
 		
 		return ret;
 	}

@@ -1,8 +1,11 @@
 package de.robotik.nao.communicator.core.sections;
 
+import java.util.ArrayList;
+import java.util.List;
 import de.northernstars.naocom.R;
 import de.robotik.nao.communicator.core.MainActivity;
 import de.robotik.nao.communicator.core.RemoteNAO;
+import de.robotik.nao.communicator.core.widgets.programming.FunctionItem;
 import de.robotik.nao.communicator.network.data.NAOCommands;
 import de.robotik.nao.communicator.network.data.response.DataResponsePackage;
 import de.robotik.nao.communicator.network.interfaces.NetworkDataRecievedListener;
@@ -46,6 +49,9 @@ public class SectionFunctions extends Section implements
 	private Button btnFunctionsCustomNewAdd;
 	
 	private LinearLayout divFunctionsCustom;
+	private List<FunctionItem> mFunctionItemsToAdd = new ArrayList<FunctionItem>();
+	private boolean mFunctionsAdding = false;
+	
 	
 	public SectionFunctions(){}
 	
@@ -105,7 +111,7 @@ public class SectionFunctions extends Section implements
 			
 			String vEventKey = txtFunctionsCustomNewALMemoryKey.getText().toString();
 			String vEventName = txtFunctionsCustomNewName.getText().toString();
-			RemoteNAO.sendCommand( NAOCommands.MEMORY_EVENT_ADD, new String[]{vEventName, vEventKey} );
+			RemoteNAO.sendCommand( NAOCommands.MEMORY_EVENT_ADD, new String[]{vEventKey, vEventName} );
 			
 		} else if( v == btnFunctionsFaceTracker ){			
 			RemoteNAO.sendCommand( NAOCommands.MEMORY_EVENT_RAISE, new String[]{"functionFaceTracker"} );
@@ -149,15 +155,62 @@ public class SectionFunctions extends Section implements
 		}
 	}
 	
+	/**
+	 * Gets {@link FunctionItem} by its key.
+	 * @param aKey	{@link String} of items ALMemory key.
+	 * @return		{@link FunctionItem} with {@code aKey}, {@code null} if no item found.
+	 */
+	private FunctionItem getItem(String aKey){
+		for( int i=0; i < divFunctionsCustom.getChildCount(); i++ ){
+			FunctionItem vItem = (FunctionItem) divFunctionsCustom.getChildAt(i);
+			
+			if( vItem.getKey().equals(aKey) ){
+				return vItem;
+			}
+		}
+		
+		return null;
+	}
+	
 	@Override
 	public void onRefresh() {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void onNetworkDataRecieved(DataResponsePackage data) {
-		// TODO Auto-generated method stub
+		
+		// check for new custom events
+		synchronized (mFunctionItemsToAdd) {
+			if( !mFunctionsAdding ){
+				mFunctionsAdding = true;
+				mFunctionItemsToAdd.clear();
+				
+				for( String key : data.customMemoryEvents.keySet() ){
+					FunctionItem vItem = getItem(key);				
+					// check if to update or to add item
+					if( vItem != null ){				
+						vItem.update(key, data.customMemoryEvents.get(key));
+					} else {				
+						vItem = new FunctionItem(getActivity(), key,
+								data.customMemoryEvents.get(key));
+						mFunctionItemsToAdd.add(vItem);
+					}
+				}
+				
+				MainActivity.getInstance().runOnUiThread(new Runnable() {				
+					@Override
+					public void run() {
+						for( FunctionItem vItem : mFunctionItemsToAdd ){
+							divFunctionsCustom.addView(vItem);
+						}
+						mFunctionItemsToAdd.clear();
+						mFunctionsAdding = false;
+					}
+				});
+				
+			}				
+		}
 		
 	}
 	
