@@ -11,7 +11,7 @@ import de.robotik.nao.communicator.core.sections.SectionLed;
 import de.robotik.nao.communicator.core.sections.SectionProgramming;
 import de.robotik.nao.communicator.core.sections.SectionSpeech;
 import de.robotik.nao.communicator.core.sections.SectionStatus;
-import de.robotik.nao.communicator.core.sections.SectionWifi;
+import de.robotik.nao.communicator.core.sections.SectionHotspot;
 import de.robotik.nao.communicator.core.widgets.RemoteDevice;
 import de.robotik.nao.communicator.network.NetworkDataRecievedListenerNotifier;
 import de.robotik.nao.communicator.network.data.NAOCommands;
@@ -150,7 +150,7 @@ public class MainActivity extends FragmentActivity implements
 		if( mSections.size() == 0 ){			
 			// Add all new sections here
 			mSections.add( new SectionConnect("Connect") );
-			mSections.add( new SectionWifi("Hotspot") );
+			mSections.add( new SectionHotspot("Hotspot") );
 			mSections.add( new SectionStatus("NAO Status") );
 			mSections.add( new SectionSpeech("Speech") );
 			mSections.add( new SectionFunctions("Functions") );

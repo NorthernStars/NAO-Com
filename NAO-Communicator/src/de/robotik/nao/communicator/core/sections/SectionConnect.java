@@ -203,6 +203,8 @@ public class SectionConnect extends Section implements OnRefreshListener {
 	 */
 	@Override
 	public void setUserVisibleHint(boolean isVisibleToUser) {
+		super.setUserVisibleHint(isVisibleToUser);
+		
 		if( isVisibleToUser ){
 			// start discovering of network services
 			(new AsyncTask<Void, Void, Void>() {

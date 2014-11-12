@@ -14,7 +14,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class SectionWifi extends Section {
+public class SectionHotspot extends Section {
 	
 	private Handler backgroundHandler = new Handler();
 	private Runnable backgroundRunnable = null;
@@ -26,7 +26,7 @@ public class SectionWifi extends Section {
 	private View rootView;
 	private TextView lblHotspotStatus;
 
-	public SectionWifi() {
+	public SectionHotspot() {
 		super();
 	}
 	
@@ -34,7 +34,7 @@ public class SectionWifi extends Section {
 	 * Constrctor
 	 * @param title
 	 */
-	public SectionWifi(String title) {
+	public SectionHotspot(String title) {
 		super(title);
 	}
 	
@@ -72,6 +72,8 @@ public class SectionWifi extends Section {
 	 */
 	@Override
 	public void setUserVisibleHint(boolean isVisibleToUser) {
+		super.setUserVisibleHint(isVisibleToUser);
+		
 		if( isVisibleToUser ){			
 			// start new background task
 			if( backgroundRunnable == null ){
