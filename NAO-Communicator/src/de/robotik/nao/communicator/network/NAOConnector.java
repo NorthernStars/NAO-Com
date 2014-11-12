@@ -54,7 +54,7 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 	public static final int connectionMaxTries = 3;
 	public static final String serverNetworkServiceToken = "_naocom._tcp.local.";
 	
-	public static final String serverStartCommand = "start.sh";
+	public static final String SSH_COMMAND_SERVER_START = "naocom/start.sh";
 	
 	private static final String SSH_CHANNEL_EXEC = "exec";
 	private static final String SSH_CHANNEL_SFTP = "sftp";
@@ -515,7 +515,7 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 		
 		// send command
 		ArrayList<String> vCommands = new ArrayList<String>();
-		vCommands.add( serverStartCommand );
+		vCommands.add( SSH_COMMAND_SERVER_START );
 		if( sendSSHCommands( vCommands ).size() > 0 ){
 		
 			// wait a few seconds for server to start
