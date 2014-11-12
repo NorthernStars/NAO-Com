@@ -292,7 +292,7 @@ public class RemoteDevice implements
 		
 		if( vConnectedRemoteDevice == this
 				&& vOnlineRevision.getRevision() >= 0
-				&& data.revision < vOnlineRevision.getRevision() ){
+				&& data.revision < vOnlineRevision.getRevision()){
 			
 			MainActivity.getInstance().runOnUiThread(new Runnable() {				
 				@Override
