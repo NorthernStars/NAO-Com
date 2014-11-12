@@ -347,9 +347,11 @@ public class MainActivity extends FragmentActivity implements
 	
 	@Override
 	public void notifyDataRecievedListeners(DataResponsePackage data){
-		for( NetworkDataRecievedListener listener : dataRecievedListener ){
-			Runnable r = new NetworkDataRecievedListenerNotifier(listener, data);
-			new Thread(r).start();
+		synchronized (dataRecievedListener) {
+			for( NetworkDataRecievedListener listener : dataRecievedListener ){
+				Runnable r = new NetworkDataRecievedListenerNotifier(listener, data);
+				new Thread(r).start();
+			}
 		}
 	}
 
