@@ -49,6 +49,7 @@ public class MainActivity extends FragmentActivity implements
 	private static MainActivity INSTANCE;
 	private static final String SHARED_PREFERENCES = "naocom_preferences";
 	private static final String INSTANCE_STATE_KESY_HOST_ADRESSES = "HOSTS";
+	private static int onlineRevision = -1;
 	
 	private List<Section> mSections = new ArrayList<Section>();	
 	private RemoteDevice mConnectedDevice = null;
@@ -281,6 +282,21 @@ public class MainActivity extends FragmentActivity implements
 			}
 		}
 		
+	}
+	
+	/**
+	 * @return	{@link Integer} of online available server revision.
+	 */
+	public int getOnlineRevision(){
+		return onlineRevision;
+	}
+	
+	/**
+	 * Sets revision of online available server.
+	 * @param aRevision	{@link Integer} revision.
+	 */
+	public void setOnlineRevision(int aRevision){
+		onlineRevision = aRevision;
 	}
 	
 	/**

@@ -5,6 +5,8 @@ import javax.jmdns.ServiceEvent;
 import de.northernstars.naocom.R;
 import de.robotik.nao.communicator.core.MainActivity;
 import de.robotik.nao.communicator.core.RemoteNAO;
+import de.robotik.nao.communicator.network.data.response.DataResponsePackage;
+import de.robotik.nao.communicator.network.interfaces.NetworkDataRecievedListener;
 import de.robotik.nao.communicator.network.interfaces.NetworkServiceHandler;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -19,6 +21,7 @@ import android.widget.TextView;
 
 public class RemoteDevice implements
 	NetworkServiceHandler,
+	NetworkDataRecievedListener,
 	OnClickListener {
 
 	public static final String workstationNetworkServiceToken = "_workstation._tcp.local.";
@@ -270,6 +273,14 @@ public class RemoteDevice implements
 					pgbLoading.setVisibility( View.GONE );
 				}
 			});
+	}
+
+	@Override
+	public void onNetworkDataRecieved(DataResponsePackage data) {
+		int vOnlineRevision = MainActivity.getInstance().getOnlineRevision();
+		if( vOnlineRevision >= 0 && data.revision < vOnlineRevision ){
+			System.out.println("update");
+		}
 	}
 
 }

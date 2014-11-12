@@ -27,6 +27,7 @@ public class DataResponsePackage {
 	/**
 	 * Requested data
 	 */
+	public int revision;
 	public String naoName;
 	public int batteryLevel;
 	public NAOAutonomousLifeStates lifeState;
@@ -38,6 +39,7 @@ public class DataResponsePackage {
 		String ret = "";
 		
 		ret += "REQUEST: " + request;
+		ret += "\nrevision: " + revision;
 		ret += "\nnaoName: " + naoName + "\tbatterylevel: " + batteryLevel;
 		ret += "\nstiffnessData:\n" + stiffnessData;
 		ret += "\naudioData:\n" + audioData;
