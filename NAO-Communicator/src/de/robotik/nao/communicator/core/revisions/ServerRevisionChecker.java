@@ -2,6 +2,8 @@ package de.robotik.nao.communicator.core.revisions;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,6 +78,13 @@ public class ServerRevisionChecker implements Runnable {
 			// get name
 			String vName = vRelease.get("name").getAsString();
 			
+			// get revision
+			long vRevision = -1;
+			String vData = vRelease.get("created_at").getAsString();
+			try {
+				vRevision = (new SimpleDateFormat("yyyy-MM-dd'T'HH:ss:ss'Z'")).parse(vData).getTime();
+			} catch (ParseException e1) {}
+			
 			// get assets
 			String vUrl = null;
 			JsonArray vAssets = vRelease.get("assets").getAsJsonArray();
@@ -90,20 +99,6 @@ public class ServerRevisionChecker implements Runnable {
 					break;
 				}
 				
-			}
-			
-			// get revision
-			int vRevision = -1;
-			if( vUrl != null ){
-				String[] vDataArray = vUrl.split("\\.tar\\.gz")[0].split("rev");
-				if( vDataArray.length > 0 ){
-					
-					String vData = vDataArray[ vDataArray.length-1 ];
-					try{
-						vRevision = Integer.parseInt(vData);
-					} catch( NumberFormatException e ){}
-					
-				}
 			}
 			
 			// add new revision

@@ -27,7 +27,7 @@ public class DataResponsePackage {
 	/**
 	 * Requested data
 	 */
-	public int revision;
+	public long revision;
 	public String naoName;
 	public int batteryLevel;
 	public NAOAutonomousLifeStates lifeState;

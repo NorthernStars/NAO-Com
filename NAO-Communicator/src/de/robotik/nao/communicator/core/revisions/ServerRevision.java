@@ -8,7 +8,7 @@ package de.robotik.nao.communicator.core.revisions;
 public class ServerRevision {
 
 	private String name = "";
-	private int revision = -1;
+	private long revision = -1;
 	private String downloadUrl = "";
 	
 	/**
@@ -22,7 +22,7 @@ public class ServerRevision {
 	 * @param aRevision		{@link Integer} revision.
 	 * @param aUrl			{@link String} url of file download.
 	 */
-	public ServerRevision(String aName, int aRevision, String aUrl) {
+	public ServerRevision(String aName, long aRevision, String aUrl) {
 		name = aName;
 		revision = aRevision;
 		downloadUrl = aUrl;
@@ -38,7 +38,7 @@ public class ServerRevision {
 	/**
 	 * @return the revision
 	 */
-	public int getRevision() {
+	public long getRevision() {
 		return revision;
 	}
 
