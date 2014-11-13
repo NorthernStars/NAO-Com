@@ -10,6 +10,8 @@ public class ServerRevision {
 	private String name = "";
 	private long revision = -1;
 	private String downloadUrl = "";
+	private boolean prerelease = true;
+	private String body = "";
 	
 	/**
 	 * Constructor
@@ -21,11 +23,15 @@ public class ServerRevision {
 	 * @param aName			{@link String} name of revision.
 	 * @param aRevision		{@link Integer} revision.
 	 * @param aUrl			{@link String} url of file download.
+	 * @param aPrerelease	{@link Boolean} if release is a pre-release {@code true}, {@code false} otherwise.
+	 * @param aBody			{@link String} of release body text.
 	 */
-	public ServerRevision(String aName, long aRevision, String aUrl) {
+	public ServerRevision(String aName, long aRevision, String aUrl, boolean aPrerelease, String aBody) {
 		name = aName;
 		revision = aRevision;
 		downloadUrl = aUrl;
+		prerelease = aPrerelease;
+		body = aBody;
 	}
 
 	/**
@@ -52,6 +58,20 @@ public class ServerRevision {
 	public String toString(){
 		return "Revision " + revision + ": " + name
 						+ "\nURL: " + downloadUrl;
+	}
+
+	/**
+	 * @return the prerelease
+	 */
+	public boolean isPrerelease() {
+		return prerelease;
+	}
+
+	/**
+	 * @return the body
+	 */
+	public String getBody() {
+		return body;
 	}
 	
 }

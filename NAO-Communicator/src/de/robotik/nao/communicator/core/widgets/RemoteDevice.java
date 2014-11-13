@@ -255,10 +255,11 @@ public class RemoteDevice implements
 	@Override
 	public void onClick(View v) {
 		if( v == mView ){
+			// connect
 			connect();
-		} else {
-			// TODO: Device update
-			System.out.println("update");
+		} else if( v == imgUpdate ) {
+			// update
+			MainActivity.getInstance().startInstaller(this, true);
 		}
 	}
 

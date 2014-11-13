@@ -6,14 +6,13 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Locale;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -82,7 +81,7 @@ public class ServerRevisionChecker implements Runnable {
 			long vRevision = -1;
 			String vData = vRelease.get("created_at").getAsString();
 			try {
-				vRevision = (new SimpleDateFormat("yyyy-MM-dd'T'HH:ss:ss'Z'")).parse(vData).getTime();
+				vRevision = (new SimpleDateFormat("yyyy-MM-dd'T'HH:ss:ss'Z'", Locale.US)).parse(vData).getTime();
 			} catch (ParseException e1) {}
 			
 			// get assets
@@ -101,9 +100,15 @@ public class ServerRevisionChecker implements Runnable {
 				
 			}
 			
+			// get prerelease
+			boolean vPrerelease = vRelease.get("prerelease").getAsBoolean();
+			
+			// get body
+			String vBody = vRelease.get("body").getAsString();
+			
 			// add new revision
-			if( vName != null && vUrl != null && vRevision >= 0 ){
-				vRevisions.add( new ServerRevision(vName, vRevision, vUrl) );
+			if( vName != null && vUrl != null && vRevision >= 0 && vBody != null ){
+				vRevisions.add( new ServerRevision(vName, vRevision, vUrl, vPrerelease, vBody) );
 			}
 		}
 		

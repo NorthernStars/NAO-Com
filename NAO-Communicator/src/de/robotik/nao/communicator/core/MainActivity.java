@@ -3,6 +3,8 @@ package de.robotik.nao.communicator.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.Gson;
+
 import de.northernstars.naocom.R;
 import de.robotik.nao.communicator.core.revisions.ServerRevision;
 import de.robotik.nao.communicator.core.revisions.ServerRevisionChecker;
@@ -47,6 +49,11 @@ public class MainActivity extends FragmentActivity implements
 	NetworkDataRecievedListener,
 	NetworkDataSender,
 	OnItemClickListener{
+	
+	public static final String INSTALLER_INTENT_EXTRA_WORKSTATION = "installer.intent.extra.device";
+	public static final String INSTALLER_INTENT_EXTRA_HOST = "installer.intent.extra.host";
+	public static final String INSTALLER_INTENT_EXTRA_REVISION = "installer.intent.extra.revision";
+	public static final String INSTALLER_INTENT_EXTRA_UPDATE = "installer.intent.extra.update";
 	
 	private static MainActivity INSTANCE;
 	private static final String SHARED_PREFERENCES = "naocom_preferences";
@@ -305,6 +312,32 @@ public class MainActivity extends FragmentActivity implements
 			aRevision = new ServerRevision();
 		}
 		onlineRevision = aRevision;
+	}
+	
+	/**
+	 * Starts the installer to update or install the latest server revision on remote device.
+	 * @param aDevice		{@link RemoteDevice} to install server.
+	 * @param aUpdate		{@link Boolean} update flag. {@code true} if to update existing server, {@code false} otherwise.
+	 */
+	public void startInstaller(RemoteDevice aDevice, boolean aUpdate){
+		
+		ServerRevision vRevision = getOnlineRevision();
+		
+		if( vRevision.getRevision() >= 0 ){		
+			// create intent
+			Intent vIntent = new Intent(this, NAOComInstaller.class);
+			Gson vGson = new Gson();
+			String jsonRevision = vGson.toJson(vRevision);
+			
+			vIntent.putExtra( INSTALLER_INTENT_EXTRA_WORKSTATION, aDevice.getWorkstationName() );
+			vIntent.putExtra( INSTALLER_INTENT_EXTRA_HOST, aDevice.getNao().getHostAdresses().get(0) );
+			vIntent.putExtra( INSTALLER_INTENT_EXTRA_REVISION, jsonRevision );
+			vIntent.putExtra( INSTALLER_INTENT_EXTRA_UPDATE, aUpdate );
+			
+			// start installer activity
+			startActivity(vIntent);
+		}
+		
 	}
 	
 	/**

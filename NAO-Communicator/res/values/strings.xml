@@ -138,5 +138,16 @@
     <string name="settings_sensor_type">Select sensor type:</string>
     <string name="settings_sensor_value">Select sensor value to wait for:</string>
     <string name="settings_say_default_text">Hello I am NAO.</string>
+    <string name="installer_title">Server Installation</string>
+    <string name="installer_title_update">Server Update</string>
+    <string name="installer_install">Install</string>
+    <string name="installer_update">Update</string>
+    <string name="installer_device">Device:</string>
+    <string name="installer_software_version">Server Version:</string>
+    <string name="installer_prerelease">Pre-release</string>
+    <string name="installer_description">Description:</string>
+    <string name="title_activity_naocom_installer">NAOComInstaller</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
 
 </resources>
