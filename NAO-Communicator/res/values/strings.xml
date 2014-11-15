@@ -159,7 +159,8 @@
     <string name="installer_status_install_failed">Installation failed.</string>
     <string name="remote_device_reboot">Reboot NAO</string>
     <string name="remote_device_shutdown">Shutdown NAO</string>
-    <string name="remote_device_install_server">Install server</string>
+    <string name="remote_device_server_install">Install server</string>
+    <string name="remote_device_server_update">Update server</string>
     <string name="title_activity_naocom_installer">NAOComInstaller</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>

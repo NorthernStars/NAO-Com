@@ -2,8 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/itRemoteDeviceInstallServer"
-        android:title="@string/remote_device_install_server">
+        android:id="@+id/itRemoteDeviceServerUpdate"
+        android:title="@string/remote_device_server_update">
+    </item>
+    <item
+        android:id="@+id/itRemoteDeviceServerInstall"
+        android:title="@string/remote_device_server_install">
     </item>
     <item
         android:id="@+id/itRemoteDeviceReboot"

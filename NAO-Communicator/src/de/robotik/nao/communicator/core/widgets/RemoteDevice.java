@@ -342,9 +342,14 @@ public class RemoteDevice implements
 	public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 		switch( item.getItemId() ){
 		
-		case R.id.itRemoteDeviceInstallServer:
+		case R.id.itRemoteDeviceServerInstall:
 			getNao().disconnect();
 			MainActivity.getInstance().startInstaller(this, false);
+			break;
+			
+		case R.id.itRemoteDeviceServerUpdate:
+			getNao().disconnect();
+			MainActivity.getInstance().startInstaller(this, true);
 			break;
 			
 		case R.id.itRemoteDeviceReboot:
@@ -371,7 +376,6 @@ public class RemoteDevice implements
 			return false;
 		}
 		
-		mView.setBackgroundColor( Color.TRANSPARENT );
 		mode.finish();
 		return true;
 	}
@@ -381,14 +385,17 @@ public class RemoteDevice implements
 		mode.getMenuInflater().inflate(R.menu.remote_device_options_menu, menu);
 		
 		// disable server install if server is already installed
-		if( !getNao().hasCommunicationServer() ){
-			menu.findItem(R.id.itRemoteDeviceInstallServer).setEnabled(false);
+		if( getNao().hasCommunicationServer() ){
+			menu.findItem(R.id.itRemoteDeviceServerInstall).setVisible(false);
+		} else {
+			menu.findItem(R.id.itRemoteDeviceServerUpdate).setVisible(false);
 		}
 		return true;
 	}
 
 	@Override
 	public void onDestroyActionMode(ActionMode mode) {
+		mView.setBackgroundColor( Color.TRANSPARENT );
 		mActionMode = null;
 	}
 

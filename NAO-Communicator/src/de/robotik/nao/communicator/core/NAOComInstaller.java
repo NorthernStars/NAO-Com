@@ -123,9 +123,9 @@ public class NAOComInstaller extends Activity implements OnClickListener {
 	}
 	
 	/**
-	 * Update to new server version
+	 * Install / update to new server version
 	 */
-	private void update(){
+	private void install(){
 		
 		(new Thread(new Runnable() {			
 			@Override
@@ -153,6 +153,26 @@ public class NAOComInstaller extends Activity implements OnClickListener {
 				} else {
 					vContinue = false;
 				}
+				
+				// Prepare for fresh installation
+				if( !mUpdate ){
+					// Delete existing installations
+					if( vContinue && vReturn.get(vCmd) != null && vReturn.get(vCmd) >= 0 ){
+						status( getResources().getString(R.string.installer_status_deleting_files), 0 );
+						vCmd = "rm -R naocom";
+						vReturn = mNAO.sendSSHCommands( new String[]{ vCmd } );
+					} else {
+						vContinue = false;
+					}
+					
+					// Create new directory for server
+					if( vContinue && vReturn.get(vCmd) != null && vReturn.get(vCmd) >= 0 ){
+						vCmd = "mkdir naocom";
+						vReturn = mNAO.sendSSHCommands( new String[]{ vCmd } );
+					} else {
+						vContinue = false;
+					}
+				}
 					
 				// Extract files
 				if( vContinue && vReturn.get(vCmd) != null && vReturn.get(vCmd) >= 0 ){
@@ -176,7 +196,7 @@ public class NAOComInstaller extends Activity implements OnClickListener {
 				if( vContinue && vReturn.get(vCmd) != null && vReturn.get(vCmd) >= 0 ){
 					status( getResources().getString(R.string.installer_status_update_revision), 10 );
 					vCmd = "sed -i 's/revision.*=.*/revision = "
-				+ (mServerRevision.getRevision()-1) + "/g' naocom/settings/Settings.py";
+				+ mServerRevision.getRevision() + "/g' naocom/settings/Settings.py";
 					vReturn = mNAO.sendSSHCommands( new String[]{ vCmd } );
 				} else {
 					vContinue = false;
@@ -184,8 +204,17 @@ public class NAOComInstaller extends Activity implements OnClickListener {
 				
 				// Delete files
 				if( vContinue && vReturn.get(vCmd) != null && vReturn.get(vCmd) >= 0 ){
-					status( getResources().getString(R.string.installer_status_deleting_files), 10 );
+					status( getResources().getString(R.string.installer_status_deleting_files), 5 );
 					vCmd = "find . -name '*.pyc' -exec rm -f {} \\;";
+					vReturn = mNAO.sendSSHCommands( new String[]{ vCmd } );
+				} else {
+					vContinue = false;
+				}
+				
+				// Delete files
+				if( vContinue && vReturn.get(vCmd) != null && vReturn.get(vCmd) >= 0 ){
+					status( getResources().getString(R.string.installer_status_deleting_files), 5 );
+					vCmd = "rm " + vFilename;
 					vReturn = mNAO.sendSSHCommands( new String[]{ vCmd } );
 				} else {
 					vContinue = false;
@@ -232,13 +261,6 @@ public class NAOComInstaller extends Activity implements OnClickListener {
 		})).start();
 
 	}
-	
-	/**
-	 * Install server
-	 */
-	private void install(){
-		// TODO: install
-	}
 
 	@Override
 	public void onClick(View v) {
@@ -252,9 +274,9 @@ public class NAOComInstaller extends Activity implements OnClickListener {
 			pgbInstallerProgress.setVisibility( View.VISIBLE );
 			
 			if( mUpdate ){				
-				update();				
-			} else {				
 				install();				
+			} else {				
+				install();			
 			}
 						
 		}
