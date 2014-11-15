@@ -412,7 +412,7 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 						aInput[i] = aInput[i].replace("%%USR%%", vUser);
 						aInput[i] = aInput[i].replace("%%PW%%", vPassword);
 						
-						Log.i(TAG, "writing " + aInput[i]);
+						Log.d(TAG, "writing " + aInput[i]);
 						vOutStream.write( (aInput[i]+"\n").getBytes() );
 						vOutStream.flush();
 					}					
