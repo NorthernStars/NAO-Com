@@ -30,7 +30,7 @@
     <string name="net_unknown_host">Unknown host</string>
     <string name="net_connection_failed">Establishing connection failed.</string>
     <string name="net_ssh_failed">Failed to execute SSH command.</string>
-    <string name="net_try_server_start">Trying to start remote server.</string>
+    <string name="net_try_server_start">Trying to start remote server (~5sec.).</string>
     <string name="net_connected">Connected</string>
     <string name="net_disconnected">Disconnected</string>
     <string name="net_restart_network_service">Restarting service &#8230;</string>
@@ -157,6 +157,9 @@
     <string name="installer_status_install_done">Server installed.</string>
     <string name="installer_status_update_failed">Update failed.</string>
     <string name="installer_status_install_failed">Installation failed.</string>
+    <string name="remote_device_reboot">Reboot NAO</string>
+    <string name="remote_device_shutdown">Shutdown NAO</string>
+    <string name="remote_device_install_server">Install server</string>
     <string name="title_activity_naocom_installer">NAOComInstaller</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>

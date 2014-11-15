@@ -335,9 +335,8 @@ public class MainActivity extends FragmentActivity implements
 			vIntent.putExtra( INSTALLER_INTENT_EXTRA_UPDATE, aUpdate );
 			
 			// disconnect
-			RemoteDevice vRemoteDevice = getConnectedDevice();
-			if( vRemoteDevice != null ){
-				vRemoteDevice.getNao().disconnect();
+			if( aDevice != null ){
+				aDevice.getNao().disconnect();
 			}
 			
 			// start installer activity

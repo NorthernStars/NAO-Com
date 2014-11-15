@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/itRemoteDeviceInstallServer"
+        android:title="@string/remote_device_install_server">
+    </item>
+    <item
+        android:id="@+id/itRemoteDeviceReboot"
+        android:title="@string/remote_device_reboot">
+    </item>
+    <item
+        android:id="@+id/itRemoteDeviceShutdown"
+        android:title="@string/remote_device_shutdown">
+    </item>
+
+</menu>

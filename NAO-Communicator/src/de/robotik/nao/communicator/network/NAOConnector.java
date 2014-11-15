@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -51,8 +52,9 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 	public static final String defaultHost = "192.168.0.100";
 	public static final int defaultPort = 5050;
 	public static final int defaultReadTimeout = 3000;
+	public static final int minReadTimeout = 100;
 	public static final int connectionMaxTries = 3;
-	public static final int connectionMaxTimeouts = 3;
+	public static final int connectionMaxTimeouts = 30;
 	public static final String serverNetworkServiceToken = "_naocom._tcp.local.";
 	
 	private static final String SSH_COMMAND_SERVER_START = "naocom/start.sh";
@@ -70,7 +72,7 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 	private OutputStream out = null;
 	private int timeoutCounter = 0;
 	
-	private JSch mSSH = new JSch();;
+	private JSch mSSH = new JSch();
 	private String mSSHUser = "nao";
 	private String mSSHPassword = "nao";
 	private boolean mUseCustomLoginData = false;
@@ -259,7 +261,7 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 	
 	/**
 	 * Connecting to ssh server
-	 * @return	{@code true} if successful connected, {@code false} otherwise.
+	 * @return			{@code true} if successful connected, {@code false} otherwise.
 	 */
 	private Session connectSSH(){
 		for( String host : hostAdresses ){			
@@ -268,10 +270,10 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 				// get user information
 				SharedPreferences vPreferences = MainActivity.getPreferences();
 				String vUser = vPreferences.getString(PREFERENCES_SSH_USER, "nao");
-				String vPassword = vPreferences.getString(PREFERENCES_SSH_PASSWORD, "nao");
+				String vPassword = vPreferences.getString(PREFERENCES_SSH_PASSWORD, "nao");				
 				if( mUseCustomLoginData ){
 					vUser = mSSHUser;
-					vPassword = mSSHPassword;
+					vPassword = mSSHPassword;					
 				}
 				
 				// create session
@@ -291,7 +293,7 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 				} catch( JSchException err ){
 					if( err.getMessage().contains("Auth fail") ){
 						
-						// ask for new login data
+						// ask for custom login data
 						if( askForCustomLoginData() ){
 							vSession = connectSSH();
 						} else {
@@ -353,7 +355,7 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 		if( vDialog.getUser() != null && vDialog.getPassword() != null ){
 			mUseCustomLoginData = true;
 			mSSHUser = vDialog.getUser();
-			mSSHPassword = vDialog.getPassword();			
+			mSSHPassword = vDialog.getPassword();
 			return true;
 		}
 		
@@ -363,25 +365,14 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 	}
 	
 	/**
-	 * Send commands to execute via ssh
-	 * @param aCommands	Array of {@link String} commands to execute;
+	 * Send commands to execute via ssh using custom login.
+	 * @param aCommands	{@link String} array of commands to execute;
+	 * @param aInput	{@link String} array with text to input followed by a return, corresponding to position of executed command.<br>
+	 * 					Use one of the following tags to specifiy login data:<br>
+	 * 					<ul><li>%%USR%%: Username</li><li>%%PW%%: Password</li></ul>
 	 * @return			{@link Map} of exit status for commands.
 	 */
-	public Map<String, Integer> sendSSHCommands(String[] aCommands){
-		ArrayList<String> vCommands = new ArrayList<String>();
-		for( int i=0; i < aCommands.length; i++ ){
-			vCommands.add( aCommands[i] );
-		}
-		
-		return sendSSHCommands(vCommands);
-	}
-	
-	/**
-	 * Send commands to execute via ssh
-	 * @param aCommands	{@link ArrayList} of {@link String} commands to execute;
-	 * @return			{@link Map} of exit status for commands.
-	 */
-	public Map<String, Integer> sendSSHCommands(ArrayList<String> aCommands){
+	public Map<String, Integer> sendSSHCommands(String[] aCommands, String... aInput){
 		
 		// onnect to ssh server
 		Session vSession = connectSSH();
@@ -390,17 +381,41 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 		if( vSession != null){
 			
 			// execute commands
-			for( String cmd : aCommands ){				
+			for( int i=0; i < aCommands.length; i++ ){
+				String cmd = aCommands[i];
 				try{
-					// open channel and connect
+					// open channel
 					Channel vChannel = vSession.openChannel(SSH_CHANNEL_EXEC);
 					ChannelExec vChannelExec = (ChannelExec) vChannel;
+					OutputStream vOutStream = vChannel.getOutputStream();
 					vChannelExec.setCommand(cmd);
 					vChannelExec.setOutputStream(System.out);
 					vChannelExec.setErrStream(System.err);
 					
+					// connect
 					Log.i(TAG, "sending " + cmd);
 					vChannel.connect();
+					
+					// get user information
+					SharedPreferences vPreferences = MainActivity.getPreferences();
+					String vUser = vPreferences.getString(PREFERENCES_SSH_USER, "nao");
+					String vPassword = vPreferences.getString(PREFERENCES_SSH_PASSWORD, "nao");				
+					if( mUseCustomLoginData ){
+						vUser = mSSHUser;
+						vPassword = mSSHPassword;					
+					}
+					
+					// send input
+					if( i < aInput.length ){
+						
+						// replace tags
+						aInput[i] = aInput[i].replace("%%USR%%", vUser);
+						aInput[i] = aInput[i].replace("%%PW%%", vPassword);
+						
+						Log.i(TAG, "writing " + aInput[i]);
+						vOutStream.write( (aInput[i]+"\n").getBytes() );
+						vOutStream.flush();
+					}					
 					
 					// wait for command to complete
 					while( !vChannel.isClosed() ){
@@ -411,10 +426,14 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 					
 					// add exit status
 					vExitStatus.put( cmd, vChannel.getExitStatus() );
+					vOutStream.close();
 					vChannel.disconnect();
 					
 				} catch(JSchException e){
 					Log.e(TAG, e.getMessage());
+				} catch (IOException e) {
+					Log.e(TAG, e.getMessage());
+					e.printStackTrace();
 				}				
 			}
 			
@@ -541,7 +560,7 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 		
 		// send command
 		String[] vCommands = new String[]{ SSH_COMMAND_SERVER_START };		
-		if( sendSSHCommands( vCommands ).size() > 2 ){
+		if( sendSSHCommands( vCommands ).size() > 0 ){
 		
 			// wait a few seconds for server to start
 			try {
@@ -579,6 +598,11 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 								R.string.net_connected, Toast.LENGTH_SHORT).show();
 					}
 				});
+				
+				// set new connection timeout
+				try {
+					socket.setSoTimeout(defaultReadTimeout);
+				} catch (SocketException e) {}
 				
 				// read data
 				while( !stop && socket != null && state == ConnectionState.CONNECTION_ESTABLISHED ){

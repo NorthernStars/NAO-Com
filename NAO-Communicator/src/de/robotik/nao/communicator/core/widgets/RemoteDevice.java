@@ -13,9 +13,13 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -23,7 +27,9 @@ import android.widget.TextView;
 public class RemoteDevice implements
 	NetworkServiceHandler,
 	NetworkDataRecievedListener,
-	OnClickListener {
+	OnClickListener,
+	OnLongClickListener,
+	ActionMode.Callback{
 
 	public static final String workstationNetworkServiceToken = "_workstation._tcp.local.";
 	public static final String networkServiceLocalToken = ".local.";
@@ -39,6 +45,8 @@ public class RemoteDevice implements
 	private ImageView imgLogo;
 	private ImageView imgUpdate;
 	private ProgressBar pgbLoading;
+	
+	private ActionMode mActionMode;
 	
 	/**
 	 * Constructor
@@ -84,7 +92,10 @@ public class RemoteDevice implements
 		txtSFTP = (TextView) mView.findViewById(R.id.txtSFTP);
 		pgbLoading = (ProgressBar) mView.findViewById(R.id.pgbSettingsPlaySoundLoading);
 		
+		// set listener
+		MainActivity.getInstance().registerForContextMenu(mView);
 		mView.setOnClickListener(this);
+		mView.setOnLongClickListener(this);
 		imgUpdate.setOnClickListener(this);
 		MainActivity.getInstance().addNetworkDataRecievedListener(this);
 	}
@@ -259,15 +270,21 @@ public class RemoteDevice implements
 			connect();
 		} else if( v == imgUpdate ) {
 			// update
-			new Thread(new Runnable() {				
-				@Override
-				public void run() {
-					getNao().disconnect();
-					MainActivity.getInstance().startInstaller(RemoteDevice.this, true);
-				}
-			}).start();
-			
+			getNao().disconnect();
+			MainActivity.getInstance().startInstaller(RemoteDevice.this, true);
 		}
+	}
+	
+	@Override
+	public boolean onLongClick(View v) {
+		if( mActionMode != null ){
+			return false;
+		}
+		
+		// Start options menu
+		mActionMode = MainActivity.getInstance().startActionMode(this);
+		mView.setBackgroundColor( mView.getResources().getColor(R.color.lightgray) );
+		return true;
 	}
 
 	/**
@@ -298,27 +315,86 @@ public class RemoteDevice implements
 		ServerRevision vOnlineRevision = MainActivity.getInstance().getOnlineRevision();
 		RemoteDevice vConnectedRemoteDevice = MainActivity.getInstance().getConnectedDevice();
 		
-		if( vConnectedRemoteDevice == this
-				&& vOnlineRevision.getRevision() >= 0
-				&& data.revision < vOnlineRevision.getRevision()){
+		if( vConnectedRemoteDevice == this && vOnlineRevision.getRevision() >= 0 ){
 			
-			MainActivity.getInstance().runOnUiThread(new Runnable() {				
-				@Override
-				public void run() {
-					imgUpdate.setVisibility( View.VISIBLE );
-				}
-			});
-			
-		} else {
-			
-			MainActivity.getInstance().runOnUiThread(new Runnable() {				
-				@Override
-				public void run() {
-					imgUpdate.setVisibility( View.GONE );
-				}
-			});
+			if( data.revision < vOnlineRevision.getRevision()
+				&& imgUpdate.getVisibility() == View.GONE ){			
+				MainActivity.getInstance().runOnUiThread(new Runnable() {				
+					@Override
+					public void run() {
+						imgUpdate.setVisibility( View.VISIBLE );
+					}
+				});			
+			} else if( data.revision >= vOnlineRevision.getRevision()
+					&& imgUpdate.getVisibility() == View.VISIBLE ) {				
+				MainActivity.getInstance().runOnUiThread(new Runnable() {				
+					@Override
+					public void run() {
+						imgUpdate.setVisibility( View.GONE );
+					}
+				});				
+			}
 			
 		}
+	}
+
+	@Override
+	public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+		switch( item.getItemId() ){
+		
+		case R.id.itRemoteDeviceInstallServer:
+			getNao().disconnect();
+			MainActivity.getInstance().startInstaller(this, false);
+			break;
+			
+		case R.id.itRemoteDeviceReboot:
+			new Thread(new Runnable() {				
+				@Override
+				public void run() {
+					getNao().getConnector().sendSSHCommands( new String[]{ "sudo -S -p '' shutdown -r now" },
+							new String[]{ "%%PW%%" });
+				}
+			}).start();			
+			break;
+			
+		case R.id.itRemoteDeviceShutdown:
+			new Thread(new Runnable() {				
+				@Override
+				public void run() {
+					getNao().getConnector().sendSSHCommands( new String[]{ "sudo -S -p '' shutdown -h now" },
+							new String[]{ "%%PW%%" });
+				}
+			}).start();	
+			break;
+			
+		default:
+			return false;
+		}
+		
+		mView.setBackgroundColor( Color.TRANSPARENT );
+		mode.finish();
+		return true;
+	}
+
+	@Override
+	public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+		mode.getMenuInflater().inflate(R.menu.remote_device_options_menu, menu);
+		
+		// disable server install if server is already installed
+		if( !getNao().hasCommunicationServer() ){
+			menu.findItem(R.id.itRemoteDeviceInstallServer).setEnabled(false);
+		}
+		return true;
+	}
+
+	@Override
+	public void onDestroyActionMode(ActionMode mode) {
+		mActionMode = null;
+	}
+
+	@Override
+	public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+		return false;
 	}
 
 }
