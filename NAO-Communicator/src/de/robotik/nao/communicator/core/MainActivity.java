@@ -334,6 +334,12 @@ public class MainActivity extends FragmentActivity implements
 			vIntent.putExtra( INSTALLER_INTENT_EXTRA_REVISION, jsonRevision );
 			vIntent.putExtra( INSTALLER_INTENT_EXTRA_UPDATE, aUpdate );
 			
+			// disconnect
+			RemoteDevice vRemoteDevice = getConnectedDevice();
+			if( vRemoteDevice != null ){
+				vRemoteDevice.getNao().disconnect();
+			}
+			
 			// start installer activity
 			startActivity(vIntent);
 		}

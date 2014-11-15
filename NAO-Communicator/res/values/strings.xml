@@ -9,6 +9,7 @@
     <string name="settings">Settings</string>
     <string name="btnOK">OK</string>
     <string name="btnCancel">Cancel</string>
+    <string name="btnExit">Exit</string>
     <string name="btnRefresh">Refresh</string>
     <string name="net_host">Host:</string>
     <string name="net_add_device">Add device</string>
@@ -146,6 +147,16 @@
     <string name="installer_software_version">Server Version:</string>
     <string name="installer_prerelease">Pre-release</string>
     <string name="installer_description">Description:</string>
+    <string name="installer_status_downloading">Downloading server files &#8230;</string>
+    <string name="installer_status_extracting">Extracting files &#8230;</string>
+    <string name="installer_status_file_right">Settings file rights &#8230;</string>
+    <string name="installer_status_update_revision">Updating revision &#8230;</string>
+    <string name="installer_status_deleting_files">Deleting files &#8230;</string>
+    <string name="installer_status_restart">Restarting server &#8230;</string>
+    <string name="installer_status_update_done">Update done.</string>
+    <string name="installer_status_install_done">Server installed.</string>
+    <string name="installer_status_update_failed">Update failed.</string>
+    <string name="installer_status_install_failed">Installation failed.</string>
     <string name="title_activity_naocom_installer">NAOComInstaller</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>

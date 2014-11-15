@@ -55,7 +55,7 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 	public static final int connectionMaxTimeouts = 3;
 	public static final String serverNetworkServiceToken = "_naocom._tcp.local.";
 	
-	public static final String SSH_COMMAND_SERVER_START = "naocom/start.sh";
+	private static final String SSH_COMMAND_SERVER_START = "naocom/start.sh";
 	
 	private static final String SSH_CHANNEL_EXEC = "exec";
 	private static final String SSH_CHANNEL_SFTP = "sftp";
@@ -299,6 +299,7 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 						}
 						
 					} else {
+						System.out.println("EXCEPTION: " + err.getMessage());
 						err.printStackTrace();
 					}
 				}
@@ -359,6 +360,20 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 		mUseCustomLoginData = false;
 		return false;
 		
+	}
+	
+	/**
+	 * Send commands to execute via ssh
+	 * @param aCommands	Array of {@link String} commands to execute;
+	 * @return			{@link Map} of exit status for commands.
+	 */
+	public Map<String, Integer> sendSSHCommands(String[] aCommands){
+		ArrayList<String> vCommands = new ArrayList<String>();
+		for( int i=0; i < aCommands.length; i++ ){
+			vCommands.add( aCommands[i] );
+		}
+		
+		return sendSSHCommands(vCommands);
 	}
 	
 	/**
@@ -525,13 +540,12 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 		});	
 		
 		// send command
-		ArrayList<String> vCommands = new ArrayList<String>();
-		vCommands.add( SSH_COMMAND_SERVER_START );
-		if( sendSSHCommands( vCommands ).size() > 0 ){
+		String[] vCommands = new String[]{ SSH_COMMAND_SERVER_START };		
+		if( sendSSHCommands( vCommands ).size() > 2 ){
 		
 			// wait a few seconds for server to start
 			try {
-				Thread.sleep(3000);
+				Thread.sleep(5000);
 			} catch (InterruptedException e) {}
 		
 			return true;

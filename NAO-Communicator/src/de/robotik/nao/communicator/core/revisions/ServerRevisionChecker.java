@@ -93,7 +93,7 @@ public class ServerRevisionChecker implements Runnable {
 				JsonObject vAsset = vAssets.get(nAsset).getAsJsonObject();
 				String vAssetUrl = vAsset.get("browser_download_url").getAsString();
 				
-				if( vAssetUrl.matches(".*rev.*\\.tar\\.gz$") ){
+				if( vAssetUrl.matches(".*\\.tar\\.gz$") ){
 					vUrl = vAssetUrl;
 					break;
 				}

@@ -142,8 +142,8 @@ public class SectionConnect extends Section implements OnRefreshListener {
 		for( RemoteDevice device : vDevicesBackup ){
 			if( !device.getNao().isConnected() ){
 				devices.remove(device);
-			}
-			lstNetworkDevices.removeAllViews();			
+				lstNetworkDevices.removeView( device.getView() );
+			}		
 		}
 	}
 	
@@ -395,7 +395,15 @@ public class SectionConnect extends Section implements OnRefreshListener {
 				@Override
 				public void run() {
 					RemoteDevice vDevice = devices.get( devices.size()-1 );
-					lstNetworkDevices.addView( vDevice.getView() );
+					
+					// check if to remove from previous parent
+					View vView = vDevice.getView();
+					ViewGroup vParent = (ViewGroup) vView.getParent();
+					if( vParent != null ){
+						vParent.removeView(vView);
+					}
+					
+					lstNetworkDevices.addView( vView );
 					servicesProcessing.remove( vDevice.getNao().getHostAdresses().get(0) );
 				}
 			} );

@@ -259,7 +259,14 @@ public class RemoteDevice implements
 			connect();
 		} else if( v == imgUpdate ) {
 			// update
-			MainActivity.getInstance().startInstaller(this, true);
+			new Thread(new Runnable() {				
+				@Override
+				public void run() {
+					getNao().disconnect();
+					MainActivity.getInstance().startInstaller(RemoteDevice.this, true);
+				}
+			}).start();
+			
 		}
 	}
 
@@ -299,6 +306,15 @@ public class RemoteDevice implements
 				@Override
 				public void run() {
 					imgUpdate.setVisibility( View.VISIBLE );
+				}
+			});
+			
+		} else {
+			
+			MainActivity.getInstance().runOnUiThread(new Runnable() {				
+				@Override
+				public void run() {
+					imgUpdate.setVisibility( View.GONE );
 				}
 			});
 			
