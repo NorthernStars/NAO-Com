@@ -149,7 +149,6 @@ public class NAOComInstaller extends Activity implements OnClickListener {
 					status( getResources().getString(R.string.installer_status_extracting), 40 );
 					vCmd = "killall communication_server.py";
 					vReturn = mNAO.sendSSHCommands( new String[]{ vCmd } );
-					System.out.println("Exit code: " + vReturn.get(vCmd));
 				} else {
 					vContinue = false;
 				}

@@ -601,7 +601,7 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 				
 				// set new connection timeout
 				try {
-					socket.setSoTimeout(defaultReadTimeout);
+					socket.setSoTimeout(minReadTimeout);
 				} catch (SocketException e) {}
 				
 				// read data
