@@ -315,7 +315,8 @@ public class RemoteDevice implements
 		ServerRevision vOnlineRevision = MainActivity.getInstance().getOnlineRevision();
 		RemoteDevice vConnectedRemoteDevice = MainActivity.getInstance().getConnectedDevice();
 		
-		if( vConnectedRemoteDevice == this && vOnlineRevision.getRevision() >= 0 ){
+		if( vConnectedRemoteDevice == this && vOnlineRevision != null
+				&& vOnlineRevision.getRevision() >= 0 ){
 			
 			if( data.revision < vOnlineRevision.getRevision()
 				&& imgUpdate.getVisibility() == View.GONE ){			
