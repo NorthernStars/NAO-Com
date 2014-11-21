@@ -3,7 +3,7 @@ package de.robotik.nao.communicator.core.sections;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.robotik.nao.communicator.core.MainActivity;
+import de.robotik.nao.communicator.MainActivity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;

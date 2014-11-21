@@ -2,7 +2,7 @@ package de.robotik.nao.communicator.core.widgets.programming.settings;
 
 import com.larswerkman.holocolorpicker.ColorPicker;
 
-import de.northernstars.naocom.R;
+import de.robotik.nao.communicator.R;
 import android.view.ViewGroup;
 import android.widget.TextView;
 

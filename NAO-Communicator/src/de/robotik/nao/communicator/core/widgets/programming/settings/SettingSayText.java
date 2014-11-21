@@ -2,8 +2,8 @@ package de.robotik.nao.communicator.core.widgets.programming.settings;
 
 import android.view.ViewGroup;
 import android.widget.TextView;
-import de.northernstars.naocom.R;
-import de.robotik.nao.communicator.core.MainActivity;
+import de.robotik.nao.communicator.R;
+import de.robotik.nao.communicator.MainActivity;
 
 public class SettingSayText extends AbstractSettingsContent {
 	

@@ -4,7 +4,7 @@ import android.view.ViewGroup;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
-import de.northernstars.naocom.R;
+import de.robotik.nao.communicator.R;
 
 public class SettingStandUp extends AbstractSettingsContent {
 

@@ -1,11 +1,14 @@
-package de.robotik.nao.communicator.core;
+package de.robotik.nao.communicator;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.Gson;
 
-import de.northernstars.naocom.R;
+import de.robotik.nao.communicator.R;
+import de.robotik.nao.communicator.core.NAOComInstaller;
+import de.robotik.nao.communicator.core.RemoteNAO;
+import de.robotik.nao.communicator.core.SectionsPagerAdapter;
 import de.robotik.nao.communicator.core.revisions.ServerRevision;
 import de.robotik.nao.communicator.core.revisions.ServerRevisionChecker;
 import de.robotik.nao.communicator.core.sections.Section;

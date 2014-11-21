@@ -1,7 +1,7 @@
 package de.robotik.nao.communicator.core.widgets;
 
-import de.northernstars.naocom.R;
-import de.robotik.nao.communicator.core.MainActivity;
+import de.robotik.nao.communicator.R;
+import de.robotik.nao.communicator.MainActivity;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;

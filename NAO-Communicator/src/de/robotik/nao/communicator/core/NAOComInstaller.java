@@ -4,7 +4,8 @@ import java.util.Map;
 
 import com.google.gson.Gson;
 
-import de.northernstars.naocom.R;
+import de.robotik.nao.communicator.R;
+import de.robotik.nao.communicator.MainActivity;
 import de.robotik.nao.communicator.core.revisions.ServerRevision;
 import de.robotik.nao.communicator.network.NAOConnector;
 import android.app.Activity;

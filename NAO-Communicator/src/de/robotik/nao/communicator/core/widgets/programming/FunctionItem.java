@@ -1,7 +1,7 @@
 package de.robotik.nao.communicator.core.widgets.programming;
 
-import de.northernstars.naocom.R;
-import de.robotik.nao.communicator.core.MainActivity;
+import de.robotik.nao.communicator.R;
+import de.robotik.nao.communicator.MainActivity;
 import de.robotik.nao.communicator.core.RemoteNAO;
 import de.robotik.nao.communicator.network.data.NAOCommands;
 import android.annotation.SuppressLint;

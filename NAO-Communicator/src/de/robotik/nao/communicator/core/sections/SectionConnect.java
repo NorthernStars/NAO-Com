@@ -10,8 +10,8 @@ import javax.jmdns.JmDNS;
 import javax.jmdns.ServiceEvent;
 import javax.jmdns.ServiceListener;
 
-import de.northernstars.naocom.R;
-import de.robotik.nao.communicator.core.MainActivity;
+import de.robotik.nao.communicator.R;
+import de.robotik.nao.communicator.MainActivity;
 import de.robotik.nao.communicator.core.RemoteNAO;
 import de.robotik.nao.communicator.core.widgets.RemoteDevice;
 import de.robotik.nao.communicator.network.NAOConnector;

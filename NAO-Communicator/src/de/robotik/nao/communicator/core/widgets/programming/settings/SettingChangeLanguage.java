@@ -8,8 +8,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
-import de.northernstars.naocom.R;
-import de.robotik.nao.communicator.core.MainActivity;
+import de.robotik.nao.communicator.R;
+import de.robotik.nao.communicator.MainActivity;
 import de.robotik.nao.communicator.network.data.response.DataResponsePackage;
 import de.robotik.nao.communicator.network.interfaces.NetworkDataRecievedListener;
 

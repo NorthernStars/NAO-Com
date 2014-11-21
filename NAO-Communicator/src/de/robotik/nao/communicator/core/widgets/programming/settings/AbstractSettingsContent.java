@@ -7,7 +7,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import de.robotik.nao.communicator.core.MainActivity;
+import de.robotik.nao.communicator.MainActivity;
 import de.robotik.nao.communicator.core.interfaces.SettingsContent;
 
 public abstract class AbstractSettingsContent implements SettingsContent {

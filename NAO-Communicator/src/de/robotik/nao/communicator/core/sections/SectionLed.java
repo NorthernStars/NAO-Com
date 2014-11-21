@@ -2,7 +2,7 @@ package de.robotik.nao.communicator.core.sections;
 
 import com.larswerkman.holocolorpicker.ColorPicker;
 
-import de.northernstars.naocom.R;
+import de.robotik.nao.communicator.R;
 import de.robotik.nao.communicator.core.RemoteNAO;
 import de.robotik.nao.communicator.network.data.NAOCommands;
 import de.robotik.nao.communicator.network.data.response.DataResponsePackage;

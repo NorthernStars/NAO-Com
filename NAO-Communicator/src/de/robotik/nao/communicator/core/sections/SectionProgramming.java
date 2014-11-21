@@ -3,8 +3,8 @@ package de.robotik.nao.communicator.core.sections;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.northernstars.naocom.R;
-import de.robotik.nao.communicator.core.MainActivity;
+import de.robotik.nao.communicator.R;
+import de.robotik.nao.communicator.MainActivity;
 import de.robotik.nao.communicator.core.RemoteNAO;
 import de.robotik.nao.communicator.core.widgets.programming.ProgrammingItem;
 import de.robotik.nao.communicator.core.widgets.programming.settings.SettingChangeLanguage;

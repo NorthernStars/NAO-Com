@@ -36,8 +36,8 @@ import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpException;
 
-import de.northernstars.naocom.R;
-import de.robotik.nao.communicator.core.MainActivity;
+import de.robotik.nao.communicator.R;
+import de.robotik.nao.communicator.MainActivity;
 import de.robotik.nao.communicator.core.sections.SectionConnect;
 import de.robotik.nao.communicator.core.widgets.LoginDialog;
 import de.robotik.nao.communicator.network.data.NAOCommands;

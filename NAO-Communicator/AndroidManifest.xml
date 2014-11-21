@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="de.northernstars.naocom"
-    android:versionCode="1"
-    android:versionName="1.0" >
+    package="de.robotik.nao.communicator"
+    android:versionCode="6"
+    android:versionName="3.0.0" >
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -21,7 +21,7 @@
         android:supportsRtl="true"
         android:theme="@android:style/Theme.Holo.Light.DarkActionBar" >
         <activity
-            android:name="de.robotik.nao.communicator.core.MainActivity"
+            android:name="de.robotik.nao.communicator.MainActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/app_name"
             android:windowSoftInputMode="stateHidden" >
@@ -34,7 +34,7 @@
         <activity
             android:name="de.robotik.nao.communicator.core.NAOComInstaller"
             android:label="@string/title_activity_naocom_installer"
-            android:parentActivityName="de.robotik.nao.communicator.core.MainActivity" >
+            android:parentActivityName="de.robotik.nao.communicator.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.robotik.nao.communicator.core.MainActivity" />

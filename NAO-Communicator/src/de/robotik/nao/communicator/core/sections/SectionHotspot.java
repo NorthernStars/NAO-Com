@@ -1,6 +1,6 @@
 package de.robotik.nao.communicator.core.sections;
 
-import de.northernstars.naocom.R;
+import de.robotik.nao.communicator.R;
 import de.robotik.nao.communicator.network.hotspot.WifiApManager;
 import de.robotik.nao.communicator.network.hotspot.WifiStates;
 import android.net.wifi.WifiConfiguration;

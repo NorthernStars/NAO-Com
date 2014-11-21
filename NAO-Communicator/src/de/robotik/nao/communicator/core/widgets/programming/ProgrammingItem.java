@@ -1,8 +1,8 @@
 package de.robotik.nao.communicator.core.widgets.programming;
 
-import de.northernstars.naocom.R;
-import de.northernstars.naocom.R.drawable;
-import de.robotik.nao.communicator.core.MainActivity;
+import de.robotik.nao.communicator.R;
+import de.robotik.nao.communicator.R.drawable;
+import de.robotik.nao.communicator.MainActivity;
 import de.robotik.nao.communicator.core.interfaces.SettingsContent;
 import android.annotation.SuppressLint;
 import android.content.ClipData;

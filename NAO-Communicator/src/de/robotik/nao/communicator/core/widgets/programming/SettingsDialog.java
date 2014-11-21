@@ -1,6 +1,6 @@
 package de.robotik.nao.communicator.core.widgets.programming;
 
-import de.northernstars.naocom.R;
+import de.robotik.nao.communicator.R;
 import de.robotik.nao.communicator.core.interfaces.SettingsContent;
 import android.app.AlertDialog;
 import android.app.Dialog;

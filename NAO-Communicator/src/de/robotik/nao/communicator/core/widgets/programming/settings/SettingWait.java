@@ -3,7 +3,7 @@ package de.robotik.nao.communicator.core.widgets.programming.settings;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
-import de.northernstars.naocom.R;
+import de.robotik.nao.communicator.R;
 
 public class SettingWait extends AbstractSettingsContent {
 

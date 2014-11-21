@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.jmdns.ServiceEvent;
 
+import de.robotik.nao.communicator.MainActivity;
 import de.robotik.nao.communicator.core.interfaces.NAOInterface;
 import de.robotik.nao.communicator.core.widgets.RemoteDevice;
 import de.robotik.nao.communicator.network.ConnectionState;
