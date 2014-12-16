@@ -383,16 +383,20 @@ public class MainActivity extends FragmentActivity implements
 
 	@Override
 	public void addNetworkDataRecievedListener(NetworkDataRecievedListener listener){
-		dataRecievedListener.add(listener);
+		synchronized(dataRecievedListener) {
+			dataRecievedListener.add(listener);
+		}
 	}
 	
 	@Override
 	public void removeNetworkDataRecievedListener(NetworkDataRecievedListener listener){
-		if( listener == null ){
-			dataRecievedListener.clear();
-		}
-		else{
-			dataRecievedListener.remove(listener);
+		synchronized(dataRecievedListener) {
+			if( listener == null ){
+				dataRecievedListener.clear();
+			}
+			else{
+				dataRecievedListener.remove(listener);
+			}
 		}
 	}
 	

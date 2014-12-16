@@ -23,6 +23,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -205,7 +206,7 @@ public class SectionSpeech extends Section implements
 			mSavedTextAdapter.notifyDataSetChanged();
 			
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			Log.i("File {} with saved texts not found", SAVED_TEXT_FILE);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
