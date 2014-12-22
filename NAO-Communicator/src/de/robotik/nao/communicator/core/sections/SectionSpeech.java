@@ -51,6 +51,8 @@ public class SectionSpeech extends Section implements
 	OnSeekBarChangeListener,
 	TextWatcher{
 	
+	private static final String TAG = SectionSpeech.class.getName();
+	
 	private static final int HISTORY_LENGTH = 10;
 	private static final String SAVED_TEXT_FILE = "savedTexts";
 	private static final String PREFERENCES_SPEECH_RATE = "speechRate";
@@ -206,7 +208,7 @@ public class SectionSpeech extends Section implements
 			mSavedTextAdapter.notifyDataSetChanged();
 			
 		} catch (FileNotFoundException e) {
-			Log.i("File {} with saved texts not found", SAVED_TEXT_FILE);
+			Log.i(TAG, "File " + SAVED_TEXT_FILE + " with saved texts not found");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -287,7 +289,11 @@ public class SectionSpeech extends Section implements
 				int position = mHistory.indexOf(aText);
 				System.out.println("is in history: " + position);
 				mHistory.remove(position);
-				lstSpeechHistory.removeViewAt( lstSpeechHistory.getChildCount() -1 - position );
+				try{
+					lstSpeechHistory.removeViewAt( lstSpeechHistory.getChildCount() -1 - position );
+				} catch (NullPointerException e){
+					e.printStackTrace();
+				}
 			}
 			
 			// add new TextView to first position in list

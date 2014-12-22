@@ -193,6 +193,7 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 			} else {
 				timeoutCounter++;
 				if( timeoutCounter >= connectionMaxTimeouts ){
+					Log.i(TAG, "");
 					stopConnector();
 				}
 			}
