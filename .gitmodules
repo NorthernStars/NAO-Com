@@ -1,0 +1,6 @@
+[submodule "submodules"]
+	path = submodules
+	url = https://github.com/LarsWerkman/HoloColorPicker.git
+[submodule "HoloColorPicker"]
+	path = HoloColorPicker
+	url = https://github.com/LarsWerkman/HoloColorPicker.git
