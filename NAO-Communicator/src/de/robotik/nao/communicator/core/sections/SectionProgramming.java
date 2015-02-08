@@ -56,14 +56,8 @@ public class SectionProgramming extends Section implements
 	/**
 	 * Constructor
 	 */
-	public SectionProgramming() {}
-	
-	/**
-	 * Constructor
-	 * @param aTitle	{@link String} title of section
-	 */
-	public SectionProgramming(String aTitle) {
-		super(aTitle);
+	public SectionProgramming() {
+		super();
 	}
 	
 	@Override

@@ -3,7 +3,7 @@
     android:id="@+id/scrollView1"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/padding"
+    android:padding="@dimen/padding_general"
     tools:context="de.robotik.nao.communicator.core.NAOComInstaller" >
 
     <LinearLayout

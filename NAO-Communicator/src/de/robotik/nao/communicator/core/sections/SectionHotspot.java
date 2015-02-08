@@ -31,14 +31,6 @@ public class SectionHotspot extends Section {
 	}
 	
 	/**
-	 * Constrctor
-	 * @param title
-	 */
-	public SectionHotspot(String title) {
-		super(title);
-	}
-	
-	/**
 	 * Called to create view
 	 */
 	@Override

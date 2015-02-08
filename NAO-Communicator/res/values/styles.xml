@@ -4,7 +4,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:background">@color/lightblue</item>
-        <item name="android:textColor">@color/white_text</item>
+        <item name="android:textColor">@color/text_light</item>
         <item name="android:drawableEnd">@drawable/ic_action_expand</item>
         <item name="android:layout_marginTop">@dimen/margin_section_header</item>
         <item name="android:layout_marginBottom">@dimen/margin_section_header</item>
@@ -14,30 +14,41 @@
         <item name="android:clickable">true</item>
     </style>
 
-    <style name="Text" parent="@android:style/TextAppearance.DeviceDefault.Small">
+    <style name="Text" parent="@android:style/TextAppearance.Small">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/black_text</item>
+        <item name="android:textColor">@color/text_dark</item>
     </style>
 
-    <style name="ItemTitle" parent="@android:style/TextAppearance.DeviceDefault.Small">
+    <style name="ItemTitle" parent="@android:style/TextAppearance.Small">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center</item>
         <item name="android:textColor">@color/blue</item>
     </style>
 
-    <style name="MenuTitle" parent="@android:style/TextAppearance.DeviceDefault.Large">
+    <style name="MenuTitle" parent="@android:style/TextAppearance.Large">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:background">@color/darkblue</item>
+        <item name="android:textColor">@color/text_light</item>
         <item name="android:padding">@dimen/padding_section_header</item>
+        <item name="android:gravity">center_vertical</item>
         <item name="android:drawableStart">@drawable/ic_action_next_item</item>
+    </style>
+
+    <style name="MenuItem" parent="@android:style/TextAppearance.Medium">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:padding">@dimen/padding_general</item>
+        <item name="android:background">@drawable/selectable_item</item>
+        <item name="android:textColor">@color/selectable_item</item>
     </style>
 
     <style name="Button">
         <item name="android:background">@drawable/background_button_click</item>
-        <item name="android:textColor">@color/white_text</item>
+        <item name="android:textColor">@color/text_light</item>
         <item name="android:layout_margin">@dimen/margin_button</item>
         <item name="android:padding">@dimen/padding_buttons</item>
     </style>
@@ -47,8 +58,8 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">end</item>
         <item name="android:background">@color/lightgray</item>
-        <item name="android:paddingLeft">@dimen/padding</item>
-        <item name="android:paddingRight">@dimen/padding</item>
+        <item name="android:paddingLeft">@dimen/padding_general</item>
+        <item name="android:paddingRight">@dimen/padding_general</item>
         <item name="android:layout_marginBottom">@dimen/margin_section_header</item>
     </style>
 
@@ -67,8 +78,8 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_gravity">center_vertical</item>
-        <item name="android:layout_marginLeft">@dimen/padding</item>
-        <item name="android:layout_marginRight">@dimen/padding</item>
+        <item name="android:layout_marginLeft">@dimen/padding_general</item>
+        <item name="android:layout_marginRight">@dimen/padding_general</item>
         <item name="android:gravity">center_vertical</item>
     </style>
 

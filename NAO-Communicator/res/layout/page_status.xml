@@ -3,7 +3,7 @@
     android:id="@+id/swipeStatus"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/padding" >
+    android:padding="@dimen/padding_general" >
 
     <ScrollView
         android:layout_width="match_parent"
@@ -25,9 +25,9 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
-                    android:paddingLeft="@dimen/padding"
-                    android:paddingRight="@dimen/padding"
-                    android:paddingStart="@dimen/padding"
+                    android:paddingLeft="@dimen/padding_general"
+                    android:paddingRight="@dimen/padding_general"
+                    android:paddingStart="@dimen/padding_general"
                     android:text="@string/status_nao_name"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -55,7 +55,7 @@
                 <TextView
                     android:id="@+id/lblStatusAutonomousLifeTitle"
                     style="@style/ItemTitle"
-                    android:layout_marginTop="@dimen/padding"
+                    android:layout_marginTop="@dimen/padding_general"
                     android:layout_weight="1"
                     android:gravity="end"
                     android:text="@string/autonomous_life" />
@@ -63,7 +63,7 @@
                 <TextView
                     android:id="@+id/lblStatusAutonomousLife"
                     style="@style/ItemTitle"
-                    android:layout_marginTop="@dimen/padding"
+                    android:layout_marginTop="@dimen/padding_general"
                     android:layout_weight="1"
                     android:text="" />
             </LinearLayout>
@@ -157,8 +157,8 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginEnd="@dimen/padding"
-                        android:layout_marginRight="@dimen/padding"
+                        android:layout_marginEnd="@dimen/padding_general"
+                        android:layout_marginRight="@dimen/padding_general"
                         android:layout_weight="1"
                         android:gravity="start|center_vertical"
                         android:minHeight="@dimen/height_min_joint_label"
@@ -178,15 +178,15 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/padding" >
+                    android:layout_marginTop="@dimen/padding_general" >
 
                     <TextView
                         android:id="@+id/lblJointHead"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginEnd="@dimen/padding"
-                        android:layout_marginRight="@dimen/padding"
+                        android:layout_marginEnd="@dimen/padding_general"
+                        android:layout_marginRight="@dimen/padding_general"
                         android:layout_weight="1"
                         android:gravity="start|center_vertical"
                         android:minHeight="@dimen/height_min_joint_label"
@@ -212,8 +212,8 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginEnd="@dimen/padding"
-                        android:layout_marginRight="@dimen/padding"
+                        android:layout_marginEnd="@dimen/padding_general"
+                        android:layout_marginRight="@dimen/padding_general"
                         android:layout_weight="1"
                         android:gravity="start|center_vertical"
                         android:minHeight="@dimen/height_min_joint_label"
@@ -239,8 +239,8 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginEnd="@dimen/padding"
-                        android:layout_marginRight="@dimen/padding"
+                        android:layout_marginEnd="@dimen/padding_general"
+                        android:layout_marginRight="@dimen/padding_general"
                         android:layout_weight="1"
                         android:gravity="start|center_vertical"
                         android:minHeight="@dimen/height_min_joint_label"
@@ -266,8 +266,8 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginEnd="@dimen/padding"
-                        android:layout_marginRight="@dimen/padding"
+                        android:layout_marginEnd="@dimen/padding_general"
+                        android:layout_marginRight="@dimen/padding_general"
                         android:layout_weight="1"
                         android:gravity="start|center_vertical"
                         android:minHeight="@dimen/height_min_joint_label"
@@ -293,8 +293,8 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginEnd="@dimen/padding"
-                        android:layout_marginRight="@dimen/padding"
+                        android:layout_marginEnd="@dimen/padding_general"
+                        android:layout_marginRight="@dimen/padding_general"
                         android:layout_weight="1"
                         android:gravity="start|center_vertical"
                         android:minHeight="@dimen/height_min_joint_label"
@@ -320,8 +320,8 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginEnd="@dimen/padding"
-                        android:layout_marginRight="@dimen/padding"
+                        android:layout_marginEnd="@dimen/padding_general"
+                        android:layout_marginRight="@dimen/padding_general"
                         android:layout_weight="1"
                         android:gravity="start|center_vertical"
                         android:minHeight="@dimen/height_min_joint_label"
@@ -347,8 +347,8 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginEnd="@dimen/padding"
-                        android:layout_marginRight="@dimen/padding"
+                        android:layout_marginEnd="@dimen/padding_general"
+                        android:layout_marginRight="@dimen/padding_general"
                         android:layout_weight="1"
                         android:gravity="start|center_vertical"
                         android:minHeight="@dimen/height_min_joint_label"

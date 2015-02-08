@@ -33,10 +33,8 @@ public class SectionLed extends Section implements
 	private Button btnLedLeftEye;
 	private Button btnLedRightEye;
 	
-	public SectionLed() {}
-	
-	public SectionLed(String aTitle){
-		super(aTitle);
+	public SectionLed() {
+		super();
 	}
 	
 	@Override

@@ -6,19 +6,14 @@ import java.util.List;
 import com.google.gson.Gson;
 
 import de.robotik.nao.communicator.R;
+import de.robotik.nao.communicator.core.MainFragment;
 import de.robotik.nao.communicator.core.NAOComInstaller;
+import de.robotik.nao.communicator.core.NavigationDrawerFragment;
 import de.robotik.nao.communicator.core.RemoteNAO;
-import de.robotik.nao.communicator.core.SectionsPagerAdapter;
 import de.robotik.nao.communicator.core.revisions.ServerRevision;
 import de.robotik.nao.communicator.core.revisions.ServerRevisionChecker;
 import de.robotik.nao.communicator.core.sections.Section;
 import de.robotik.nao.communicator.core.sections.SectionConnect;
-import de.robotik.nao.communicator.core.sections.SectionFunctions;
-import de.robotik.nao.communicator.core.sections.SectionLed;
-import de.robotik.nao.communicator.core.sections.SectionProgramming;
-import de.robotik.nao.communicator.core.sections.SectionSpeech;
-import de.robotik.nao.communicator.core.sections.SectionStatus;
-import de.robotik.nao.communicator.core.sections.SectionHotspot;
 import de.robotik.nao.communicator.core.widgets.RemoteDevice;
 import de.robotik.nao.communicator.network.NetworkDataRecievedListenerNotifier;
 import de.robotik.nao.communicator.network.data.NAOCommands;
@@ -35,23 +30,19 @@ import android.os.Looper;
 import android.preference.PreferenceManager.OnActivityResultListener;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 public class MainActivity extends FragmentActivity implements
 	NetworkDataRecievedListener,
-	NetworkDataSender,
-	OnItemClickListener{
+	NetworkDataSender{
 	
 	public static final String INSTALLER_INTENT_EXTRA_WORKSTATION = "installer.intent.extra.device";
 	public static final String INSTALLER_INTENT_EXTRA_HOST = "installer.intent.extra.host";
@@ -68,54 +59,47 @@ public class MainActivity extends FragmentActivity implements
 	private List<NetworkDataRecievedListener> dataRecievedListener = new ArrayList<NetworkDataRecievedListener>();
 	private List<OnActivityResultListener> activityResultListener = new ArrayList<OnActivityResultListener>();
 	
-	private String mTitle = "[offline] NAO Communicator";
-	private SectionsPagerAdapter mSectionsPagerAdapter;
-	private ViewPager mViewPager;
-	private DrawerLayout mDrawerLayout;
-	private ActionBarDrawerToggle mDrawerToggle;
-	private LinearLayout mMenu;
-	private ListView mMenueListView;
-	private String[] mMenuItems;
-
 	/**
-	 * Called if activity created
+	 * NEW THIGNS
 	 */
+	
+	private DrawerLayout mDrawerLayout;
+	
+	private ActionBarDrawerToggle mDrawerToggle;
+	private NavigationDrawerFragment mNavigationDrawerFragment;
+	private MainFragment mMainFragment;
+	
+	
+	/**
+	 * OLD THINGS
+	 */
+	private String mTitle = "[offline] NAO Communicator";
+	private ListView mMenueListView;
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		
+		super.onCreate(savedInstanceState);		
 		INSTANCE = this;
 		
 		setContentView(R.layout.activity_main);	
 		updateTitle(mTitle);
 		
 		// add layouts
-		createPageFragmentLayouts();
-		
-		// Create the adapter that will return a fragment for each of
-		// primary sections of the app.
-		mSectionsPagerAdapter = new SectionsPagerAdapter(
-				getSupportFragmentManager());
+		//createPageFragmentLayouts();
 
-		// Set up the ViewPager with the sections adapter.
-		mViewPager = (ViewPager) findViewById(R.id.pager);
-		mViewPager.setAdapter(mSectionsPagerAdapter);
-		
-		// set up left slide menu
+		// set navigation drawer fragment and drawer shadow
+		FragmentManager vFragmentManager = getSupportFragmentManager();
+		mNavigationDrawerFragment = (NavigationDrawerFragment) vFragmentManager
+				.findFragmentById(R.id.navigation_drawer);
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerLayout.setDrawerShadow( R.drawable.drawer_shadow, GravityCompat.START );
-		mMenu = (LinearLayout) findViewById(R.id.menu);
-		mMenueListView = (ListView) findViewById(R.id.lstMenu);
-		mMenuItems = getResources().getStringArray(R.array.menu_items);
-		mMenueListView.setAdapter( new ArrayAdapter<String>(this,
-				R.layout.menu_list_item, mMenuItems) );
-		
-		mMenueListView.setOnItemClickListener(this);
-		mMenueListView.setItemChecked(0, true);
-		
-		// enable ActionBar app icon to behave as action to toggle nav drawer
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
+        
+        // set main fragment
+        mMainFragment = new MainFragment();
+        vFragmentManager.beginTransaction()
+        	.replace(R.id.container, mMainFragment)
+        	.commit();
         
         // ActionBarDrawerToggle ties together the the proper interactions
         // between the sliding drawer and the action bar app icon
@@ -127,21 +111,41 @@ public class MainActivity extends FragmentActivity implements
                 R.string.menu_close		/* "close drawer" description for accessibility */
                 ) {
             public void onDrawerClosed(View view) {
-                getActionBar().setTitle(mTitle);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                super.onDrawerClosed(view);
             }
 
             public void onDrawerOpened(View drawerView) {
-                getActionBar().setTitle(mTitle);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                super.onDrawerOpened(drawerView);
             }
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         
+        // enable ActionBar app icon to behave as action to toggle nav drawer
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setHomeButtonEnabled(true);
+        
         // start fetching data for server update
         (new Thread(new ServerRevisionChecker())).start();
 
-	}	
+	}
+	
+	/**
+	 * @return	{@link NavigationDrawerFragment}
+	 */
+	public NavigationDrawerFragment getNavigationDrawer(){
+		return mNavigationDrawerFragment;
+	}
+	
+	public DrawerLayout getDrawerLayout(){
+		return mDrawerLayout;
+	}
+	
+	/**
+	 * @return	{@link MainFragment}
+	 */
+	public MainFragment getMainFragment(){
+		return mMainFragment;
+	}
 	
 	@Override
 	protected void onActivityResult(int requestCode,int resultCode,Intent data) {
@@ -157,29 +161,6 @@ public class MainActivity extends FragmentActivity implements
 		}
 		
 		super.onActivityResult(requestCode, resultCode, data);
-	}
-	
-	/**
-	 * Adds layouts for fragment pages
-	 */
-	private void createPageFragmentLayouts(){
-		if( mSections.size() == 0 ){			
-			// Add all new sections here
-			mSections.add( new SectionConnect("Connect") );
-			mSections.add( new SectionHotspot("Hotspot") );
-			mSections.add( new SectionStatus("NAO Status") );
-			mSections.add( new SectionSpeech("Speech") );
-			mSections.add( new SectionFunctions("Functions") );
-			mSections.add( new SectionLed("LEDs") );
-			mSections.add( new SectionProgramming("Programming") );			
-		}
-	}
-
-	/**
-	 * @return the sections
-	 */
-	public List<Section> getSections() {
-		return mSections;
 	}
 
 	/**
@@ -215,13 +196,6 @@ public class MainActivity extends FragmentActivity implements
 				setTitle( mTitle );
 			}
 		});
-	}
-	
-	/**
-	 * @return Current {@link ViewPager}
-	 */
-	public ViewPager getViewPager() {
-		return mViewPager;
 	}
 	
 	/**
@@ -399,19 +373,6 @@ public class MainActivity extends FragmentActivity implements
 			}
 		}
 	}
-	
-	@Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
-        mDrawerToggle.syncState();
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        mDrawerToggle.onConfigurationChanged(newConfig);
-    }
 
 	
 	@Override
@@ -422,28 +383,6 @@ public class MainActivity extends FragmentActivity implements
 				new Thread(r).start();
 			}
 		}
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if( mDrawerToggle.onOptionsItemSelected(item) ){
-			// menu item clicked
-			if( mDrawerLayout.isDrawerOpen(mMenu) ){
-				mDrawerLayout.closeDrawer(mMenu);
-			} else {
-				mDrawerLayout.openDrawer(mMenu);
-			}
-		}
-		
-		return super.onOptionsItemSelected(item);
-	}
-
-	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position,
-			long id) {
-		mViewPager.setCurrentItem(position);
-		mMenueListView.setItemChecked(position, true);
-		mDrawerLayout.closeDrawer(mMenu);
 	}
 	
 	@Override
@@ -484,6 +423,32 @@ public class MainActivity extends FragmentActivity implements
 			}
 		}
 		super.onRestoreInstanceState(savedInstanceState);
+	}
+	
+	/**
+	 * NEW THINGS
+	 */
+	
+	@Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if( mDrawerToggle.onOptionsItemSelected(item) ){
+			return true;
+		}
+		
+		return super.onOptionsItemSelected(item);
 	}
 
 }

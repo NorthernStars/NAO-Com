@@ -14,7 +14,6 @@ public abstract class Section extends Fragment {
 	
 	private static final int WRONG_VALUE_MAX_COUNT = 2;
 	
-	protected String title = "PAGE TITLE";
 	protected View rootView =  null;
 	private Map<View, Integer> wrongValueCounter = new HashMap<View, Integer>();
 	
@@ -23,21 +22,6 @@ public abstract class Section extends Fragment {
 	 */
 	public Section(){
 		super();
-	}
-	
-	/**
-	 * Constructor
-	 * @param aTitle Title of section
-	 */
-	public Section(String aTitle){
-		title = aTitle;
-	}
-
-	/**
-	 * @return the title
-	 */
-	public String getTitle() {
-		return title;
 	}
 	
 	/**

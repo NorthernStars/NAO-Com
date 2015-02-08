@@ -87,10 +87,8 @@ public class SectionSpeech extends Section implements
 	private DataResponsePackage lastResponsePackage;
 	private SharedPreferences mSettings;
 	
-	public SectionSpeech() {}
-	
-	public SectionSpeech(String title){
-		super(title);
+	public SectionSpeech() {
+		super();
 	}
 	
 	@Override

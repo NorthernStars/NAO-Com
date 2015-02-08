@@ -83,14 +83,8 @@ public class SectionStatus extends Section implements
 	/**
 	 * Constructor
 	 */
-	public SectionStatus() {}
-	
-	/**
-	 * Constructor
-	 * @param title	{@link String} title.
-	 */
-	public SectionStatus(String title) {
-		super(title);
+	public SectionStatus() {
+		super();
 	}
 	
 	@Override

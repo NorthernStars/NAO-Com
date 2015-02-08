@@ -9,18 +9,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/lighterblue"
-        android:paddingLeft="@dimen/padding"
-        android:paddingRight="@dimen/padding"
+        android:paddingLeft="@dimen/padding_general"
+        android:paddingRight="@dimen/padding_general"
         android:text="@string/programming_hint"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/white_text" />
+        android:textColor="@color/text_light" />
 
     <HorizontalScrollView
         android:id="@+id/horizontalScrollView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/lighterlightblue"
-        android:padding="@dimen/padding" >
+        android:padding="@dimen/padding_general" >
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -141,7 +141,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/lighterlightblue"
-        android:padding="@dimen/padding" >
+        android:padding="@dimen/padding_general" >
 
         <ImageButton
             android:id="@+id/btnProgrammingPlay"

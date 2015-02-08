@@ -54,14 +54,6 @@ public class SectionConnect extends Section implements OnRefreshListener {
 	public SectionConnect() {
 		super();
 	}
-	
-	/**
-	 * Constrctor
-	 * @param title
-	 */
-	public SectionConnect(String title) {
-		super(title);
-	}
 
 	/**
 	 * Called to create view

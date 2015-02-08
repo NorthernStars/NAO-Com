@@ -49,10 +49,8 @@ public class SectionFunctions extends Section implements
 	private boolean mFunctionsAdding = false;
 	
 	
-	public SectionFunctions(){}
-	
-	public SectionFunctions(String aTitle){
-		super(aTitle);
+	public SectionFunctions(){
+		super();
 	}
 
 	@Override
