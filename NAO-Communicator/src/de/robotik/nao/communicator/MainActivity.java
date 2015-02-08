@@ -9,11 +9,8 @@ import de.robotik.nao.communicator.R;
 import de.robotik.nao.communicator.core.MainFragment;
 import de.robotik.nao.communicator.core.NAOComInstaller;
 import de.robotik.nao.communicator.core.NavigationDrawerFragment;
-import de.robotik.nao.communicator.core.RemoteNAO;
 import de.robotik.nao.communicator.core.revisions.ServerRevision;
 import de.robotik.nao.communicator.core.revisions.ServerRevisionChecker;
-import de.robotik.nao.communicator.core.sections.Section;
-import de.robotik.nao.communicator.core.sections.SectionConnect;
 import de.robotik.nao.communicator.core.widgets.RemoteDevice;
 import de.robotik.nao.communicator.network.NetworkDataRecievedListenerNotifier;
 import de.robotik.nao.communicator.network.data.NAOCommands;
@@ -37,44 +34,45 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends FragmentActivity implements
 	NetworkDataRecievedListener,
 	NetworkDataSender{
 	
+	/**
+	 * Static strings
+	 */
 	public static final String INSTALLER_INTENT_EXTRA_WORKSTATION = "installer.intent.extra.device";
 	public static final String INSTALLER_INTENT_EXTRA_HOST = "installer.intent.extra.host";
 	public static final String INSTALLER_INTENT_EXTRA_REVISION = "installer.intent.extra.revision";
-	public static final String INSTALLER_INTENT_EXTRA_UPDATE = "installer.intent.extra.update";
-	
-	private static MainActivity INSTANCE;
-	private static final String SHARED_PREFERENCES = "naocom_preferences";
-	private static final String INSTANCE_STATE_KESY_HOST_ADRESSES = "HOSTS";
-	private static ServerRevision onlineRevision;
-	
-	private List<Section> mSections = new ArrayList<Section>();	
-	private RemoteDevice mConnectedDevice = null;
-	private List<NetworkDataRecievedListener> dataRecievedListener = new ArrayList<NetworkDataRecievedListener>();
-	private List<OnActivityResultListener> activityResultListener = new ArrayList<OnActivityResultListener>();
+	public static final String INSTALLER_INTENT_EXTRA_UPDATE = "installer.intent.extra.update";	
 	
 	/**
-	 * NEW THIGNS
-	 */
-	
+	 * Layout
+	 */	
 	private DrawerLayout mDrawerLayout;
 	
 	private ActionBarDrawerToggle mDrawerToggle;
 	private NavigationDrawerFragment mNavigationDrawerFragment;
 	private MainFragment mMainFragment;
 	
+	private String mTitle;
 	
 	/**
-	 * OLD THINGS
+	 * Preferences and online backup
 	 */
-	private String mTitle = "[offline] NAO Communicator";
-	private ListView mMenueListView;
+	private static MainActivity INSTANCE;
+	private static final String SHARED_PREFERENCES = "naocom_preferences";
+	private static ServerRevision onlineRevision;
+	
+	/**
+	 * Listener lists
+	 */
+	private List<NetworkDataRecievedListener> dataRecievedListener = new ArrayList<NetworkDataRecievedListener>();
+	private List<OnActivityResultListener> activityResultListener = new ArrayList<OnActivityResultListener>();
+	
 	
 	
 	@Override
@@ -82,8 +80,8 @@ public class MainActivity extends FragmentActivity implements
 		super.onCreate(savedInstanceState);		
 		INSTANCE = this;
 		
-		setContentView(R.layout.activity_main);	
-		updateTitle(mTitle);
+		setContentView(R.layout.activity_main);
+		updateTitle( getString(R.string.title_offline) );
 		
 		// add layouts
 		//createPageFragmentLayouts();
@@ -147,41 +145,29 @@ public class MainActivity extends FragmentActivity implements
 		return mMainFragment;
 	}
 	
-	@Override
-	protected void onActivityResult(int requestCode,int resultCode,Intent data) {
-		// reconnect remote nao
-		RemoteNAO vRemoteNao = RemoteNAO.getCurrentRemoteNao();
-		if( vRemoteNao != null && !vRemoteNao.isConnected() ){
-			vRemoteNao.reconnect();
-		}
-		
-		// call listener
-		for( OnActivityResultListener listener : activityResultListener ){
-			listener.onActivityResult(requestCode, resultCode, data);
-		}
-		
-		super.onActivityResult(requestCode, resultCode, data);
-	}
-
 	/**
-	 * @return the connectedDevice
+	 * @return	{@link Integer} of online available server revision.
 	 */
-	public RemoteDevice getConnectedDevice() {
-		return mConnectedDevice;
+	public ServerRevision getOnlineRevision(){
+		return onlineRevision;
 	}
-
+	
 	/**
-	 * @param aConnectedDevice the connectedDevice to set
+	 * Sets revision of online available server.
+	 * @param aRevision	{@link ServerRevision} revision.
 	 */
-	public void setConnectedDevice(RemoteDevice aConnectedDevice) {
-		if( mConnectedDevice != null ){
-			mConnectedDevice.getNao().removeNetworkDataRecievedListener(this);
+	public void setOnlineRevision(ServerRevision aRevision){
+		if( aRevision == null ){
+			aRevision = new ServerRevision();
 		}
-		mConnectedDevice = aConnectedDevice;
-		
-		if( mConnectedDevice != null ){
-			mConnectedDevice.getNao().addNetworkDataRecievedListener(this);
-		}
+		onlineRevision = aRevision;
+	}
+	
+	/**
+	 * @return	Applications {@link SharedPreferences}.
+	 */
+	public static SharedPreferences getPreferences(){
+		return getInstance().getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE);
 	}
 	
 	/**
@@ -260,38 +246,6 @@ public class MainActivity extends FragmentActivity implements
 	}
 	
 	/**
-	 * Selects item in menu drawer
-	 * @param view
-	 */
-	public void selectMenueItem(Section section){
-		for( int i=0; i < mSections.size(); i++ ){
-			Section s = mSections.get(i);
-			if( s == section ){
-				mMenueListView.setItemChecked(i, true);
-			}
-		}
-		
-	}
-	
-	/**
-	 * @return	{@link Integer} of online available server revision.
-	 */
-	public ServerRevision getOnlineRevision(){
-		return onlineRevision;
-	}
-	
-	/**
-	 * Sets revision of online available server.
-	 * @param aRevision	{@link ServerRevision} revision.
-	 */
-	public void setOnlineRevision(ServerRevision aRevision){
-		if( aRevision == null ){
-			aRevision = new ServerRevision();
-		}
-		onlineRevision = aRevision;
-	}
-	
-	/**
 	 * Starts the installer to update or install the latest server revision on remote device.
 	 * @param aDevice		{@link RemoteDevice} to install server.
 	 * @param aUpdate		{@link Boolean} update flag. {@code true} if to update existing server, {@code false} otherwise.
@@ -307,13 +261,13 @@ public class MainActivity extends FragmentActivity implements
 			String jsonRevision = vGson.toJson(vRevision);
 			
 			vIntent.putExtra( INSTALLER_INTENT_EXTRA_WORKSTATION, aDevice.getWorkstationName() );
-			vIntent.putExtra( INSTALLER_INTENT_EXTRA_HOST, aDevice.getNao().getHostAdresses().get(0) );
+			vIntent.putExtra( INSTALLER_INTENT_EXTRA_HOST, aDevice.getHostAdresses().get(0) );
 			vIntent.putExtra( INSTALLER_INTENT_EXTRA_REVISION, jsonRevision );
 			vIntent.putExtra( INSTALLER_INTENT_EXTRA_UPDATE, aUpdate );
 			
 			// disconnect
 			if( aDevice != null ){
-				aDevice.getNao().disconnect();
+				aDevice.disconnect();
 			}
 			
 			// start installer activity
@@ -323,36 +277,50 @@ public class MainActivity extends FragmentActivity implements
 	}
 	
 	/**
-	 * @return Current {@link MainActivity} instance.
+	 * NEW THINGS
 	 */
-	public static MainActivity getInstance() {
-		return INSTANCE;
-	}
 	
 	/**
-	 * @return	Applications {@link SharedPreferences}.
+	 * Shows toast.
+	 * @param aMessage		{@link Integer} id of message to show.
+	 * @param aDurations	Duration either {@code LENGTH_SHORT} or {@code LENGTH_LONG}.
 	 */
-	public static SharedPreferences getPreferences(){
-		return getInstance().getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE);
+	public void makeToast(int aMessage, int aDurations){
+		Toast.makeText(getApplicationContext(), getString(aMessage), aDurations).show();
 	}
 	
 	@Override
-	public void onNetworkDataRecieved(DataResponsePackage data) {
-		if( data.request.command == NAOCommands.SYS_DISCONNECT && data.requestSuccessfull ){
-			updateTitle( "[offline] NAO Communicator" );
-		} else {
-			updateTitle( "[" + data.batteryLevel + "%] " + data.naoName );
+	protected void onActivityResult(int requestCode,int resultCode,Intent data) {
+		// TODO: reconnect remote nao
+		
+		// call listener
+		for( OnActivityResultListener listener : activityResultListener ){
+			listener.onActivityResult(requestCode, resultCode, data);
 		}
-		notifyDataRecievedListeners(data);
+		
+		super.onActivityResult(requestCode, resultCode, data);
 	}
-
+	
 	@Override
-	protected void onStop() {		
-		RemoteNAO nao = RemoteNAO.getCurrentRemoteNao();
-		if( nao != null ){
-			nao.disconnect();
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if( mDrawerToggle.onOptionsItemSelected(item) ){
+			return true;
 		}
-		super.onStop();
+		
+		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
@@ -386,69 +354,22 @@ public class MainActivity extends FragmentActivity implements
 	}
 	
 	@Override
-	protected void onSaveInstanceState(Bundle outState) {	
-		// check if device connected
-		RemoteDevice vDevice = getConnectedDevice();
-		if( vDevice != null && vDevice.getNao().isConnected() ){
-			
-			// add connected hosts
-			ArrayList<String> vHostAdresses = new ArrayList<String>( vDevice.getNao().getHostAdresses() );
-			outState.putStringArrayList( INSTANCE_STATE_KESY_HOST_ADRESSES, vHostAdresses );
-			
+	public void onNetworkDataRecieved(DataResponsePackage data) {
+		if( data.request.command == NAOCommands.SYS_DISCONNECT && data.requestSuccessfull ){
+			updateTitle( "[offline] NAO Communicator" );
+		} else {
+			updateTitle( "[" + data.batteryLevel + "%] " + data.naoName );
 		}
-		super.onSaveInstanceState(outState);
+		notifyDataRecievedListeners(data);
 	}
 	
-	@Override
-	protected void onRestoreInstanceState(Bundle savedInstanceState) {		
-		// check if device was connected
-		if( savedInstanceState.containsKey(INSTANCE_STATE_KESY_HOST_ADRESSES) ){
-			
-			ArrayList<String> vHostAdresses = savedInstanceState.getStringArrayList(INSTANCE_STATE_KESY_HOST_ADRESSES);
-			if( vHostAdresses.size() > 0 ){
-				
-				// create new remote device and add host adresses
-				RemoteDevice vDevice = new RemoteDevice(this, vHostAdresses.get(0));
-				for( String vHost : vHostAdresses ){
-					vDevice.addAdress(vHost);
-				}
-				
-				// add remote device
-				SectionConnect.getInstance().clearDevicesList();
-				SectionConnect.getInstance().addRemoteDevice(vDevice);
-				
-				// connect device
-				vDevice.connect();
-				
-			}
-		}
-		super.onRestoreInstanceState(savedInstanceState);
-	}
+	
 	
 	/**
-	 * NEW THINGS
+	 * @return Current {@link MainActivity} instance.
 	 */
-	
-	@Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
-        mDrawerToggle.syncState();
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        mDrawerToggle.onConfigurationChanged(newConfig);
-    }
-	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if( mDrawerToggle.onOptionsItemSelected(item) ){
-			return true;
-		}
-		
-		return super.onOptionsItemSelected(item);
+	public static MainActivity getInstance() {
+		return INSTANCE;
 	}
 
 }

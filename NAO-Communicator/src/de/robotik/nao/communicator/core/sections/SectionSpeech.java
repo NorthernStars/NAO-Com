@@ -10,7 +10,6 @@ import java.util.List;
 
 import de.robotik.nao.communicator.R;
 import de.robotik.nao.communicator.MainActivity;
-import de.robotik.nao.communicator.core.RemoteNAO;
 import de.robotik.nao.communicator.network.data.NAOCommands;
 import de.robotik.nao.communicator.network.data.response.DataResponsePackage;
 import de.robotik.nao.communicator.network.interfaces.NetworkDataRecievedListener;
@@ -177,13 +176,14 @@ public class SectionSpeech extends Section implements
 		super.setUserVisibleHint(isVisibleToUser);
 		
 		if( isVisibleToUser ){
-			RemoteNAO.sendCommand(NAOCommands.SYS_SET_REQUIRED_DATA, new String[]{
-					"speechVolume",
-					"speechVoice",
-					"speechLanguage",
-					"speechLanguagesList",
-					"speechVoicesList",
-			});
+			// TODO: send command
+//			RemoteNAO.sendCommand(NAOCommands.SYS_SET_REQUIRED_DATA, new String[]{
+//					"speechVolume",
+//					"speechVoice",
+//					"speechLanguage",
+//					"speechLanguagesList",
+//					"speechVoicesList",
+//			});
 		}
 	}
 	
@@ -341,9 +341,11 @@ public class SectionSpeech extends Section implements
 
 	@Override
 	public void onRefresh() {
-		if( !RemoteNAO.sendCommand(NAOCommands.SYS_GET_INFO) ){
-			swipeSpeech.setRefreshing(false);
-		}
+		// TODO: send command
+//		if( !RemoteNAO.sendCommand(NAOCommands.SYS_GET_INFO) ){
+//			swipeSpeech.setRefreshing(false);
+//		}
+		swipeSpeech.setRefreshing(false);
 	}
 
 	@Override
@@ -355,13 +357,14 @@ public class SectionSpeech extends Section implements
 			int speed = skbSpeechRate.getProgress();
 			int shape = skbSpeechModulation.getProgress();
 			
-			if( RemoteNAO.sendCommand( NAOCommands.SAY,
-					new String[]{
-						vText,
-						Integer.toString(speed),
-						Integer.toString(shape)} ) ){			
-				addToHistory(vText);
-			}
+			// TODO: send command
+//			if( RemoteNAO.sendCommand( NAOCommands.SAY,
+//					new String[]{
+//						vText,
+//						Integer.toString(speed),
+//						Integer.toString(shape)} ) ){			
+//				addToHistory(vText);
+//			}
 			
 		} else if( v == btnSaveText ){
 			
@@ -387,13 +390,19 @@ public class SectionSpeech extends Section implements
 		if( parent == lstSavedText ){
 			txtSpeechInputText.setText( mSavedText.get(position) );
 		} else if( parent == spSpeechLanguage ){
+			
 			resetWrongValueCounter(spSpeechLanguage);
-			RemoteNAO.sendCommand( NAOCommands.SET_SPEECH_LANGUAGE,
-					new String[]{ mSpeechLanguages.get(position) } );
+			// TODO: send command
+//			RemoteNAO.sendCommand( NAOCommands.SET_SPEECH_LANGUAGE,
+//					new String[]{ mSpeechLanguages.get(position) } );
+			
 		} else if( parent == spSpeechVoice ){
+			
 			resetWrongValueCounter(spSpeechVoice);
-			RemoteNAO.sendCommand( NAOCommands.SET_SPEECH_VOICE,
-					new String[]{ mSpeechVoices.get(position) } );
+			// TODO: send command
+//			RemoteNAO.sendCommand( NAOCommands.SET_SPEECH_VOICE,
+//					new String[]{ mSpeechVoices.get(position) } );
+			
 		}
 	}
 
@@ -456,9 +465,11 @@ public class SectionSpeech extends Section implements
 			
 		} else if( seekBar == skbSpeechVolume ){			
 			lblSpeechVolume.setText( Integer.toString(progress) + "%" );
-			RemoteNAO.sendCommand(
-					NAOCommands.SET_SPEECH_VOLUME,
-					new String[]{ Float.toString( (float)(progress)/100.0f ) } );
+			
+			// TODO: send command
+//			RemoteNAO.sendCommand(
+//					NAOCommands.SET_SPEECH_VOLUME,
+//					new String[]{ Float.toString( (float)(progress)/100.0f ) } );
 		}
 		
 		edit.apply();

@@ -5,7 +5,6 @@ import java.util.List;
 
 import de.robotik.nao.communicator.R;
 import de.robotik.nao.communicator.MainActivity;
-import de.robotik.nao.communicator.core.RemoteNAO;
 import de.robotik.nao.communicator.core.widgets.programming.ProgrammingItem;
 import de.robotik.nao.communicator.core.widgets.programming.settings.SettingChangeLanguage;
 import de.robotik.nao.communicator.core.widgets.programming.settings.SettingSensor;
@@ -150,8 +149,8 @@ public class SectionProgramming extends Section implements
 			vArguments[i] = vItem.toJson();
 		}
 		
-		// send command
-		RemoteNAO.sendCommand(NAOCommands.PLAY_PROGRAM, vArguments);
+		// TODO: send command
+//		RemoteNAO.sendCommand(NAOCommands.PLAY_PROGRAM, vArguments);
 		
 	}
 
@@ -244,7 +243,8 @@ public class SectionProgramming extends Section implements
 		else if( v == btnProgrammingPlay ){			
 			playProgram();			
 		} else if( v == btnProgrammingStop ){
-			RemoteNAO.sendCommand(NAOCommands.STOP_PROGRAM);
+			// TODO: send command
+//			RemoteNAO.sendCommand(NAOCommands.STOP_PROGRAM);
 		}
 		
 		// add new item

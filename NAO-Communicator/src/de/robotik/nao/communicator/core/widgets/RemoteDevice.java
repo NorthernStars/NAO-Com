@@ -1,47 +1,65 @@
 package de.robotik.nao.communicator.core.widgets;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.jmdns.ServiceEvent;
 
 import de.robotik.nao.communicator.R;
 import de.robotik.nao.communicator.MainActivity;
-import de.robotik.nao.communicator.core.RemoteNAO;
+import de.robotik.nao.communicator.core.interfaces.NAOInterface;
 import de.robotik.nao.communicator.core.revisions.ServerRevision;
+import de.robotik.nao.communicator.network.ConnectionState;
+import de.robotik.nao.communicator.network.NAOConnector;
 import de.robotik.nao.communicator.network.data.response.DataResponsePackage;
 import de.robotik.nao.communicator.network.interfaces.NetworkDataRecievedListener;
 import de.robotik.nao.communicator.network.interfaces.NetworkServiceHandler;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.view.ActionMode;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-public class RemoteDevice implements
+public class RemoteDevice extends LinearLayout implements
 	NetworkServiceHandler,
 	NetworkDataRecievedListener,
+	NAOInterface,
 	OnClickListener,
 	OnLongClickListener,
 	ActionMode.Callback{
-
-	public static final String workstationNetworkServiceToken = "_workstation._tcp.local.";
-	public static final String networkServiceLocalToken = ".local.";
 	
-	private RemoteNAO nao;
+	/**
+	 * Network service token
+	 */
+	public static final String workstationNetworkServiceToken = "_workstation._tcp.local.";
+	public static final String networkTokenLocal= ".local.";
+	public static final String naoNetworkServiceToken = "_nao._tcp.local.";
+	public static final String naoqiNetworkServiceToken = "_naoqi._tcp.local.";
+	public static final String sshNetworkServiceToken = "_ssh._tcp.local.";
+	
+	/**
+	 * Remote device information
+	 */
+	private NAOConnector connector = null;
+	private List<String> services = new ArrayList<String>();	
+	
+	
+	/**
+	 * Layout
+	 */
 	private String workstationName = null;
 	
-	private View mView;
+	private LinearLayout mRootView;
 	private TextView txtName;
 	private TextView txtNAOqi;
 	private TextView txtSSH;
-	private TextView txtSFTP;
 	private ImageView imgLogo;
 	private ImageView imgUpdate;
 	private ProgressBar pgbLoading;
@@ -49,62 +67,47 @@ public class RemoteDevice implements
 	private ActionMode mActionMode;
 	
 	/**
-	 * Constructor
-	 * @param context	Layout {@link Context}
-	 * @param service	{@link ServiceEvent}
-	 */
-	public RemoteDevice(Context context, ServiceEvent service) {
-		this(context);
-		
-		// add network service
-		addNetworkService(service);
-	}
-	
-	/**
-	 * Constructor
-	 * @param aContext	Layout {@link Context}
-	 * @param aHost		{@link String} of remote host name
-	 */
-	public RemoteDevice(Context aContext, String aHost){
-		this(aContext);		
-		txtName.setText(aHost);
-		addAdress(aHost);
-	}
-	
-	/**
 	 * Default Constructor
 	 * @param context	Layout {@link Context}
 	 */
 	@SuppressLint("InflateParams")
-	public RemoteDevice(Context context){
-		nao = new RemoteNAO();
+	public RemoteDevice(Context context) {
+		super(context);
+		setOrientation(LinearLayout.VERTICAL);
 		
-		// inflate detail layout
-		LayoutInflater inflater = LayoutInflater.from(context);
-		mView = inflater.inflate( R.layout.remote_device, null );
+		// get root view
+		mRootView = (LinearLayout) inflate(getContext(), R.layout.remote_device, null);
+		addView(mRootView);
 		
 		// get components
-		txtName = (TextView) mView.findViewById(R.id.txtDevicename);
-		imgLogo = (ImageView) mView.findViewById(R.id.imgDevice);
-		imgUpdate = (ImageView) mView.findViewById(R.id.imgDeviceUpdate);
-		txtNAOqi = (TextView) mView.findViewById(R.id.txtNAOqi);
-		txtSSH = (TextView) mView.findViewById(R.id.txtSSH);
-		txtSFTP = (TextView) mView.findViewById(R.id.txtSFTP);
-		pgbLoading = (ProgressBar) mView.findViewById(R.id.pgbSettingsPlaySoundLoading);
+		txtName = (TextView) findViewById(R.id.txtDevicename);
+		imgLogo = (ImageView) findViewById(R.id.imgDevice);
+		imgUpdate = (ImageView) findViewById(R.id.imgDeviceUpdate);
+		txtNAOqi = (TextView) findViewById(R.id.txtNAOqi);
+		txtSSH = (TextView) findViewById(R.id.txtSSH);
+		pgbLoading = (ProgressBar) findViewById(R.id.pgbSettingsPlaySoundLoading);
 		
 		// set listener
-		MainActivity.getInstance().registerForContextMenu(mView);
-		mView.setOnClickListener(this);
-		mView.setOnLongClickListener(this);
+		MainActivity.getInstance().registerForContextMenu(this);
+		setOnClickListener(this);
+		setOnLongClickListener(this);
 		imgUpdate.setOnClickListener(this);
+		
 		MainActivity.getInstance().addNetworkDataRecievedListener(this);
 	}
 	
 	/**
-	 * @return {@link View} of the remote device
+	 * Sets if to show loading animation.
+	 * @param aLoading	Set {@code true} to show loading animation, {@code false} otherwise.
 	 */
-	public View getView(){
-		return mView;
+	public void setLoading(boolean aLoading){
+		if( aLoading ){
+			imgLogo.setVisibility(View.GONE);
+			pgbLoading.setVisibility(View.VISIBLE);
+		} else {
+			imgLogo.setVisibility(View.VISIBLE);
+			pgbLoading.setVisibility(View.GONE);
+		}
 	}
 	
 	/**
@@ -112,39 +115,28 @@ public class RemoteDevice implements
 	 */
 	public void updateView(){	
 		
-		new AsyncTask<Void, Void, Void>(){
-
-			@Override
-			protected Void doInBackground(Void... params) {
-				return null;
-			}
-			
-			protected void onPostExecute(Void result) {
+		new Thread( new Runnable(){			
+			public void run() {
 				
-				String name = nao.getName();
+				String name = getWorkstationName();
 				String ip = "";
 				int imgRes = R.drawable.unknown_device;
 				
 				// check name
 				if( name == null ){
-					if( getWorkstationName() == null ){
-						name = mView.getResources().getString(R.string.net_unknown_device);
-					}
-					else{
-						name = getWorkstationName();
-					}
+					name = getResources().getString(R.string.net_unknown_device);
 				}
 				
 				// check ip
-				if( nao.getHostAdresses().size() > 0 ){
-					ip = " [" + nao.getHostAdresses().get(0) + "]";
+				if( getHostAdresses().size() > 0 ){
+					ip = " [" + getHostAdresses().get(0) + "]";
 				}
 				
 				// check image
-				if( nao.isNAO() ){
+				if( isNAO() ){
 					imgRes = R.drawable.robot_off;
 				}
-				if( nao.hasCommunicationServer() ){
+				if( hasCommunicationServer() ){
 					imgRes = R.drawable.robot_on;
 				}		
 				
@@ -153,37 +145,33 @@ public class RemoteDevice implements
 				imgLogo.setImageResource(imgRes);
 				
 				// check services
-				if( nao.hasNAOqi() ){
-					txtNAOqi.setTextColor( mView.getResources().getColor(R.color.darkblue) );
+				if( hasNAOqi() ){
+					txtNAOqi.setTextColor( getResources().getColor(R.color.darkblue) );
 				}
 				else{
-					txtNAOqi.setTextColor(  mView.getResources().getColor(R.color.inactive_text) );
+					txtNAOqi.setTextColor( getResources().getColor(R.color.inactive_text) );
 				}
 				
-				if( nao.hasSSH() ){
-					txtSSH.setTextColor(  mView.getResources().getColor(R.color.darkblue) );
+				if( hasSSH() ){
+					txtSSH.setTextColor( getResources().getColor(R.color.darkblue) );
 				}
 				else{
-					txtSSH.setTextColor(  mView.getResources().getColor(R.color.inactive_text) );
+					txtSSH.setTextColor( getResources().getColor(R.color.inactive_text) );
 				}
 				
-				if( nao.hasSFTP() ){
-					txtSFTP.setTextColor(  mView.getResources().getColor(R.color.darkblue) );
-				}
-				else{
-					txtSFTP.setTextColor(  mView.getResources().getColor(R.color.inactive_text) );
+				// check if connected > set background color
+				setLoading( !isConnected() );
+				if( isConnected() ) {
+					setBackgroundColor(
+							getResources().getColor(R.color.lighterlightblue) );
+				} else {
+					// set transparent background
+					setBackgroundColor( Color.TRANSPARENT );
 				}
 				
 			}
-			}.execute();
+		} ).start();
 		
-	}
-
-	/**
-	 * @return Underlying {@link RemoteNAO} object
-	 */
-	public RemoteNAO getNao() {
-		return nao;
 	}
 	
 	/**
@@ -197,51 +185,23 @@ public class RemoteDevice implements
 	 * @param name {@link String} of workstations name
 	 */
 	public void setWorkstationName(String name){
-		workstationName = name.substring(0, name.indexOf(networkServiceLocalToken));
+		workstationName = name;
+		txtName.setText(workstationName);
 	}
 	
-
 	/**
-	 * @param adress {@link String}
-	 * @return {@code true} if device has network device with {@code adress}, {@code false} otherwise
+	 * Gets status of network service.
+	 * @param serviceToken	{@link String} of service token
+	 * @return 				{@code true} if service is available, {@code false} otherwise.
 	 */
-	public boolean hasAdress(String adress){
-		for( String host : nao.getHostAdresses() ){
-			if( host.contains(adress) ){
-				return true;
+	private boolean getServiceStatus(String serviceToken){
+		synchronized (services) {
+			for( String vService : services ){
+				if( vService.equals(serviceToken) ){
+					return true;
+				}
 			}
 		}		
-		return false;
-	}
-	
-	/**
-	 * Adds a new host address.
-	 * @param adress	{@link String} host address.
-	 */
-	public void addAdress(String adress){
-		if( !hasAdress(adress) ){
-			nao.addHostAdress(adress);
-		}
-	}
-	
-	/**
-	 * Connects the device to remote server
-	 * @return	{@code true} if successful, {@code false} otherwise.
-	 */
-	public boolean connect(){
-		// check if to disconnect from other NAO
-		RemoteDevice remoteDevice = MainActivity.getInstance().getConnectedDevice();
-		if( remoteDevice != null ){
-			remoteDevice.getNao().disconnect();
-			MainActivity.getInstance().setConnectedDevice( null );
-		}
-		
-		if( remoteDevice != this && getNao().connect() ){
-			MainActivity.getInstance().setConnectedDevice( this );
-			imgLogo.setVisibility( View.GONE );
-			pgbLoading.setVisibility( View.VISIBLE );	
-			return true;
-		}
 		
 		return false;
 	}
@@ -249,29 +209,52 @@ public class RemoteDevice implements
 
 	@Override
 	public void addNetworkService(ServiceEvent service) {
-		nao.addNetworkService(service);
-		if( nao.getName() == null ){
-			setWorkstationName(service.getInfo().getServer());
+		String serviceType = service.getType();
+		
+		synchronized (services) {
+			services.add(serviceType);
+		}		
+		
+		// check connector and add host adresses
+		if(connector == null){
+			connector = new NAOConnector(service);
 		}
+		
+		connector.addHostAdresses( service.getInfo().getHostAddresses() );
+		
+		// check for communication server or only nao
+		if( serviceType.contains(NAOConnector.serverNetworkServiceToken) ){
+			setWorkstationName( service.getName() );
+		}		
 
 		updateView();
 	}
 
 	@Override
 	public void removeNetworkService(ServiceEvent service) {
-		nao.removeNetworkService(service);
+		synchronized (services) {
+			services.remove(service.getType());
+		}
 		updateView();
 	}
 
 	@Override
 	public void onClick(View v) {
-		if( v == mView ){
-			// connect
-			connect();
+		if( v == this ){
+			
+			// connect / disconnect
+			if( isConnected() ){
+				disconnect();
+			} else {
+				connect();
+			}
+			
 		} else if( v == imgUpdate ) {
+			
 			// update
-			getNao().disconnect();
-			MainActivity.getInstance().startInstaller(RemoteDevice.this, true);
+			disconnect();
+			MainActivity.getInstance().startInstaller(this, true);
+			
 		}
 	}
 	
@@ -283,60 +266,39 @@ public class RemoteDevice implements
 		
 		// Start options menu
 		mActionMode = MainActivity.getInstance().startActionMode(this);
-		mView.setBackgroundColor( mView.getResources().getColor(R.color.lightgray) );
+		setBackgroundColor( getResources().getColor(R.color.lightgray) );
 		return true;
-	}
-
-	/**
-	 * Updates device background depending on its connection state.
-	 */
-	public void updateDeviceBackground() {	
-			MainActivity.getInstance().runOnUiThread(new Runnable() {				
-				@Override
-				public void run() {
-					// check if connected > set background color
-					if( getNao().isConnected() ) {
-						getView().setBackgroundColor(
-								getView().getResources().getColor(R.color.lighterlightblue) );
-					} else {
-						// set transparent background
-						getView().setBackgroundColor( Color.TRANSPARENT );
-					}
-					
-					// disable loading progress bar
-					imgLogo.setVisibility( View.VISIBLE );
-					pgbLoading.setVisibility( View.GONE );
-				}
-			});
 	}
 
 	@Override
 	public void onNetworkDataRecieved(DataResponsePackage data) {
-		ServerRevision vOnlineRevision = MainActivity.getInstance().getOnlineRevision();
-		RemoteDevice vConnectedRemoteDevice = MainActivity.getInstance().getConnectedDevice();
+		// TODO: check for online update
 		
-		if( vConnectedRemoteDevice == this && vOnlineRevision != null
-				&& vOnlineRevision.getRevision() >= 0 ){
-			
-			if( data.revision < vOnlineRevision.getRevision()
-				&& imgUpdate.getVisibility() == View.GONE ){			
-				MainActivity.getInstance().runOnUiThread(new Runnable() {				
-					@Override
-					public void run() {
-						imgUpdate.setVisibility( View.VISIBLE );
-					}
-				});			
-			} else if( data.revision >= vOnlineRevision.getRevision()
-					&& imgUpdate.getVisibility() == View.VISIBLE ) {				
-				MainActivity.getInstance().runOnUiThread(new Runnable() {				
-					@Override
-					public void run() {
-						imgUpdate.setVisibility( View.GONE );
-					}
-				});				
-			}
-			
-		}
+//		ServerRevision vOnlineRevision = MainActivity.getInstance().getOnlineRevision();
+//		RemoteDevice vConnectedRemoteDevice = MainActivity.getInstance().getConnectedDevice();
+//		
+//		if( vConnectedRemoteDevice == this && vOnlineRevision != null
+//				&& vOnlineRevision.getRevision() >= 0 ){
+//			
+//			if( data.revision < vOnlineRevision.getRevision()
+//				&& imgUpdate.getVisibility() == View.GONE ){			
+//				MainActivity.getInstance().runOnUiThread(new Runnable() {				
+//					@Override
+//					public void run() {
+//						imgUpdate.setVisibility( View.VISIBLE );
+//					}
+//				});			
+//			} else if( data.revision >= vOnlineRevision.getRevision()
+//					&& imgUpdate.getVisibility() == View.VISIBLE ) {				
+//				MainActivity.getInstance().runOnUiThread(new Runnable() {				
+//					@Override
+//					public void run() {
+//						imgUpdate.setVisibility( View.GONE );
+//					}
+//				});				
+//			}
+//			
+//		}
 	}
 
 	@Override
@@ -344,12 +306,12 @@ public class RemoteDevice implements
 		switch( item.getItemId() ){
 		
 		case R.id.itRemoteDeviceServerInstall:
-			getNao().disconnect();
+			disconnect();
 			MainActivity.getInstance().startInstaller(this, false);
 			break;
 			
 		case R.id.itRemoteDeviceServerUpdate:
-			getNao().disconnect();
+			disconnect();
 			MainActivity.getInstance().startInstaller(this, true);
 			break;
 			
@@ -357,7 +319,7 @@ public class RemoteDevice implements
 			new Thread(new Runnable() {				
 				@Override
 				public void run() {
-					getNao().getConnector().sendSSHCommands( new String[]{ "sudo -S -p '' shutdown -r now" },
+					connector.sendSSHCommands( new String[]{ "sudo -S -p '' shutdown -r now" },
 							new String[]{ "%%PW%%" });
 				}
 			}).start();			
@@ -367,7 +329,7 @@ public class RemoteDevice implements
 			new Thread(new Runnable() {				
 				@Override
 				public void run() {
-					getNao().getConnector().sendSSHCommands( new String[]{ "sudo -S -p '' shutdown -h now" },
+					connector.sendSSHCommands( new String[]{ "sudo -S -p '' shutdown -h now" },
 							new String[]{ "%%PW%%" });
 				}
 			}).start();	
@@ -386,7 +348,7 @@ public class RemoteDevice implements
 		mode.getMenuInflater().inflate(R.menu.remote_device_options_menu, menu);
 		
 		// disable server install if server is already installed
-		if( getNao().hasCommunicationServer() ){
+		if( hasCommunicationServer() ){
 			menu.findItem(R.id.itRemoteDeviceServerInstall).setVisible(false);
 		} else {
 			menu.findItem(R.id.itRemoteDeviceServerUpdate).setVisible(false);
@@ -396,13 +358,93 @@ public class RemoteDevice implements
 
 	@Override
 	public void onDestroyActionMode(ActionMode mode) {
-		mView.setBackgroundColor( Color.TRANSPARENT );
+		setBackgroundColor( Color.TRANSPARENT );
 		mActionMode = null;
 	}
 
 	@Override
 	public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
 		return false;
+	}
+	
+	@Override
+	public boolean connect() {
+		disconnect();
+		if( connector != null ){
+			
+			// check if to restart connector
+			if( connector.getConnectionState() != ConnectionState.CONNECTION_INIT ){
+				connector = new NAOConnector(connector);
+			}
+			
+			// start connector thread
+			connector.start();
+			setLoading(true);
+			
+			return true;
+		}
+		
+		return false;
+	}
+
+	@Override
+	public void disconnect() {
+		if( connector != null ){
+			connector.stopConnector();
+		}
+	}
+	
+	@Override
+	public boolean isConnected() {
+		return (connector != null
+				&& connector.getConnectionState() == ConnectionState.CONNECTION_ESTABLISHED );
+	}
+
+	@Override
+	public String getName() {
+		return getWorkstationName();
+	}
+
+	@Override
+	public boolean hasNAOqi() {
+		return getServiceStatus(naoqiNetworkServiceToken);
+	}
+
+	@Override
+	public boolean hasSSH() {
+		return getServiceStatus(sshNetworkServiceToken);
+	}
+
+	@Override
+	public boolean isNAO() {
+		return getServiceStatus(naoNetworkServiceToken);
+	}
+
+	@Override
+	public boolean hasCommunicationServer() {
+		return getServiceStatus(NAOConnector.serverNetworkServiceToken);
+	}
+
+	@Override
+	public List<String> getHostAdresses() {
+		if( connector != null ){
+			return connector.getHostAdresses();
+		}
+		return new ArrayList<String>();
+	}
+
+	@Override
+	public void addHostAdress(String aAdress) {
+		if( connector != null ){
+			connector.addHostAdress(aAdress);
+		} else {
+			connector = new NAOConnector(aAdress, NAOConnector.defaultPort);
+		}
+	}
+	
+	@Override
+	public boolean hasAdress(String aAdress) {
+		return connector.getHostAdresses().contains(aAdress);
 	}
 
 }

@@ -3,7 +3,6 @@ package de.robotik.nao.communicator.core.sections;
 import com.larswerkman.holocolorpicker.ColorPicker;
 
 import de.robotik.nao.communicator.R;
-import de.robotik.nao.communicator.core.RemoteNAO;
 import de.robotik.nao.communicator.network.data.NAOCommands;
 import de.robotik.nao.communicator.network.data.response.DataResponsePackage;
 import de.robotik.nao.communicator.network.interfaces.NetworkDataRecievedListener;
@@ -62,48 +61,49 @@ public class SectionLed extends Section implements
 	}
 	
 	@Override
-	public void onClick(View v) {		
-		if( v ==  btnLedAngry){
-			RemoteNAO.sendCommand( NAOCommands.LED_ANGRY );
-			
-		} else if( v == btnLedBlink ){
-			RemoteNAO.sendCommand( NAOCommands.LED_BLINK );
-			
-		} else if( v == btnLedCautious ){
-			RemoteNAO.sendCommand( NAOCommands.LED_CAUTIOUS );
-			
-		} else if( v == btnLedCircleEyes ){
-			RemoteNAO.sendCommand( NAOCommands.LED_CIRCLE_EYES );
-			
-		} else if( v == btnLedDisco ){
-			RemoteNAO.sendCommand( NAOCommands.LED_DISCO );
-			
-		} else if( v == btnLedFlash ){
-			RemoteNAO.sendCommand( NAOCommands.LED_FLASH );
-			
-		} else if( v == btnLedHappy ){
-			RemoteNAO.sendCommand( NAOCommands.LED_HAPPY );
-			
-		} else if( v == btnLedLaugh ){
-			RemoteNAO.sendCommand( NAOCommands.LED_LAUGH );
-			
-		} else if( v == btnLedMischievous ){
-			RemoteNAO.sendCommand( NAOCommands.LED_MISCHIEVIOUS );
-			
-		} else if( v == btnLedThinking ){
-			RemoteNAO.sendCommand( NAOCommands.LED_THINKING );
-			
-		} else if( v == btnLedRightEye ){			
-			int vColor = pckColor.getColor();
-			RemoteNAO.sendCommand( NAOCommands.LED_SET_EYE,
-					new String[]{ "right", Integer.toString(vColor) });
-			
-		} else if( v == btnLedLeftEye ){			
-			int vColor = pckColor.getColor();
-			RemoteNAO.sendCommand( NAOCommands.LED_SET_EYE,
-					new String[]{ "left", Integer.toString(vColor) });
-			
-		} 
+	public void onClick(View v) {
+		// TODO: send commands
+//		if( v ==  btnLedAngry){
+//			RemoteNAO.sendCommand( NAOCommands.LED_ANGRY );
+//			
+//		} else if( v == btnLedBlink ){
+//			RemoteNAO.sendCommand( NAOCommands.LED_BLINK );
+//			
+//		} else if( v == btnLedCautious ){
+//			RemoteNAO.sendCommand( NAOCommands.LED_CAUTIOUS );
+//			
+//		} else if( v == btnLedCircleEyes ){
+//			RemoteNAO.sendCommand( NAOCommands.LED_CIRCLE_EYES );
+//			
+//		} else if( v == btnLedDisco ){
+//			RemoteNAO.sendCommand( NAOCommands.LED_DISCO );
+//			
+//		} else if( v == btnLedFlash ){
+//			RemoteNAO.sendCommand( NAOCommands.LED_FLASH );
+//			
+//		} else if( v == btnLedHappy ){
+//			RemoteNAO.sendCommand( NAOCommands.LED_HAPPY );
+//			
+//		} else if( v == btnLedLaugh ){
+//			RemoteNAO.sendCommand( NAOCommands.LED_LAUGH );
+//			
+//		} else if( v == btnLedMischievous ){
+//			RemoteNAO.sendCommand( NAOCommands.LED_MISCHIEVIOUS );
+//			
+//		} else if( v == btnLedThinking ){
+//			RemoteNAO.sendCommand( NAOCommands.LED_THINKING );
+//			
+//		} else if( v == btnLedRightEye ){			
+//			int vColor = pckColor.getColor();
+//			RemoteNAO.sendCommand( NAOCommands.LED_SET_EYE,
+//					new String[]{ "right", Integer.toString(vColor) });
+//			
+//		} else if( v == btnLedLeftEye ){			
+//			int vColor = pckColor.getColor();
+//			RemoteNAO.sendCommand( NAOCommands.LED_SET_EYE,
+//					new String[]{ "left", Integer.toString(vColor) });
+//			
+//		} 
 	}
 	
 	@Override

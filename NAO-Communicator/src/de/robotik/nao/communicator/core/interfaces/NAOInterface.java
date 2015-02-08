@@ -11,15 +11,14 @@ public interface NAOInterface {
 	public boolean connect();
 	
 	/**
-	 * Reconnects to NAO and replaces existing connection.
-	 * @return {@code true} if connecting process started, {@code false} otherwise
-	 */
-	public boolean reconnect();
-	
-	/**
 	 * Disconnect from NAO
 	 */
 	public void disconnect();
+	
+	/**
+	 * @return {@code true} if connected, {@code false} otherwise.
+	 */
+	public boolean isConnected();
 	
 	/**
 	 * @return Name of NAO
@@ -35,11 +34,6 @@ public interface NAOInterface {
 	 * @return {@code true} if NAO has ssh server running, {@code false} otherwise
 	 */
 	public boolean hasSSH();
-	
-	/**
-	 * @return {@code true} if NAO has sftp server running, {@code false} otherwise
-	 */
-	public boolean hasSFTP();
 	
 	/**
 	 * @return {@code true} if NAO has nao network service running, {@code false} otherwise
@@ -61,5 +55,12 @@ public interface NAOInterface {
 	 * @param aAdress	{@link String} host address
 	 */
 	public void addHostAdress(String aAdress);
+	
+	/**
+	 * Checks if NAO has a host adress.
+	 * @param aAdress	{@link String} host adress
+	 * @return			{@code true} if NAO has hot adress, {@code false} otherwise.
+	 */
+	public boolean hasAdress(String aAdress);
 	
 }

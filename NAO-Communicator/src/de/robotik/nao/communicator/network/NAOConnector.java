@@ -238,7 +238,7 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 				socket = null;
 				state = ConnectionState.CONNECTION_CLOSED;
 				
-				MainActivity.getInstance().setConnectedDevice(null);
+				// TODO: remove conncted device
 				
 				return true;	
 			}
@@ -252,7 +252,9 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 			notifyDataRecievedListeners( new DataResponsePackage(
 					new DataRequestPackage(NAOCommands.SYS_DISCONNECT, new String[]{}), true) );
 			state = ConnectionState.CONNECTION_CLOSED;
-			MainActivity.getInstance().setConnectedDevice(null);
+			
+			// TODO: set connected device
+			
 			return true;
 		}
 		
@@ -591,12 +593,12 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 			if( connect() ){
 				
 				// connected
-				SectionConnect.updateRemoteDevicesBackgrounds();
+				SectionConnect.updateRemoteDevices();
 				MainActivity.getInstance().runOnUiThread( new Runnable() {						
 					@Override
 					public void run() {
-						Toast.makeText(MainActivity.getInstance().getApplicationContext(),
-								R.string.net_connected, Toast.LENGTH_SHORT).show();
+						MainActivity.getInstance()
+							.makeToast(R.string.net_connected, Toast.LENGTH_SHORT);
 					}
 				});
 				
@@ -617,12 +619,11 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 					MainActivity.getInstance().runOnUiThread( new Runnable() {						
 						@Override
 						public void run() {
-							Toast.makeText(MainActivity.getInstance().getApplicationContext(),
-									R.string.net_disconnected, Toast.LENGTH_SHORT).show();
+							MainActivity.getInstance()
+								.makeToast(R.string.net_disconnected, Toast.LENGTH_SHORT);
 						}
 					});
 				}
-				SectionConnect.updateRemoteDevicesBackgrounds();
 				
 			} else {
 				
@@ -635,12 +636,11 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 				} else {
 					
 					Log.e(TAG, "Establishing connection to " + host + ":" + port + " failed.");
-					SectionConnect.updateRemoteDevicesBackgrounds();
 					MainActivity.getInstance().runOnUiThread( new Runnable() {				
 						@Override
 						public void run() {
-							Toast.makeText(MainActivity.getInstance().getApplicationContext(),
-									R.string.net_connection_failed, Toast.LENGTH_SHORT).show();
+							MainActivity.getInstance()
+								.makeToast(R.string.net_connection_failed, Toast.LENGTH_SHORT);
 						}
 					});
 					
@@ -652,6 +652,14 @@ public class NAOConnector extends Thread implements NetworkDataSender {
 		
 		// try to disconnect
 		disconnect();
+		
+		// trigger device update
+		new Thread( new Runnable() {			
+			@Override
+			public void run() {
+				SectionConnect.updateRemoteDevices();
+			}
+		}).start();
 		
 	}
 	

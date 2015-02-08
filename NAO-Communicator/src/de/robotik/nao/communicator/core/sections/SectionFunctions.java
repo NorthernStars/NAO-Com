@@ -5,7 +5,6 @@ import java.util.Map;
 
 import de.robotik.nao.communicator.R;
 import de.robotik.nao.communicator.MainActivity;
-import de.robotik.nao.communicator.core.RemoteNAO;
 import de.robotik.nao.communicator.core.widgets.programming.FunctionItem;
 import de.robotik.nao.communicator.network.data.NAOCommands;
 import de.robotik.nao.communicator.network.data.response.DataResponsePackage;
@@ -89,55 +88,56 @@ public class SectionFunctions extends Section implements
 
 	@Override
 	public void onClick(View v) {
-		if( v == btnFunctionHello ){			
-			RemoteNAO.sendCommand( NAOCommands.MEMORY_EVENT_RAISE, new String[]{"animationHello"} );
-			
-		} else if( v == btnFunctionsCustomNewAdd ){
-			
-			String vEventKey = txtFunctionsCustomNewALMemoryKey.getText().toString();
-			String vEventName = txtFunctionsCustomNewName.getText().toString();
-			RemoteNAO.sendCommand( NAOCommands.MEMORY_EVENT_ADD, new String[]{vEventKey, vEventName} );
-			
-		} else if( v == btnFunctionsFaceTracker ){			
-			RemoteNAO.sendCommand( NAOCommands.MEMORY_EVENT_RAISE, new String[]{"functionFaceTracker"} );
-			
-		} else if( v == btnFunctionShakeHands ){
-			RemoteNAO.sendCommand( NAOCommands.MEMORY_EVENT_RAISE, new String[]{"animationShakeHands"} );
-			
-		} else if( v == btnFunctionsRedBallTracker ){
-			RemoteNAO.sendCommand( NAOCommands.MEMORY_EVENT_RAISE, new String[]{"functionRedBallTracker"} );
-			
-		} else if( v == btnFunctionStandUp ){
-			RemoteNAO.sendCommand( NAOCommands.STAND_UP );
-			
-		} else if( v == btnFunctionWipeForehead ){
-			RemoteNAO.sendCommand( NAOCommands.MEMORY_EVENT_RAISE, new String[]{"animationWipeForehead"} );
-			
-		} else if( v == btnFuntctionSitDown ){
-			RemoteNAO.sendCommand( NAOCommands.SIT_DOWN );
-			
-		} else if( v == btnDanceCaravanPalace ){
-			RemoteNAO.sendCommand( NAOCommands.MEMORY_EVENT_RAISE, new String[]{"danceCaravanPalace"} );
-			
-		} else if( v == btnDanceEvolutionOfDance ){
-			RemoteNAO.sendCommand( NAOCommands.MEMORY_EVENT_RAISE, new String[]{"danceEvolutionOfDance"} );
-			
-		} else if( v == btnDanceEyeOfTheTiger ){
-			RemoteNAO.sendCommand( NAOCommands.MEMORY_EVENT_RAISE, new String[]{"danceEyeOfTheTiger"} );
-			
-		} else if( v == btnDanceGangnameStyle ){
-			RemoteNAO.sendCommand( NAOCommands.MEMORY_EVENT_RAISE, new String[]{"danceGangnamStyle"} );
-			
-		} else if( v == btnDanceThaiChi ){
-			RemoteNAO.sendCommand( NAOCommands.MEMORY_EVENT_RAISE, new String[]{"danceThaiChi"} );
-			
-		} else if( v == btnDanceVangelisDance ){
-			RemoteNAO.sendCommand( NAOCommands.MEMORY_EVENT_RAISE, new String[]{"danceVangelisDance"} );
-			
-		} else if( v == btnFunctionsAbort ){
-			RemoteNAO.sendCommand( NAOCommands.MEMORY_EVENT_RAISE, new String[]{"naocomAbort"} );
-			
-		}
+		// TODO: send commands
+//		if( v == btnFunctionHello ){			
+//			RemoteNAO.sendCommand( NAOCommands.MEMORY_EVENT_RAISE, new String[]{"animationHello"} );
+//			
+//		} else if( v == btnFunctionsCustomNewAdd ){
+//			
+//			String vEventKey = txtFunctionsCustomNewALMemoryKey.getText().toString();
+//			String vEventName = txtFunctionsCustomNewName.getText().toString();
+//			RemoteNAO.sendCommand( NAOCommands.MEMORY_EVENT_ADD, new String[]{vEventKey, vEventName} );
+//			
+//		} else if( v == btnFunctionsFaceTracker ){			
+//			RemoteNAO.sendCommand( NAOCommands.MEMORY_EVENT_RAISE, new String[]{"functionFaceTracker"} );
+//			
+//		} else if( v == btnFunctionShakeHands ){
+//			RemoteNAO.sendCommand( NAOCommands.MEMORY_EVENT_RAISE, new String[]{"animationShakeHands"} );
+//			
+//		} else if( v == btnFunctionsRedBallTracker ){
+//			RemoteNAO.sendCommand( NAOCommands.MEMORY_EVENT_RAISE, new String[]{"functionRedBallTracker"} );
+//			
+//		} else if( v == btnFunctionStandUp ){
+//			RemoteNAO.sendCommand( NAOCommands.STAND_UP );
+//			
+//		} else if( v == btnFunctionWipeForehead ){
+//			RemoteNAO.sendCommand( NAOCommands.MEMORY_EVENT_RAISE, new String[]{"animationWipeForehead"} );
+//			
+//		} else if( v == btnFuntctionSitDown ){
+//			RemoteNAO.sendCommand( NAOCommands.SIT_DOWN );
+//			
+//		} else if( v == btnDanceCaravanPalace ){
+//			RemoteNAO.sendCommand( NAOCommands.MEMORY_EVENT_RAISE, new String[]{"danceCaravanPalace"} );
+//			
+//		} else if( v == btnDanceEvolutionOfDance ){
+//			RemoteNAO.sendCommand( NAOCommands.MEMORY_EVENT_RAISE, new String[]{"danceEvolutionOfDance"} );
+//			
+//		} else if( v == btnDanceEyeOfTheTiger ){
+//			RemoteNAO.sendCommand( NAOCommands.MEMORY_EVENT_RAISE, new String[]{"danceEyeOfTheTiger"} );
+//			
+//		} else if( v == btnDanceGangnameStyle ){
+//			RemoteNAO.sendCommand( NAOCommands.MEMORY_EVENT_RAISE, new String[]{"danceGangnamStyle"} );
+//			
+//		} else if( v == btnDanceThaiChi ){
+//			RemoteNAO.sendCommand( NAOCommands.MEMORY_EVENT_RAISE, new String[]{"danceThaiChi"} );
+//			
+//		} else if( v == btnDanceVangelisDance ){
+//			RemoteNAO.sendCommand( NAOCommands.MEMORY_EVENT_RAISE, new String[]{"danceVangelisDance"} );
+//			
+//		} else if( v == btnFunctionsAbort ){
+//			RemoteNAO.sendCommand( NAOCommands.MEMORY_EVENT_RAISE, new String[]{"naocomAbort"} );
+//			
+//		}
 	}
 	
 	/**

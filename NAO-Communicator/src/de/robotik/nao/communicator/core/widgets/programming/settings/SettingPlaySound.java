@@ -25,7 +25,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import de.robotik.nao.communicator.R;
 import de.robotik.nao.communicator.MainActivity;
-import de.robotik.nao.communicator.core.RemoteNAO;
 import de.robotik.nao.communicator.network.ConnectionState;
 import de.robotik.nao.communicator.network.NAOConnector;
 
@@ -57,23 +56,22 @@ public class SettingPlaySound extends AbstractSettingsContent implements
 			protected File doInBackground(File... params) {				
 				if( params.length > 0 ){
 					
-					// get connector and file
+					// TODO: get connector and file
 					File vFile = (File) params[0];					
-					RemoteNAO vRemoteNao = RemoteNAO.getCurrentRemoteNao();
-					NAOConnector vConnector = vRemoteNao.getConnector();
-					
-					// wait for connector to establish connection
-					while( vConnector.getConnectionState() != ConnectionState.CONNECTION_ESTABLISHED
-							&& vConnector.getConnectionState() == ConnectionState.CONNECTION_INIT ){
-						try {
-							Thread.sleep(100);
-						} catch (InterruptedException e) {}
-					}		
-					
-					// upload file
-					if( vConnector.uploadSFTP( vFile, NAO_SOUND_DIRECTORY ) ){
-						return vFile;
-					};
+//					NAOConnector vConnector = vRemoteNao.getConnector();
+//					
+//					// wait for connector to establish connection
+//					while( vConnector.getConnectionState() != ConnectionState.CONNECTION_ESTABLISHED
+//							&& vConnector.getConnectionState() == ConnectionState.CONNECTION_INIT ){
+//						try {
+//							Thread.sleep(100);
+//						} catch (InterruptedException e) {}
+//					}		
+//					
+//					// upload file
+//					if( vConnector.uploadSFTP( vFile, NAO_SOUND_DIRECTORY ) ){
+//						return vFile;
+//					};
 				}
 								
 				return null;
@@ -113,18 +111,18 @@ public class SettingPlaySound extends AbstractSettingsContent implements
 			@Override
 			protected SpinnerAdapter doInBackground(Void... params) {
 				
-				// get connector
-				RemoteNAO vRemoteNao = RemoteNAO.getCurrentRemoteNao();
-				NAOConnector vConnector = vRemoteNao.getConnector();
-				
-				List<String> vRemoteFiles = vConnector.getSftpDirContent( NAO_SOUND_DIRECTORY );
-				
-				SpinnerAdapter vAdapter = new ArrayAdapter<String>(
-						MainActivity.getInstance().getApplicationContext(),
-						R.layout.spinner_item,
-						vRemoteFiles );
-			
-				return vAdapter;
+				// TODO: get connector
+//				NAOConnector vConnector = vRemoteNao.getConnector();
+//				
+//				List<String> vRemoteFiles = vConnector.getSftpDirContent( NAO_SOUND_DIRECTORY );
+//				
+//				SpinnerAdapter vAdapter = new ArrayAdapter<String>(
+//						MainActivity.getInstance().getApplicationContext(),
+//						R.layout.spinner_item,
+//						vRemoteFiles );
+//			
+//				return vAdapter;
+				return null;
 			}
 			
 			protected void onPostExecute(SpinnerAdapter result) {				

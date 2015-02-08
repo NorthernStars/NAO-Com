@@ -2,7 +2,6 @@ package de.robotik.nao.communicator.core.widgets.programming;
 
 import de.robotik.nao.communicator.R;
 import de.robotik.nao.communicator.MainActivity;
-import de.robotik.nao.communicator.core.RemoteNAO;
 import de.robotik.nao.communicator.network.data.NAOCommands;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -99,14 +98,15 @@ public class FunctionItem extends LinearLayout implements
 
 	@Override
 	public void onClick(View v) {
-		if( v == btnRemove ){
-			RemoteNAO.sendCommand( NAOCommands.MEMORY_EVENT_REMOVE,
-					new String[]{ txtKey.getText().toString() } );
-			removed = true;
-		} else {
-			RemoteNAO.sendCommand( NAOCommands.MEMORY_EVENT_RAISE,
-					new String[]{ txtKey.getText().toString() } );
-		}
+		// TODO: send commands 
+//		if( v == btnRemove ){
+//			RemoteNAO.sendCommand( NAOCommands.MEMORY_EVENT_REMOVE,
+//					new String[]{ txtKey.getText().toString() } );
+//			removed = true;
+//		} else {
+//			RemoteNAO.sendCommand( NAOCommands.MEMORY_EVENT_RAISE,
+//					new String[]{ txtKey.getText().toString() } );
+//		}
 	}
 
 }
