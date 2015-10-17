@@ -2,6 +2,7 @@ package de.robotik.nao.communicator.core.sections;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import de.robotik.nao.communicator.R;
 import de.robotik.nao.communicator.MainActivity;
@@ -166,7 +167,7 @@ public class SectionFunctions extends Section implements
 		synchronized (mFunctionItemsToUpdate) {
 			if( !mFunctionsAdding ){
 				mFunctionsAdding = true;
-				mFunctionItemsToUpdate = data.customMemoryEvents;
+				mFunctionItemsToUpdate = new TreeMap<String, String>( data.customMemoryEvents );
 				
 				MainActivity.getInstance().runOnUiThread(new Runnable() {					
 					@Override
